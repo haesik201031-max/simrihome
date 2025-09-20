@@ -1,12 +1,112 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CAPE-15 검사</title>
+<meta charset="UTF-8" />
+<title>CAPE-15 (정신증 경향)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  body{font-family:-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:#f6f8fb;color:#111}
+  .wrap{max-width:900px;margin:0 auto;padding:32px}
+  h1{font-size:28px;margin:8px 0 16px}
+  .card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:22px 20px;margin:14px 0;box-shadow:0 6px 16px rgba(17,24,39,.06)}
+  .q{margin:0 0 10px;font-weight:600}
+  .row{display:flex;gap:16px;flex-wrap:wrap}
+  .col{flex:1 1 260px}
+  .opts label{display:inline-flex;align-items:center;gap:8px;margin:6px 8px 6px 0;padding:6px 10px;border-radius:10px;border:1px solid #e5e7eb;cursor:pointer}
+  .btn{display:inline-block;background:#1668e3;color:#fff;border:0;border-radius:10px;padding:14px 18px;font-weight:700;cursor:pointer}
+  .result{background:#eef5ff;border:1px solid #cfe2ff;border-radius:12px;padding:16px 18px;margin-top:16px}
+  .muted{color:#667085}
+  .topnav{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  a.home{color:#1668e3;text-decoration:none;font-weight:600}
+</style>
 </head>
 <body>
-  <h1>CAPE-15 검사 페이지 준비중입니다.</h1>
-  <p><a href="index.html">← 메인으로 돌아가기</a></p>
+<div class="wrap">
+  <div class="topnav">
+    <div class="muted">마음건강 자가검진</div>
+    <a class="home" href="index.html">← 메인으로</a>
+  </div>
+  <h1>CAPE-15 (정신증 경향)</h1>
+  <p class="muted">각 항목마다 <b>빈도</b>와 <b>고통 정도</b>를 선택해주세요. (0~3점)</p>
+
+  <form id="form"></form>
+
+  <div>
+    <button class="btn" id="submitBtn" type="button">결과 보기</button>
+    <div id="out" class="result" style="display:none"></div>
+  </div>
+</div>
+
+<script>
+const qs = [
+  "사람들이 나에 대해 숨겨진 의미로 말하는 것 같았다",
+  "내 생각이 메아리처럼 들린 적이 있었다",
+  "어떤 힘이 나를 통제하는 것처럼 느꼈다",
+  "가족/지인과 꼭 닮은 분신이 나타난 것 같았다",
+  "혼자 있을 때 어떤 ‘음성’을 들었다",
+  "혼자 있을 때 사람들이 서로 말하는 소리를 들었다",
+  "다른 사람에게 보이지 않는 사물이나 사람/동물을 보았다",
+  "겉으로 보이는 것과 다르다고 사람들을 느꼈다",
+  "어떤 방식으로든 괴롭힘을 당한다는 느낌이 있었다",
+  "나를 둘러싼 음모가 있는 것 같았다",
+  "외모 때문에 사람들이 이상하게 본다고 느꼈다",
+  "전자기기가 내 생각방식에 영향을 준다고 느꼈다",
+  "머릿속 생각을 누군가 빼앗아간다고 느꼈다",
+  "내 생각들이 내 것이 아닌 것처럼 느꼈다",
+  "생생한 생각이 다른 사람에게 들릴까 걱정됐다"
+];
+const freq = ["없음(0)","가끔(1)","자주(2)","거의 항상(3)"];
+const dist = ["없음(0)","조금(1)","상당히(2)","매우(3)"];
+
+const form = document.getElementById('form');
+qs.forEach((t,i)=>{
+  const box = document.createElement('div'); box.className='card';
+  box.innerHTML = `
+    <div class="q">${i+1}. ${t}</div>
+    <div class="row">
+      <div class="col">
+        <div class="muted">빈도</div>
+        <div class="opts">
+          ${freq.map((lb,idx)=>`
+            <label><input type="radio" name="f${i}" value="${idx}" required/> ${lb}</label>
+          `).join('')}
+        </div>
+      </div>
+      <div class="col">
+        <div class="muted">고통</div>
+        <div class="opts">
+          ${dist.map((lb,idx)=>`
+            <label><input type="radio" name="d${i}" value="${idx}" required/> ${lb}</label>
+          `).join('')}
+        </div>
+      </div>
+    </div>`;
+  form.append(box);
+});
+
+function score(){
+  let f=0,d=0,c=0;
+  qs.forEach((_,i)=>{
+    const sf = form.querySelector(`input[name="f${i}"]:checked`);
+    const sd = form.querySelector(`input[name="d${i}"]:checked`);
+    if(!sf || !sd) return;
+    f += Number(sf.value);
+    d += Number(sd.value);
+    c++;
+  });
+  if(c!==qs.length) return null;
+  return {f,d}; // 빈도/고통 총점 (각 0~45)
+}
+
+document.getElementById('submitBtn').addEventListener('click', ()=>{
+  const sc = score();
+  const out = document.getElementById('out');
+  if(!sc){ alert('모든 항목의 빈도/고통을 선택해주세요.'); return; }
+  let guide="일부 항목에 반복적으로 해당되고 고통이 크다면 전문가와 상담을 권합니다.";
+  out.style.display='block';
+  out.innerHTML = `<b>빈도 총점: ${sc.f} (0~45)</b><br/><b>고통 총점: ${sc.d} (0~45)</b><br/><span class="muted">${guide}</span>`;
+});
+</script>
 </body>
 </html>
+
