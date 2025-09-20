@@ -1,0 +1,21 @@
+{
+  "pages": [
+    {
+      "id": "home",
+      "title": "메인",
+      "sections": [
+        { "type": "hero", "heading": "마음건강 자가검진", "sub": "검사 유형을 선택하세요", "bg": "" },
+        { "type": "grid", "cards": [
+          { "title": "스트레스평가 (PSS)",     "desc": "최근 한 달 수준",       "href": "test-pss.html"   },
+          { "title": "우울 (PHQ-9)",          "desc": "지난 2주 우울",         "href": "test-phq9.html"  },
+          { "title": "알코올중독 (AUDIT-K)",  "desc": "음주 패턴",             "href": "test-auditk.html"},
+          { "title": "정신증 (CAPE-15)",      "desc": "경험 빈도",             "href": "test-cape15.html"},
+          { "title": "사건충격척도 (IES-R)",  "desc": "외상 후 반응",           "href": "test-iesr.html"  },
+          { "title": "불면 (ISI-K)",          "desc": "수면 문제",             "href": "test-isik.html"  },
+          { "title": "온라인 상담",            "desc": "간단 정보 입력 후 이동", "href": "counsel.html"    },
+          { "title": "결과 보기(테스트)",      "desc": "샘플 결과 페이지",       "href": "result.html"     }
+        ]}
+      ]
+    }
+  ]
+}
