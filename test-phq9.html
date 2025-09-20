@@ -1,12 +1,102 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PHQ-9 검사</title>
+<meta charset="UTF-8" />
+<title>PHQ-9 (우울)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  body{font-family:-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:#f6f8fb;color:#111}
+  .wrap{max-width:900px;margin:0 auto;padding:32px}
+  h1{font-size:28px;margin:8px 0 16px}
+  .card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:22px 20px;margin:14px 0;box-shadow:0 6px 16px rgba(17,24,39,.06)}
+  .q{margin:0 0 12px;font-weight:600}
+  .opts label{display:inline-flex;align-items:center;gap:8px;margin:6px 10px 6px 0;padding:8px 10px;border-radius:10px;border:1px solid #e5e7eb;cursor:pointer}
+  .btn{display:inline-block;background:#1668e3;color:#fff;border:0;border-radius:10px;padding:14px 18px;font-weight:700;cursor:pointer}
+  .result{background:#eef5ff;border:1px solid #cfe2ff;border-radius:12px;padding:16px 18px;margin-top:16px}
+  .muted{color:#667085}
+  .topnav{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  a.home{color:#1668e3;text-decoration:none;font-weight:600}
+</style>
 </head>
 <body>
-  <h1>PHQ-9 검사 페이지 준비중입니다.</h1>
-  <p><a href="index.html">← 메인으로 돌아가기</a></p>
+<div class="wrap">
+  <div class="topnav">
+    <div class="muted">마음건강 자가검진</div>
+    <a class="home" href="index.html">← 메인으로</a>
+  </div>
+  <h1>PHQ-9 (우울)</h1>
+  <p class="muted">지난 2주간 얼마나 자주 해당 증상이 있었는지 선택하세요. (0~3점)</p>
+
+  <form id="form"></form>
+
+  <div>
+    <button class="btn" id="submitBtn" type="button">결과 보기</button>
+    <div id="out" class="result" style="display:none"></div>
+  </div>
+</div>
+
+<script>
+const q = [
+  "기분이 가라앉거나, 우울하거나, 희망이 없었다",
+  "평소 하던 일에 대한 흥미가 없어지거나 즐거움이 줄었다",
+  "잠들기 어렵거나 자주 깼다 / 혹은 너무 많이 잤다",
+  "평소보다 식욕이 줄었다 / 혹은 평소보다 많이 먹었다",
+  "다른 사람이 눈치 챌 정도로 말과 행동이 느려졌다 / 혹은 너무 안절부절못했다",
+  "피곤하고 기운이 없었다",
+  "내가 잘못했거나 실패했다는 생각 / 자신과 가족을 실망시켰다고 생각했다",
+  "신문 읽기 / TV 보기 같은 일에도 집중하기 어려웠다",
+  "차라리 죽는 게 낫겠다 / 자해 생각을 했다"
+];
+// 0 없음, 1 2~6일, 2 7~12일, 3 거의 매일
+const labels = ["없음(0)","2~6일(1)","7~12일(2)","거의 매일(3)"];
+const impactQ = "위 증상 때문에 일/집안일/대인관계에 지장이 있었습니까? (점수에 미포함)";
+
+const form = document.getElementById('form');
+q.forEach((t,i)=>{
+  const box = document.createElement('div'); box.className='card';
+  box.innerHTML = `
+    <div class="q">${i+1}. ${t}</div>
+    <div class="opts">
+      ${labels.map((lb,idx)=>`
+        <label><input type="radio" name="q${i}" value="${idx}" required/> ${lb}</label>
+      `).join('')}
+    </div>`;
+  form.append(box);
+});
+const impact = document.createElement('div');
+impact.className='card';
+impact.innerHTML = `
+  <div class="q">10. ${impactQ}</div>
+  <div class="opts">
+    ${["전혀 지장없다","약간 힘들었다","많이 힘들었다","매우 많이 힘들었다"].map((lb,idx)=>`
+      <label><input type="radio" name="impact" value="${idx}" required/> ${lb}</label>
+    `).join('')}
+  </div>`;
+form.append(impact);
+
+function score(){
+  let s=0,c=0;
+  q.forEach((_,i)=>{
+    const sel = form.querySelector(`input[name="q${i}"]:checked`);
+    if(!sel) return; s+=Number(sel.value); c++;
+  });
+  if(c!==q.length) return null;
+  return s; // 0~27
+}
+
+document.getElementById('submitBtn').addEventListener('click', ()=>{
+  const sc = score();
+  const out = document.getElementById('out');
+  if(sc===null){ alert('모든 문항을 선택해주세요.'); return; }
+  let level="", guide="";
+  if(sc<=4){ level="최소"; guide="우울 증상이 경미한 수준입니다."; }
+  else if(sc<=9){ level="경도"; guide="우울 증상이 가벼운 편입니다. 지속 시 점검 권장."; }
+  else if(sc<=14){ level="중등도"; guide="중등도의 우울감. 전문가 상담을 권합니다."; }
+  else if(sc<=19){ level="중등도-중증"; guide="증상이 뚜렷합니다. 상담/진료를 권합니다."; }
+  else { level="중증"; guide="중증 범위일 수 있습니다. 빠른 상담/진료 권고."; }
+  out.style.display='block';
+  out.innerHTML = `<b>총점: ${sc}점 (0~27)</b><br/>구분: <b>${level}</b><br/><span class="muted">${guide}</span>`;
+});
+</script>
 </body>
 </html>
