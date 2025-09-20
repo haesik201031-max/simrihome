@@ -1,12 +1,96 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AUDIT-K 검사</title>
+<meta charset="UTF-8" />
+<title>AUDIT-K (알코올 사용)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  body{font-family:-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:#f6f8fb;color:#111}
+  .wrap{max-width:900px;margin:0 auto;padding:32px}
+  h1{font-size:28px;margin:8px 0 16px}
+  .card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:22px 20px;margin:14px 0;box-shadow:0 6px 16px rgba(17,24,39,.06)}
+  .q{margin:0 0 12px;font-weight:600}
+  .opts label{display:block;margin:8px 0;padding:8px 10px;border-radius:10px;border:1px solid #e5e7eb;cursor:pointer}
+  .btn{display:inline-block;background:#1668e3;color:#fff;border:0;border-radius:10px;padding:14px 18px;font-weight:700;cursor:pointer}
+  .result{background:#eef5ff;border:1px solid #cfe2ff;border-radius:12px;padding:16px 18px;margin-top:16px}
+  .muted{color:#667085}
+  .topnav{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  a.home{color:#1668e3;text-decoration:none;font-weight:600}
+</style>
 </head>
 <body>
-  <h1>AUDIT-K 검사 페이지 준비중입니다.</h1>
-  <p><a href="index.html">← 메인으로 돌아가기</a></p>
+<div class="wrap">
+  <div class="topnav">
+    <div class="muted">마음건강 자가검진</div>
+    <a class="home" href="index.html">← 메인으로</a>
+  </div>
+  <h1>AUDIT-K (알코올 사용)</h1>
+  <p class="muted">지난 1년 동안의 음주 습관에 대해 선택하세요.</p>
+
+  <form id="form"></form>
+
+  <div>
+    <button class="btn" id="submitBtn" type="button">결과 보기</button>
+    <div id="out" class="result" style="display:none"></div>
+  </div>
+</div>
+
+<script>
+const items = [
+  {t:"술은 얼마나 자주 마십니까?", o:[
+    "전혀 마시지 않는다(0)","한달에 1회 미만(1)","한달에 2~4회(2)","주 2~3회(3)","주 4회 이상(4)"]},
+  {t:"평소 술을 마시는 날, 몇 잔 정도 마십니까?", o:[
+    "1~2잔(0)","3~4잔(1)","5~6잔(2)","7~9잔(3)","10잔 이상(4)"]},
+  {t:"한 번에 소주 1병/맥주 4병 이상 마시는 음주는 얼마나 자주?", o:[
+    "전혀 없다(0)","한달 1회 미만(1)","한달 1회(2)","주 1회(3)","거의 매일(4)"]},
+  {t:"마시기 시작하면 멈출 수 없었던 때가 얼마나 자주?", o:[
+    "전혀 없다(0)","한달 1회 미만(1)","한달 1회(2)","주 1회(3)","거의 매일(4)"]},
+  {t:"음주 때문에 평소 할 수 있던 일을 실패한 적이 얼마나 자주?", o:[
+    "전혀 없다(0)","한달 1회 미만(1)","한달 1회(2)","주 1회(3)","거의 매일(4)"]},
+  {t:"다음날 아침 해장술이 필요했던 적이 얼마나 자주?", o:[
+    "전혀 없다(0)","한달 1회 미만(1)","한달 1회(2)","주 1회(3)","거의 매일(4)"]},
+  {t:"음주 후 죄책감/후회를 한 적이 얼마나 자주?", o:[
+    "전혀 없다(0)","한달 1회 미만(1)","한달 1회(2)","주 1회(3)","거의 매일(4)"]},
+  {t:"음주 때문에 전날 밤 일이 기억나지 않았던 적이 얼마나 자주?", o:[
+    "전혀 없다(0)","한달 1회 미만(1)","한달 1회(2)","주 1회(3)","거의 매일(4)"]},
+  {t:"음주로 인해 자신/타인이 다친 적이 있었습니까?", o:[
+    "없었다(0)","있었지만 지난 1년간은 없음(2)","지난 1년간 있었다(4)"]},
+  {t:"가족/친구/의사가 술 끊기를 권유한 적이 있었습니까?", o:[
+    "없었다(0)","있었지만 지난 1년간은 없음(2)","지난 1년간 있었다(4)"]}
+];
+
+const form = document.getElementById('form');
+items.forEach((it,i)=>{
+  const box = document.createElement('div'); box.className='card';
+  box.innerHTML = `<div class="q">${i+1}. ${it.t}</div>
+  <div class="opts">${it.o.map((op,j)=>`<label>
+    <input type="radio" name="q${i}" value="${Number(op.match(/\((\d)\)/)?.[1]||0)}" required/> ${op}
+  </label>`).join('')}</div>`;
+  form.append(box);
+});
+
+function score(){
+  let s=0,c=0;
+  items.forEach((_,i)=>{
+    const sel = form.querySelector(`input[name="q${i}"]:checked`);
+    if(!sel) return; s+=Number(sel.value); c++;
+  });
+  if(c!==items.length) return null;
+  return s; // 0~40
+}
+
+document.getElementById('submitBtn').addEventListener('click', ()=>{
+  const sc = score();
+  const out = document.getElementById('out');
+  if(sc===null){ alert('모든 문항을 선택해주세요.'); return; }
+  let level="", guide="";
+  if(sc<=7){ level="저위험"; guide="위험 음주 가능성 낮음."; }
+  else if(sc<=15){ level="위험"; guide="위험 음주 가능성이 있습니다. 절주가 필요합니다."; }
+  else { level="유해/의존 가능"; guide="문제 음주 가능성이 높습니다. 상담/진료를 권합니다."; }
+  out.style.display='block';
+  out.innerHTML = `<b>총점: ${sc}점 (0~40)</b><br/>구분: <b>${level}</b><br/><span class="muted">${guide}</span>`;
+});
+</script>
 </body>
 </html>
+
