@@ -1,184 +1,227 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>간단 관리자 | 페이지 구성 편집</title>
-  <style>
-    :root{--bg:#f6f8fb;--card:#fff;--line:#e5e7eb;--text:#111;--muted:#667085;--brand:#1668e3}
-    *{box-sizing:border-box} body{margin:0;font-family:-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text)}
-    .wrap{max-width:980px;margin:0 auto;padding:28px}
-    h1{font-size:22px;margin:4px 0 14px}
-    .muted{color:var(--muted)}
-    .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0;box-shadow:0 6px 16px rgba(17,24,39,.06)}
-    label{font-weight:600;display:block;margin:10px 0 6px}
-    input[type=text]{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px}
-    .row{display:flex;gap:10px;flex-wrap:wrap}
-    .col{flex:1 1 260px}
-    table{width:100%;border-collapse:collapse}
-    th,td{padding:8px;border-top:1px solid var(--line);vertical-align:top}
-    th{background:#fbfbfd;text-align:left}
-    .btn{display:inline-block;background:var(--brand);color:#fff;border:0;border-radius:10px;padding:10px 12px;font-weight:700;cursor:pointer}
-    .btn.gray{background:#eef2f7;color:#111;border:1px solid var(--line)}
-    .btn.red{background:#d83a3a}
-    .toolbar{display:flex;gap:8px;flex-wrap:wrap}
-    textarea{width:100%;min-height:180px;padding:10px;border:1px solid var(--line);border-radius:10px;font-family:ui-monospace,Menlo,Consolas,monospace}
-    .help{font-size:13px;color:var(--muted)}
-    .topnav{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-    a.home{color:var(--brand);text-decoration:none;font-weight:700}
-    .pill{display:inline-block;padding:4px 8px;border-radius:999px;background:#eef5ff;border:1px solid #cfe2ff;color:#0b61d6;font-size:12px}
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ADMIN | simrihome</title>
+<style>
+  :root{
+    --bg:#f6f8fb; --panel:#fff; --muted:#667085; --border:#e5e7eb; --brand:#2563eb;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:#111}
+  .wrap{max-width:1100px;margin:0 auto;padding:28px}
+  header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+  header h1{margin:0;font-size:24px;color:#0f172a}
+  header a{color:var(--brand);text-decoration:none}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin:12px 0;box-shadow:0 6px 16px rgba(17,24,39,.06)}
+  .row{display:flex;gap:12px;flex-wrap:wrap}
+  .col{flex:1 1 240px}
+  label{display:block;margin:8px 0 6px;font-weight:600}
+  input[type=text], textarea, select{
+    width:100%;padding:12px;border-radius:10px;border:1px solid var(--border);background:#fff
+  }
+  textarea{min-height:120px}
+  .muted{color:var(--muted)}
+  table{width:100%;border-collapse:collapse}
+  th, td{border-bottom:1px solid var(--border);padding:10px 8px;text-align:left;vertical-align:top}
+  th{background:#f8fafc;font-weight:700}
+  .btn{display:inline-block;background:var(--brand);color:#fff;border:0;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer}
+  .btn.secondary{background:#eef2ff;color:#111;border:1px solid var(--border)}
+  .btn.icon{padding:6px 10px}
+  .right{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+  .help{font-size:14px}
+  .jsonbox{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+  .danger{color:#b91c1c}
+  code{background:#f3f4f6;padding:2px 6px;border-radius:6px}
+</style>
 </head>
 <body>
 <div class="wrap">
-  <div class="topnav">
-    <div><span class="pill">ADMIN</span></div>
-    <a class="home" href="../index.html">← 사이트로 돌아가기</a>
-  </div>
-
-  <h1>페이지 구성 편집(간단 모드)</h1>
-  <p class="muted">아래에서 메인 히어로 문구와 카드 목록을 수정한 뒤, <b>JSON 생성</b> → <b>복사/다운로드</b>하여
-    <code>admin/content/pages.json</code>에 붙여넣어 커밋하세요.</p>
+  <header>
+    <h1>ADMIN <span class="muted">/ simrihome</span></h1>
+    <a href="../index.html">← 메인으로</a>
+  </header>
 
   <!-- 히어로 -->
   <div class="card">
-    <h3>히어로 영역</h3>
+    <h2 style="margin:0 0 8px">히어로 영역</h2>
     <div class="row">
       <div class="col">
-        <label for="heroHeading">제목</label>
-        <input id="heroHeading" type="text" placeholder="예) 마음건강 자가검진" />
+        <label for="heroTitle">제목</label>
+        <input id="heroTitle" type="text" placeholder="예) 마음건강 자가검진" />
       </div>
       <div class="col">
-        <label for="heroSub">보조문구</label>
-        <input id="heroSub" type="text" placeholder="예) 검사 유형을 선택하세요" />
+        <label for="heroSubtitle">보조문구</label>
+        <input id="heroSubtitle" type="text" placeholder="예) 검사 종류를 선택하세요 (중복 선택 가능 · 결과는 화면에 표시)" />
       </div>
     </div>
+    <div class="help muted">※ 메인 상단 큰 제목/보조문구</div>
   </div>
 
-  <!-- 카드 목록 -->
+  <!-- 카드 리스트 -->
   <div class="card">
     <div style="display:flex;justify-content:space-between;align-items:center">
-      <h3 style="margin:0">카드 목록</h3>
-      <button id="addCard" class="btn">+ 카드 추가</button>
+      <h2 style="margin:0">카드(버튼) 목록</h2>
+      <button id="addCard" class="btn secondary">+ 카드 추가</button>
     </div>
-    <div class="help">제목/설명/링크(href)를 편집하세요. 순서는 위/아래 버튼으로 조정합니다.</div>
-    <table id="cardsTable">
+    <table id="cardTable">
       <thead>
-        <tr><th style="width:26%">제목</th><th>설명</th><th style="width:26%">링크</th><th style="width:170px">동작</th></tr>
+        <tr>
+          <th style="width:22%">제목</th>
+          <th>설명</th>
+          <th style="width:22%">링크(파일 경로)</th>
+          <th style="width:12%">버튼 텍스트</th>
+          <th style="width:120px">정렬/삭제</th>
+        </tr>
       </thead>
       <tbody></tbody>
     </table>
+    <div class="help muted">링크 예: <code>/test-pss.html</code>, <code>/counsel.html</code>, <code>/result.html</code></div>
   </div>
 
-  <!-- 생성/내보내기 -->
+  <!-- 출력/액션 -->
   <div class="card">
-    <div class="toolbar">
-      <button id="buildBtn" class="btn">JSON 생성</button>
-      <button id="copyBtn" class="btn gray">복사</button>
-      <button id="downloadBtn" class="btn gray">다운로드</button>
-      <span class="help">생성된 JSON을 <code>admin/content/pages.json</code>에 붙여넣어 커밋</span>
+    <div class="right" style="margin-bottom:10px">
+      <button id="makeJson" class="btn">JSON 생성</button>
+      <button id="copyJson" class="btn secondary">복사</button>
+      <button id="downloadJson" class="btn secondary">다운로드</button>
+      <a class="btn secondary" href="https://github.com/haesik201031-max/simrihome/blob/main/admin/content/pages.json" target="_blank">GitHub에서 열기</a>
     </div>
-    <label style="margin-top:12px">생성된 JSON</label>
-    <textarea id="out" spellcheck="false" placeholder="{ ... }"></textarea>
+    <textarea id="jsonOut" class="jsonbox" placeholder="여기에 JSON이 생성됩니다. (복사 후 admin/content/pages.json에 붙여넣고 커밋)"></textarea>
+    <p class="help">
+      ① 위에서 **JSON 생성** → ② **복사** →  
+      ③ GitHub에서 <code>admin/content/pages.json</code> 파일을 **편집** → **모두 지우고 붙여넣기** → **Commit**  
+      (<span class="muted">또는 다운로드한 파일을 업로드로 교체</span>)
+    </p>
+  </div>
+
+  <!-- 안내 -->
+  <div class="card">
+    <details>
+      <summary><b>적용이 안 보일 때?</b></summary>
+      <ol class="help">
+        <li>GitHub에서 Commit이 끝난 뒤 10~30초 정도 기다립니다.</li>
+        <li>브라우저에서 메인 페이지를 <b>Ctrl+F5</b>로 강력 새로고침합니다.</li>
+        <li>여전히 안 보이면 캐시/쿠키 문제일 수 있으니 시크릿창으로 확인합니다.</li>
+      </ol>
+    </details>
   </div>
 </div>
 
 <script>
-const cardsTbody = document.querySelector('#cardsTable tbody');
-const out = document.getElementById('out');
-const heroHeading = document.getElementById('heroHeading');
-const heroSub = document.getElementById('heroSub');
+const T_BODY = document.querySelector('#cardTable tbody');
+const heroTitle = document.getElementById('heroTitle');
+const heroSubtitle = document.getElementById('heroSubtitle');
+const jsonOut = document.getElementById('jsonOut');
 
-let data = null;
-
-// JSON 로드
-async function load() {
-  try {
-    const res = await fetch('content/pages.json?_=' + Date.now());
-    data = await res.json();
-    const page = (data.pages && data.pages[0]) || {};
-    const hero = page.sections?.find(s => s.type === 'hero') || {heading:'', sub:''};
-    const grid = page.sections?.find(s => s.type === 'grid') || {cards:[]};
-
-    heroHeading.value = hero.heading || '';
-    heroSub.value = hero.sub || '';
-
-    // 표 채우기
-    cardsTbody.innerHTML = '';
-    (grid.cards || []).forEach(addRow);
-  } catch (e) {
-    alert('pages.json을 불러오지 못했습니다. 경로를 확인하세요.');
-    console.error(e);
-  }
-}
-
-// 행 추가
-function addRow(card = {title:'', desc:'', href:''}) {
-  const tr = document.createElement('tr');
-  tr.innerHTML = `
-    <td><input type="text" class="i-title" value="${escapeHtml(card.title)}" /></td>
-    <td><input type="text" class="i-desc"  value="${escapeHtml(card.desc)}"  /></td>
-    <td><input type="text" class="i-href"  value="${escapeHtml(card.href)}"  /></td>
-    <td>
-      <div class="toolbar">
-        <button class="btn gray btn-up">↑</button>
-        <button class="btn gray btn-down">↓</button>
-        <button class="btn red btn-del">삭제</button>
-      </div>
-    </td>`;
-  // 이벤트
-  tr.querySelector('.btn-del').onclick = () => tr.remove();
-  tr.querySelector('.btn-up').onclick = () => tr.previousElementSibling && cardsTbody.insertBefore(tr, tr.previousElementSibling);
-  tr.querySelector('.btn-down').onclick = () => tr.nextElementSibling && cardsTbody.insertBefore(tr.nextElementSibling, tr);
-  cardsTbody.appendChild(tr);
-}
-
-function escapeHtml(s=''){return s.replace(/[&<>"']/g,m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]))}
-
-// JSON 생성
-function buildJson() {
-  const rows = [...cardsTbody.querySelectorAll('tr')];
-  const cards = rows.map(tr => ({
-    title: tr.querySelector('.i-title').value.trim(),
-    desc:  tr.querySelector('.i-desc').value.trim(),
-    href:  tr.querySelector('.i-href').value.trim()
-  }));
-  const obj = {
-    pages: [{
-      id: 'home',
-      title: '메인',
-      sections: [
-        { type:'hero', heading: heroHeading.value.trim(), sub: heroSub.value.trim(), bg: '' },
-        { type:'grid', cards }
-      ]
-    }]
-  };
-  out.value = JSON.stringify(obj, null, 2);
-  return obj;
-}
-
-// 다운로드
-function download(filename, text){
-  const a=document.createElement('a');
-  a.href='data:application/json;charset=utf-8,'+encodeURIComponent(text);
-  a.download=filename; a.click();
-}
-
-// 버튼들
-document.getElementById('addCard').onclick = () => addRow();
-document.getElementById('buildBtn').onclick = () => buildJson();
-document.getElementById('copyBtn').onclick = async () => {
-  if(!out.value.trim()) buildJson();
-  await navigator.clipboard.writeText(out.value);
-  alert('복사되었습니다. admin/content/pages.json에 붙여넣고 커밋하세요.');
-};
-document.getElementById('downloadBtn').onclick = () => {
-  if(!out.value.trim()) buildJson();
-  download('pages.json', out.value);
+let data = {
+  hero: { title: '마음건강 자가검진', subtitle: '검사 종류를 선택하세요 (중복 선택 가능 · 결과는 화면에 표시)' },
+  cards: [
+    { title:'스트레스평가 (PSS)', desc:'최근 한 달의 인지된 스트레스 수준', href:'/test-pss.html', cta:'검사 시작' },
+    { title:'우울 (PHQ-9)', desc:'지난 2주간 우울 증상 빈도와 심각도', href:'/test-phq9.html', cta:'검사 시작' },
+    { title:'알코올중독 (AUDIT-K)', desc:'음주 패턴 / 위험 음주 선별', href:'/test-auditk.html', cta:'검사 시작' },
+    { title:'정신증 (CAPE-15)', desc:'양성/음성/우울 관련 경험 빈도 및 고통', href:'/test-cape15.html', cta:'검사 시작' },
+    { title:'사건충격척도 (IES-R)', desc:'외상 후 스트레스 반응 정도', href:'/test-iesr.html', cta:'검사 시작' },
+    { title:'불면 (ISI-K)', desc:'수면 곤란 심각도 및 기능 손상', href:'/test-isik.html', cta:'검사 시작' },
+    { title:'온라인 상담', desc:'간단 정보 입력 후 상담 글쓰기 페이지로 이동', href:'/counsel.html', cta:'상담하기' },
+    { title:'결과 보기(테스트)', desc:'검사 결과 화면 샘플(내부 접수 전달 시 표시)', href:'/result.html', cta:'결과 페이지' }
+  ]
 };
 
-// 시작
-load();
+// pages.json 불러오기 (있으면 덮어씀)
+(async function loadJSON(){
+  try{
+    const res = await fetch('./content/pages.json', {cache:'no-store'});
+    if(res.ok){
+      const j = await res.json();
+      if(j && j.hero && j.cards) data = j;
+    }
+  }catch(e){/* 처음엔 파일이 없을 수 있음 - 무시 */}
+  fillForm();
+})();
+
+function fillForm(){
+  heroTitle.value = data.hero?.title || '';
+  heroSubtitle.value = data.hero?.subtitle || '';
+  renderTable();
+}
+
+function renderTable(){
+  T_BODY.innerHTML = '';
+  data.cards.forEach((c, idx)=>{
+    const tr = document.createElement('tr');
+
+    const td1 = document.createElement('td');
+    td1.innerHTML = `<input type="text" value="${esc(c.title)}" data-k="title" data-i="${idx}" />`;
+    const td2 = document.createElement('td');
+    td2.innerHTML = `<textarea rows="2" data-k="desc" data-i="${idx}">${esc(c.desc||'')}</textarea>`;
+    const td3 = document.createElement('td');
+    td3.innerHTML = `<input type="text" value="${esc(c.href)}" data-k="href" data-i="${idx}" placeholder="/test-pss.html" />`;
+    const td4 = document.createElement('td');
+    td4.innerHTML = `<input type="text" value="${esc(c.cta||'검사 시작')}" data-k="cta" data-i="${idx}" />`;
+    const td5 = document.createElement('td');
+    td5.innerHTML = `
+      <button class="btn icon" onclick="moveRow(${idx}, -1)">↑</button>
+      <button class="btn icon" onclick="moveRow(${idx}, 1)">↓</button>
+      <button class="btn icon danger" style="background:#fee2e2;color:#b91c1c" onclick="delRow(${idx})">삭제</button>
+    `;
+
+    tr.append(td1,td2,td3,td4,td5);
+    T_BODY.appendChild(tr);
+  });
+
+  // 바인딩
+  T_BODY.querySelectorAll('input,textarea').forEach(el=>{
+    el.addEventListener('input', (e)=>{
+      const i = +e.target.dataset.i;
+      const k = e.target.dataset.k;
+      data.cards[i][k] = e.target.value;
+    });
+  });
+}
+
+function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+document.getElementById('addCard').addEventListener('click', ()=>{
+  data.cards.push({title:'', desc:'', href:'/', cta:'열기'});
+  renderTable();
+});
+
+window.moveRow = function(i, dir){
+  const j = i+dir;
+  if(j<0 || j>=data.cards.length) return;
+  const t = data.cards[i]; data.cards[i]=data.cards[j]; data.cards[j]=t;
+  renderTable();
+};
+window.delRow = function(i){
+  if(!confirm('이 카드를 삭제할까요?')) return;
+  data.cards.splice(i,1);
+  renderTable();
+};
+
+document.getElementById('makeJson').addEventListener('click', ()=>{
+  data.hero = { title: heroTitle.value.trim(), subtitle: heroSubtitle.value.trim() };
+  const clean = JSON.stringify(data, null, 2);
+  jsonOut.value = clean;
+  jsonOut.scrollIntoView({behavior:'smooth'});
+});
+
+document.getElementById('copyJson').addEventListener('click', async ()=>{
+  if(!jsonOut.value.trim()) return alert('먼저 [JSON 생성]을 눌러주세요.');
+  await navigator.clipboard.writeText(jsonOut.value);
+  alert('복사되었습니다. GitHub의 admin/content/pages.json에 붙여넣고 Commit 하세요.');
+});
+
+document.getElementById('downloadJson').addEventListener('click', ()=>{
+  if(!jsonOut.value.trim()) return alert('먼저 [JSON 생성]을 눌러주세요.');
+  const blob = new Blob([jsonOut.value], {type:'application/json;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'pages.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
 </script>
 </body>
 </html>
