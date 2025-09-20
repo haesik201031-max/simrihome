@@ -1,12 +1,50 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>검사 결과</title>
+<meta charset="UTF-8" />
+<title>결과 보기 (테스트)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  body{font-family:-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:#f6f8fb;color:#111}
+  .wrap{max-width:900px;margin:0 auto;padding:32px}
+  .topnav{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  a.home{color:#1668e3;text-decoration:none;font-weight:600}
+  h1{font-size:28px;margin:8px 0 16px}
+  .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+  .card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:18px 20px;box-shadow:0 6px 16px rgba(17,24,39,.06)}
+  .muted{color:#667085}
+  .btn{display:inline-block;background:#1668e3;color:#fff;border:0;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer}
+</style>
 </head>
 <body>
-  <h1>결과 페이지 준비중입니다.</h1>
-  <p><a href="index.html">← 메인으로 돌아가기</a></p>
+<div class="wrap">
+  <div class="topnav">
+    <div class="muted">마음건강 자가검진</div>
+    <a class="home" href="index.html">← 메인으로</a>
+  </div>
+
+  <h1>결과 보기 (테스트)</h1>
+  <p class="muted">실제 검사는 각 설문 페이지 하단에서 즉시 점수와 안내가 표시됩니다. 아래는 샘플입니다.</p>
+
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+const samples = [
+  {t:"PSS", s:"총점 19점(중간)", g:"보통 수준의 스트레스를 경험할 수 있습니다."},
+  {t:"PHQ-9", s:"총점 12점(중등도)", g:"전문가 상담을 권합니다."},
+  {t:"AUDIT-K", s:"총점 18점(유해/의존 가능)", g:"절주 및 전문 상담 권고."},
+  {t:"CAPE-15", s:"빈도 10 / 고통 8", g:"반복되거나 고통이 크면 상담 권장."},
+  {t:"IES-R", s:"총점 46점(높음)", g:"외상 후 스트레스 반응이 높을 수 있습니다."},
+  {t:"ISI-K", s:"총점 16점(중등도)", g:"수면위생 점검 및 상담 고려."}
+];
+const grid = document.getElementById('grid');
+samples.forEach(x=>{
+  const el = document.createElement('div');
+  el.className='card';
+  el.innerHTML = `<b>${x.t}</b><br/>${x.s}<br/><span class="muted">${x.g}</span>`;
+  grid.append(el);
+});
+</script>
 </body>
 </html>
