@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>마음건강 자가검진</title>
+<style>
+  :root{--accent:#2b6cb0;--bg:#f6f9fc;--card:#fff;--line:#e6eef5;--muted:#5f6c76}
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:#222;font-family:"Noto Sans KR",sans-serif}
+  header{background:#2b6cb0;color:#fff;padding:28px 18px} header h1{margin:0;font-size:1.6rem;text-align:center}
+  .wrap{max-width:1120px;margin:28px auto;padding:0 16px}
+  .panel{background:#eaf5ff;border:1px solid #d9ebff;border-radius:14px;padding:22px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px}
+  @media(max-width:900px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;cursor:pointer;
+        box-shadow:0 2px 6px rgba(0,0,0,.04);display:flex;align-items:center;gap:12px}
+  .card:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(0,0,0,.08)}
+  .check{width:28px;height:28px;border-radius:50%;border:2px solid #cfe3ff;display:inline-flex;align-items:center;justify-content:center}
+  .title{font-weight:700}
+  .sub{color:var(--muted);font-size:.92rem}
+  .center{text-align:center}
+  .note{color:#2b6cb0;font-weight:700;font-size:.9rem}
+  footer{color:#666;text-align:center;margin:24px 0}
+</style>
+</head>
+<body>
+<header><h1>마음건강 자가검진</h1></header>
+
+<div class="wrap">
+  <div class="panel">
+    <div class="center" style="margin-bottom:8px;">
+      <div style="font-weight:800;font-size:1.15rem">검사종류</div>
+      <div class="note">중복체크 가능</div>
+    </div>
+
+    <div class="grid">
+      <div class="card" onclick="location.href='test-pss.html'">
+        <div class="check">✓</div>
+        <div>
+          <div class="title">스트레스평가 (PSS)</div>
+          <div class="sub">최근 한 달의 인지된 스트레스 수준</div>
+        </div>
+      </div>
+      <div class="card" onclick="location.href='test-phq9.html'">
+        <div class="check">✓</div>
+        <div>
+          <div class="title">우울 (PHQ-9)</div>
+          <div class="sub">우울 증상 빈도와 심각도</div>
+        </div>
+      </div>
+      <div class="card" onclick="location.href='test-auditk.html'">
+        <div class="check">✓</div>
+        <div>
+          <div class="title">알코올중독 (AUDIT-K)</div>
+          <div class="sub">음주 패턴/위험도 선별</div>
+        </div>
+      </div>
+      <div class="card" onclick="location.href='test-cape15.html'">
+        <div class="check">✓</div>
+        <div>
+          <div class="title">정신증 경향 (CAPE-15)</div>
+          <div class="sub">양성/음성/우울 관련 경험 빈도</div>
+        </div>
+      </div>
+      <div class="card" onclick="location.href='test-iesr.html'">
+        <div class="check">✓</div>
+        <div>
+          <div class="title">사건충격척도 (IES-R)</div>
+          <div class="sub">외상 후 스트레스 반응 정도</div>
+        </div>
+      </div>
+      <div class="card" onclick="location.href='test-isik.html'">
+        <div class="check">✓</div>
+        <div>
+          <div class="title">불면 (ISI-K)</div>
+          <div class="sub">수면곤란 심각도</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer>© <span id="y"></span> 마음건강 자가검진</footer>
+<script>document.getElementById('y').textContent=new Date().getFullYear()</script>
+</body>
+</html>

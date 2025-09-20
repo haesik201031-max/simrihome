@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AUDIT-K 자가검진</title>
+<style>
+body{font-family:"Noto Sans KR",sans-serif;background:#f6f9fc;margin:0}
+header{padding:20px 16px;background:#2b6cb0;color:#fff}
+.wrap{max-width:900px;margin:24px auto;padding:0 16px}
+.card{background:#fff;border:1px solid #e6eef5;border-radius:12px;padding:18px;margin-bottom:16px}
+h1{margin:0;font-size:1.2rem}
+h2{margin:0 0 12px}
+.q{padding:14px 0;border-bottom:1px solid #f0f4f8}
+.q:last-child{border-bottom:0}
+label{display:block;margin:8px 0}
+.row{display:grid;grid-template-columns:160px 1fr;gap:16px}
+input[type=text],input[type=number],select{width:100%;padding:10px;border:1px solid #d9e2ec;border-radius:8px}
+.btn{background:#2b6cb0;color:#fff;border:none;border-radius:10px;padding:12px 16px;font-weight:600;cursor:pointer}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+small{color:#5f6c76}
+.badge{display:inline-block;border-radius:999px;background:#eef6ff;padding:4px 10px;font-size:.8rem;color:#2b6cb0;margin-left:8px}
+a{color:#2b6cb0}
+</style>
+</head>
+<body>
+<header><h1>알코올중독(AUDIT-K) 자가검진 <span class="badge">간편 정보 → 즉시 결과</span></h1></header>
+<div class="wrap">
+  <div class="card">
+    <h2>간편 정보</h2>
+    <div class="row">
+      <div><label for="nick">닉네임</label></div>
+      <div><input id="nick" type="text" placeholder="예: 바다"></div>
+      <div><label>성별</label></div>
+      <div>
+        <label><input type="radio" name="sex" value="남"> 남</label>
+        <label><input type="radio" name="sex" value="여"> 여</label>
+      </div>
+      <div><label for="age">나이</label></div>
+      <div><input id="age" type="number" min="10" max="100" placeholder="예: 28"></div>
+      <div><label for="region">거주지</label></div>
+      <div>
+        <select id="region">
+          <option value="">지역 선택</option>
+          <option>부산</option><option>서울</option><option>경기</option><option>기타</option>
+        </select>
+      </div>
+    </div>
+    <small>※ 별도 회원가입 없이 진행합니다. 심층상담은 다음 단계에서 동의 후 개인정보를 수집합니다. · <a href="index.html">검사 선택으로 돌아가기</a></small>
+  </div>
+
+  <div class="card" id="form">
+    <h2>지난 1년 동안의 음주에 대해 응답해 주세요.</h2>
+    <div class="q"><strong>1. 술은 얼마나 자주 마십니까?</strong>
+      <label><input type="radio" name="q1" data-score="0"> 전혀 마시지 않음</label>
+      <label><input type="radio" name="q1" data-score="1"> 한 달에 한 번 미만</label>
+      <label><input type="radio" name="q1" data-score="2"> 한 달에 2~4회</label>
+      <label><input type="radio" name="q1" data-score="3"> 일주일에 2~3회</label>
+      <label><input type="radio" name="q1" data-score="4"> 일주일에 4회 이상</label>
+    </div>
+    <div class="q"><strong>2. 평소 마시는 양은 몇 잔 정도입니까?</strong>
+      <label><input type="radio" name="q2" data-score="0"> 1~2잔</label>
+      <label><input type="radio" name="q2" data-score="1"> 3~4잔</label>
+      <label><input type="radio" name="q2" data-score="2"> 5~6잔</label>
+      <label><input type="radio" name="q2" data-score="3"> 7~9잔</label>
+      <label><input type="radio" name="q2" data-score="4"> 10잔 이상</label>
+    </div>
+    <div class="q"><strong>3. 한 번에 소주 1병/맥주 4캔 이상 마시는 빈도는?</strong>
+      <label><input type="radio" name="q3" data-score="0"> 전혀 없음</label>
+      <label><input type="radio" name="q3" data-score="1"> 한 달에 1번 미만</label>
+      <label><input type="radio" name="q3" data-score="2"> 한 달에 1번</label>
+      <label><input type="radio" name="q3" data-score="3"> 일주일에 1번</label>
+      <label><input type="radio" name="q3" data-score="4"> 거의 매일</label>
+    </div>
+    <div class="q"><strong>4. 한 번 시작하면 멈출 수 없었던 때가 얼마나 자주?</strong>
+      <label><input type="radio" name="q4" data-score="0"> 전혀 없다</label>
+      <label><input type="radio" name="q4" data-score="1"> 한 달에 1번 미만</label>
+      <label><input type="radio" name="q4" data-score="2"> 한 달에 1번</label>
+      <label><input type="radio" name="q4" data-score="3"> 일주일에 1번</label>
+      <label><input type="radio" name="q4" data-score="4"> 거의 매일</label>
+    </div>
+    <div class="q"><strong>5. 음주 때문에 평소 할 일을 못한 적이 얼마나 자주?</strong>
+      <label><input type="radio" name="q5" data-score="0"> 전혀 없다</label>
+      <label><input type="radio" name="q5" data-score="1"> 한 달에 1번 미만</label>
+      <label><input type="radio" name="q5" data-score="2"> 한 달에 1번</label>
+      <label><input type="radio" name="q5" data-score="3"> 일주일에 1번</label>
+      <label><input type="radio" name="q5" data-score="4"> 거의 매일</label>
+    </div>
+    <div class="q"><strong>6. 과음 후 다음 날 아침 해장술이 얼마나 자주?</strong>
+      <label><input type="radio" name="q6" data-score="0"> 전혀 없다</label>
+      <label><input type="radio" name="q6" data-score="1"> 한 달에 1번 미만</label>
+      <label><input type="radio" name="q6" data-score="2"> 한 달에 1번</label>
+      <label><input type="radio" name="q6" data-score="3"> 일주일에 1번</label>
+      <label><input type="radio" name="q6" data-score="4"> 거의 매일</label>
+    </div>
+    <div class="q"><strong>7. 음주로 인해 죄책감이나 후회가 얼마나 자주?</strong>
+      <label><input type="radio" name="q7" data-score="0"> 전혀 없다</label>
+      <label><input type="radio" name="q7" data-score="1"> 한 달에 1번 미만</label>
+      <label><input type="radio" name="q7" data-score="2"> 한 달에 1번</label>
+      <label><input type="radio" name="q7" data-score="3"> 일주일에 1번</label>
+      <label><input type="radio" name="q7" data-score="4"> 거의 매일</label>
+    </div>
+    <div class="q"><strong>8. 전날 밤의 일을 기억 못한 적이 얼마나 자주?</strong>
+      <label><input type="radio" name="q8" data-score="0"> 전혀 없다</label>
+      <label><input type="radio" name="q8" data-score="1"> 한 달에 1번 미만</label>
+      <label><input type="radio" name="q8" data-score="2"> 한 달에 1번</label>
+      <label><input type="radio" name="q8" data-score="3"> 일주일에 1번</label>
+      <label><input type="radio" name="q8" data-score="4"> 거의 매일</label>
+    </div>
+    <div class="q"><strong>9. 음주로 다치거나 다치게 한 적이 있습니까?</strong>
+      <label><input type="radio" name="q9" data-score="0"> 아니다</label>
+      <label><input type="radio" name="q9" data-score="2"> 있다</label>
+    </div>
+    <div class="q"><strong>10. 가족/지인/의료진이 음주 줄이라 권고한 적?</strong>
+      <label><input type="radio" name="q10" data-score="0"> 없다</label>
+      <label><input type="radio" name="q10" data-score="2"> 있다</label>
+    </div>
+    <button class="btn" id="submitBtn" disabled>점수 계산 및 결과 보기</button>
+  </div>
+</div>
+<script>
+const required = ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10'];
+function ready(){ 
+  const check = ()=> {
+    const done = required.every(n=>document.querySelector(`input[name=${n}]:checked`));
+    document.getElementById('submitBtn').disabled = !done;
+  };
+  document.getElementById('form').addEventListener('change', check);
+  check();
+  document.getElementById('submitBtn').addEventListener('click', ()=>{
+    let score=0;
+    required.forEach(n=>{
+      const el=document.querySelector(`input[name=${n}]:checked`);
+      score += parseInt(el.dataset.score,10);
+    });
+    let cat='저위험';
+    if(score>=8 && score<=15) cat='위험음주';
+    else if(score>=16 && score<=19) cat='유해음주';
+    else if(score>=20) cat='알코올사용장애 의심';
+    const params = new URLSearchParams({
+      nick: document.getElementById('nick').value || '',
+      sex: (document.querySelector('input[name=sex]:checked')||{}).value || '',
+      age: document.getElementById('age').value || '',
+      region: document.getElementById('region').value || '',
+      tool: 'AUDIT-K',
+      score: String(score),
+      category: cat
+    });
+    location.href = `result.html?${params.toString()}`;
+  });
+}
+document.addEventListener('DOMContentLoaded', ready);
+</script>
+</body>
+</html>
