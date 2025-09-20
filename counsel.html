@@ -96,10 +96,7 @@
 
       <div style="margin-top:8px">
         <div class="muted" style="margin-bottom:6px">간단 체크(선택)</div>
-        <div class="chkrow">
-          ${["수면문제가 있다","불안/걱정이 많다","우울감이 있다","음주 문제가 우려된다","최근 충격 사건을 겪었다","약물/치료 중이다","자가검진 결과가 높게 나왔다","기타"].map((t,i)=>`
-            <label><input type="checkbox" name="flag" value="${t}"/> ${t}</label>`).join('')}
-        </div>
+        <div class="chkrow" id="chkWrap"></div>
       </div>
     </div>
 
@@ -115,21 +112,26 @@
 <script>
 const f = document.getElementById('f');
 const out = document.getElementById('out');
-function getVal(id){return document.getElementById(id).value.trim();}
+const chkWrap = document.getElementById('chkWrap');
+["수면문제가 있다","불안/걱정이 많다","우울감이 있다","음주 문제가 우려된다","최근 충격 사건을 겪었다","약물/치료 중이다","자가검진 결과가 높게 나왔다","기타"]
+  .forEach(t=>{
+    const label=document.createElement('label');
+    label.innerHTML = '<input type="checkbox" name="flag" value="'+t+'"> '+t;
+    chkWrap.appendChild(label);
+  });
+
+function v(id){return document.getElementById(id).value.trim();}
 f.addEventListener('submit', (e)=>{
   e.preventDefault();
   if(!document.getElementById('agree').checked){ alert('개인정보 수집·이용에 동의해주세요.'); return; }
-  if(!getVal('name') || !getVal('title')){ alert('필수항목(이름/제목)을 입력해주세요.'); return; }
+  if(!v('name') || !v('title')){ alert('필수항목(이름/제목)을 입력해주세요.'); return; }
   const sex = (new FormData(f).get('sex')||'');
   const flags = [...document.querySelectorAll('input[name="flag"]:checked')].map(x=>x.value);
   const payload = {
     time: new Date().toLocaleString(),
-    name: getVal('name'),
-    sex, age:getVal('age'), region:getVal('region'),
-    phone:getVal('phone'), email:getVal('email'),
-    title:getVal('title'),
-    content:getVal('content'),
-    checks: flags
+    name: v('name'), sex, age:v('age'), region:v('region'),
+    phone:v('phone'), email:v('email'),
+    title:v('title'), content:v('content'), checks: flags
   };
   out.style.display='block';
   out.textContent =
@@ -154,7 +156,7 @@ document.getElementById('copyBtn').addEventListener('click', async ()=>{
 document.getElementById('mailBtn').addEventListener('click', ()=>{
   if(out.style.display!=='block'){ alert('먼저 미리보기를 생성하세요.'); return; }
   const body = encodeURIComponent(out.textContent);
-  location.href = `mailto:?subject=${encodeURIComponent('[온라인상담] ' + (getVal('title')||''))}&body=${body}`;
+  location.href = `mailto:?subject=${encodeURIComponent('[온라인상담] ' + (v('title')||''))}&body=${body}`;
 });
 </script>
 </body>
