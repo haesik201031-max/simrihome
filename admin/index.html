@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>간단 관리자 | 페이지 구성 편집</title>
+  <style>
+    :root{--bg:#f6f8fb;--card:#fff;--line:#e5e7eb;--text:#111;--muted:#667085;--brand:#1668e3}
+    *{box-sizing:border-box} body{margin:0;font-family:-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text)}
+    .wrap{max-width:980px;margin:0 auto;padding:28px}
+    h1{font-size:22px;margin:4px 0 14px}
+    .muted{color:var(--muted)}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0;box-shadow:0 6px 16px rgba(17,24,39,.06)}
+    label{font-weight:600;display:block;margin:10px 0 6px}
+    input[type=text]{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px}
+    .row{display:flex;gap:10px;flex-wrap:wrap}
+    .col{flex:1 1 260px}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:8px;border-top:1px solid var(--line);vertical-align:top}
+    th{background:#fbfbfd;text-align:left}
+    .btn{display:inline-block;background:var(--brand);color:#fff;border:0;border-radius:10px;padding:10px 12px;font-weight:700;cursor:pointer}
+    .btn.gray{background:#eef2f7;color:#111;border:1px solid var(--line)}
+    .btn.red{background:#d83a3a}
+    .toolbar{display:flex;gap:8px;flex-wrap:wrap}
+    textarea{width:100%;min-height:180px;padding:10px;border:1px solid var(--line);border-radius:10px;font-family:ui-monospace,Menlo,Consolas,monospace}
+    .help{font-size:13px;color:var(--muted)}
+    .topnav{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+    a.home{color:var(--brand);text-decoration:none;font-weight:700}
+    .pill{display:inline-block;padding:4px 8px;border-radius:999px;background:#eef5ff;border:1px solid #cfe2ff;color:#0b61d6;font-size:12px}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topnav">
+    <div><span class="pill">ADMIN</span></div>
+    <a class="home" href="../index.html">← 사이트로 돌아가기</a>
+  </div>
+
+  <h1>페이지 구성 편집(간단 모드)</h1>
+  <p class="muted">아래에서 메인 히어로 문구와 카드 목록을 수정한 뒤, <b>JSON 생성</b> → <b>복사/다운로드</b>하여
+    <code>admin/content/pages.json</code>에 붙여넣어 커밋하세요.</p>
+
+  <!-- 히어로 -->
+  <div class="card">
+    <h3>히어로 영역</h3>
+    <div class="row">
+      <div class="col">
+        <label for="heroHeading">제목</label>
+        <input id="heroHeading" type="text" placeholder="예) 마음건강 자가검진" />
+      </div>
+      <div class="col">
+        <label for="heroSub">보조문구</label>
+        <input id="heroSub" type="text" placeholder="예) 검사 유형을 선택하세요" />
+      </div>
+    </div>
+  </div>
+
+  <!-- 카드 목록 -->
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3 style="margin:0">카드 목록</h3>
+      <button id="addCard" class="btn">+ 카드 추가</button>
+    </div>
+    <div class="help">제목/설명/링크(href)를 편집하세요. 순서는 위/아래 버튼으로 조정합니다.</div>
+    <table id="cardsTable">
+      <thead>
+        <tr><th style="width:26%">제목</th><th>설명</th><th style="width:26%">링크</th><th style="width:170px">동작</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- 생성/내보내기 -->
+  <div class="card">
+    <div class="toolbar">
+      <button id="buildBtn" class="btn">JSON 생성</button>
+      <button id="copyBtn" class="btn gray">복사</button>
+      <button id="downloadBtn" class="btn gray">다운로드</button>
+      <span class="help">생성된 JSON을 <code>admin/content/pages.json</code>에 붙여넣어 커밋</span>
+    </div>
+    <label style="margin-top:12px">생성된 JSON</label>
+    <textarea id="out" spellcheck="false" placeholder="{ ... }"></textarea>
+  </div>
+</div>
+
+<script>
+const cardsTbody = document.querySelector('#cardsTable tbody');
+const out = document.getElementById('out');
+const heroHeading = document.getElementById('heroHeading');
+const heroSub = document.getElementById('heroSub');
+
+let data = null;
+
+// JSON 로드
+async function load() {
+  try {
+    const res = await fetch('content/pages.json?_=' + Date.now());
+    data = await res.json();
+    const page = (data.pages && data.pages[0]) || {};
+    const hero = page.sections?.find(s => s.type === 'hero') || {heading:'', sub:''};
+    const grid = page.sections?.find(s => s.type === 'grid') || {cards:[]};
+
+    heroHeading.value = hero.heading || '';
+    heroSub.value = hero.sub || '';
+
+    // 표 채우기
+    cardsTbody.innerHTML = '';
+    (grid.cards || []).forEach(addRow);
+  } catch (e) {
+    alert('pages.json을 불러오지 못했습니다. 경로를 확인하세요.');
+    console.error(e);
+  }
+}
+
+// 행 추가
+function addRow(card = {title:'', desc:'', href:''}) {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input type="text" class="i-title" value="${escapeHtml(card.title)}" /></td>
+    <td><input type="text" class="i-desc"  value="${escapeHtml(card.desc)}"  /></td>
+    <td><input type="text" class="i-href"  value="${escapeHtml(card.href)}"  /></td>
+    <td>
+      <div class="toolbar">
+        <button class="btn gray btn-up">↑</button>
+        <button class="btn gray btn-down">↓</button>
+        <button class="btn red btn-del">삭제</button>
+      </div>
+    </td>`;
+  // 이벤트
+  tr.querySelector('.btn-del').onclick = () => tr.remove();
+  tr.querySelector('.btn-up').onclick = () => tr.previousElementSibling && cardsTbody.insertBefore(tr, tr.previousElementSibling);
+  tr.querySelector('.btn-down').onclick = () => tr.nextElementSibling && cardsTbody.insertBefore(tr.nextElementSibling, tr);
+  cardsTbody.appendChild(tr);
+}
+
+function escapeHtml(s=''){return s.replace(/[&<>"']/g,m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]))}
+
+// JSON 생성
+function buildJson() {
+  const rows = [...cardsTbody.querySelectorAll('tr')];
+  const cards = rows.map(tr => ({
+    title: tr.querySelector('.i-title').value.trim(),
+    desc:  tr.querySelector('.i-desc').value.trim(),
+    href:  tr.querySelector('.i-href').value.trim()
+  }));
+  const obj = {
+    pages: [{
+      id: 'home',
+      title: '메인',
+      sections: [
+        { type:'hero', heading: heroHeading.value.trim(), sub: heroSub.value.trim(), bg: '' },
+        { type:'grid', cards }
+      ]
+    }]
+  };
+  out.value = JSON.stringify(obj, null, 2);
+  return obj;
+}
+
+// 다운로드
+function download(filename, text){
+  const a=document.createElement('a');
+  a.href='data:application/json;charset=utf-8,'+encodeURIComponent(text);
+  a.download=filename; a.click();
+}
+
+// 버튼들
+document.getElementById('addCard').onclick = () => addRow();
+document.getElementById('buildBtn').onclick = () => buildJson();
+document.getElementById('copyBtn').onclick = async () => {
+  if(!out.value.trim()) buildJson();
+  await navigator.clipboard.writeText(out.value);
+  alert('복사되었습니다. admin/content/pages.json에 붙여넣고 커밋하세요.');
+};
+document.getElementById('downloadBtn').onclick = () => {
+  if(!out.value.trim()) buildJson();
+  download('pages.json', out.value);
+};
+
+// 시작
+load();
+</script>
+</body>
+</html>
