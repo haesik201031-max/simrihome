@@ -1,12 +1,161 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>상담 안내</title>
+<meta charset="UTF-8" />
+<title>온라인 상담</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  body{font-family:-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:#f6f8fb;color:#111}
+  .wrap{max-width:900px;margin:0 auto;padding:32px}
+  .topnav{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  a.home{color:#1668e3;text-decoration:none;font-weight:600}
+  h1{font-size:28px;margin:8px 0 16px}
+  .card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:18px 20px;margin:12px 0;box-shadow:0 6px 16px rgba(17,24,39,.06)}
+  label{display:block;margin:8px 0 4px;font-weight:600}
+  input[type=text],input[type=tel],input[type=email],input[type=number],select,textarea{
+    width:100%;padding:12px;border-radius:10px;border:1px solid #e5e7eb;box-sizing:border-box
+  }
+  .row{display:flex;gap:12px;flex-wrap:wrap}
+  .col{flex:1 1 260px}
+  .muted{color:#667085}
+  .btn{display:inline-block;background:#1668e3;color:#fff;border:0;border-radius:10px;padding:12px 16px;font-weight:700;cursor:pointer}
+  .btn.secondary{background:#eef2f7;color:#111;border:1px solid #e5e7eb}
+  .result{background:#eef5ff;border:1px solid #cfe2ff;border-radius:12px;padding:14px 16px;margin-top:12px;white-space:pre-wrap}
+  .chkrow{display:flex;gap:16px;flex-wrap:wrap}
+  .chkrow label{font-weight:500;display:flex;align-items:center;gap:6px}
+  details{border:1px solid #e5e7eb;border-radius:12px;background:#fff;padding:12px 14px}
+  summary{cursor:pointer;font-weight:700}
+</style>
 </head>
 <body>
-  <h1>상담 안내 페이지 준비중입니다.</h1>
-  <p><a href="index.html">← 메인으로 돌아가기</a></p>
+<div class="wrap">
+  <div class="topnav">
+    <div class="muted">마음건강 자가검진</div>
+    <a class="home" href="index.html">← 메인으로</a>
+  </div>
+
+  <h1>온라인 상담</h1>
+
+  <div class="card">
+    <details>
+      <summary>개인정보 수집·이용 안내 (열기)</summary>
+      <div class="muted" style="margin-top:8px; line-height:1.6">
+        상담 접수 및 답변 제공을 위해 최소한의 개인정보(이름/연락처 등)를 수집·이용합니다.
+        수집된 정보는 답변 목적 외 다른 용도로 사용되지 않으며, 보관 후 안전하게 파기합니다.
+      </div>
+    </details>
+    <label style="margin-top:10px">
+      <input type="checkbox" id="agree" /> 개인정보 수집·이용에 동의합니다.
+    </label>
+  </div>
+
+  <form id="f">
+    <div class="card">
+      <div class="row">
+        <div class="col">
+          <label for="name">이름/닉네임*</label>
+          <input id="name" required placeholder="예) 홍길동" />
+        </div>
+        <div class="col">
+          <label>성별</label>
+          <div class="chkrow">
+            <label><input type="radio" name="sex" value="남" checked/> 남</label>
+            <label><input type="radio" name="sex" value="여"/> 여</label>
+          </div>
+        </div>
+        <div class="col">
+          <label for="age">연령</label>
+          <input id="age" type="number" min="1" max="120" placeholder="예) 33" />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <label for="region">거주지</label>
+          <select id="region">
+            <option value="">선택</option>
+            <option>부산</option>
+            <option>부산 외</option>
+          </select>
+        </div>
+        <div class="col">
+          <label for="phone">연락처(선택)</label>
+          <input id="phone" type="tel" placeholder="010-0000-0000" />
+        </div>
+        <div class="col">
+          <label for="email">이메일(선택)</label>
+          <input id="email" type="email" placeholder="you@example.com" />
+        </div>
+      </div>
+
+      <label for="title">제목*</label>
+      <input id="title" required placeholder="상담 제목을 적어주세요" />
+
+      <label for="content">상세 내용</label>
+      <textarea id="content" rows="6" placeholder="상담받고 싶은 내용을 간단히 적어주세요."></textarea>
+
+      <div style="margin-top:8px">
+        <div class="muted" style="margin-bottom:6px">간단 체크(선택)</div>
+        <div class="chkrow">
+          ${["수면문제가 있다","불안/걱정이 많다","우울감이 있다","음주 문제가 우려된다","최근 충격 사건을 겪었다","약물/치료 중이다","자가검진 결과가 높게 나왔다","기타"].map((t,i)=>`
+            <label><input type="checkbox" name="flag" value="${t}"/> ${t}</label>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <button type="submit" class="btn">미리보기</button>
+      <button class="btn secondary" type="button" id="copyBtn">복사</button>
+      <button class="btn secondary" type="button" id="mailBtn">메일로 보내기</button>
+      <div id="out" class="result" style="display:none"></div>
+    </div>
+  </form>
+</div>
+
+<script>
+const f = document.getElementById('f');
+const out = document.getElementById('out');
+function getVal(id){return document.getElementById(id).value.trim();}
+f.addEventListener('submit', (e)=>{
+  e.preventDefault();
+  if(!document.getElementById('agree').checked){ alert('개인정보 수집·이용에 동의해주세요.'); return; }
+  if(!getVal('name') || !getVal('title')){ alert('필수항목(이름/제목)을 입력해주세요.'); return; }
+  const sex = (new FormData(f).get('sex')||'');
+  const flags = [...document.querySelectorAll('input[name="flag"]:checked')].map(x=>x.value);
+  const payload = {
+    time: new Date().toLocaleString(),
+    name: getVal('name'),
+    sex, age:getVal('age'), region:getVal('region'),
+    phone:getVal('phone'), email:getVal('email'),
+    title:getVal('title'),
+    content:getVal('content'),
+    checks: flags
+  };
+  out.style.display='block';
+  out.textContent =
+`[온라인 상담 접수]
+시간: ${payload.time}
+이름/닉네임: ${payload.name}
+성별/연령: ${payload.sex || '-'} / ${payload.age || '-'}
+거주지: ${payload.region || '-'}
+연락처: ${payload.phone || '-'}
+이메일: ${payload.email || '-'}
+제목: ${payload.title}
+내용:
+${payload.content || '-'}
+체크항목: ${payload.checks.length?payload.checks.join(', '):'-'}`;
+});
+
+document.getElementById('copyBtn').addEventListener('click', async ()=>{
+  if(out.style.display!=='block'){ alert('먼저 미리보기를 생성하세요.'); return; }
+  await navigator.clipboard.writeText(out.textContent);
+  alert('복사되었습니다. 메일/메신저에 붙여넣기 하세요.');
+});
+document.getElementById('mailBtn').addEventListener('click', ()=>{
+  if(out.style.display!=='block'){ alert('먼저 미리보기를 생성하세요.'); return; }
+  const body = encodeURIComponent(out.textContent);
+  location.href = `mailto:?subject=${encodeURIComponent('[온라인상담] ' + (getVal('title')||''))}&body=${body}`;
+});
+</script>
 </body>
 </html>
