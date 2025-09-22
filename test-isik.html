@@ -2,15 +2,15 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
-<title>ISI-K (불면증)</title>
+<title>ISI-K (불면)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
   body{font-family:-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:#f6f8fb;color:#111}
   .wrap{max-width:900px;margin:0 auto;padding:32px}
   h1{font-size:28px;margin:8px 0 16px}
-  .card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:18px 20px;margin:12px 0;box-shadow:0 6px 16px rgba(17,24,39,.06)}
-  .q{margin:0 0 10px;font-weight:600}
-  .opts label{display:inline-flex;align-items:center;gap:8px;margin:6px 8px 6px 0;padding:6px 10px;border-radius:10px;border:1px solid #e5e7eb;cursor:pointer}
+  .card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:22px 20px;margin:14px 0;box-shadow:0 6px 16px rgba(17,24,39,.06)}
+  .q{margin:0 0 12px;font-weight:600}
+  .opts label{display:inline-flex;align-items:center;gap:8px;margin:6px 10px 6px 0;padding:8px 10px;border-radius:10px;border:1px solid #e5e7eb;cursor:pointer}
   .btn{display:inline-block;background:#1668e3;color:#fff;border:0;border-radius:10px;padding:14px 18px;font-weight:700;cursor:pointer}
   .result{background:#eef5ff;border:1px solid #cfe2ff;border-radius:12px;padding:16px 18px;margin-top:16px}
   .muted{color:#667085}
@@ -24,8 +24,8 @@
     <div class="muted">마음건강 자가검진</div>
     <a class="home" href="index.html">← 메인으로</a>
   </div>
-  <h1>ISI-K (불면증)</h1>
-  <p class="muted">지난 2주 동안의 수면 상태를 가장 잘 나타내는 항목을 선택해주세요. (0~4점)</p>
+  <h1>ISI-K (불면)</h1>
+  <p class="muted">지난 2주 동안의 수면 상태를 선택하세요.</p>
 
   <form id="form"></form>
 
@@ -36,27 +36,32 @@
 </div>
 
 <script>
-const labels5 = ["전혀 없음(0)","약간 있음(1)","중간(2)","심함(3)","매우 심함(4)"];
-const labelsSatis = ["매우 만족(0)","만족(1)","보통(2)","불만족(3)","매우 불만족(4)"];
-const labelsImpact = ["전혀 현저하지 않음(0)","조금 현저함(1)","다소 현저함(2)","많이 현저함(3)","매우 많이 현저함(4)"];
-const labelsWorry = ["전혀 걱정 안함(0)","조금 걱정(1)","다소 걱정(2)","많이 걱정(3)","매우 많이 걱정(4)"];
-const labelsDaily = ["전혀 방해 안됨(0)","조금 방해됨(1)","다소 방해됨(2)","많이 방해됨(3)","매우 많이 방해됨(4)"];
-
 const qs = [
-  {t:"잠들기 어려움", o:labels5},
-  {t:"잠을 유지하기 어려움(자주 깸)", o:labels5},
-  {t:"새벽에 너무 일찍 잠에서 깸", o:labels5},
-  {t:"현재 수면패턴에 대한 만족도", o:labelsSatis},
-  {t:"불면으로 인한 삶의 질 손상 정도(다른 사람에게 보여지는 정도)", o:labelsImpact},
-  {t:"현재 불면에 대해 걱정하는 정도", o:labelsWorry},
-  {t:"수면문제가 일상생활(피곤/업무/집안일/집중/기억/기분 등)을 방해하는 정도", o:labelsDaily}
+  "(최근 2주) 잠들기 어려움",
+  "(최근 2주) 수면 유지 어려움(자주 깸)",
+  "(최근 2주) 새벽에 너무 일찍 깸",
+  "현재 수면패턴 만족도",
+  "불면으로 인한 삶의 질 손상 정도(타인에게 보이는 정도)",
+  "불면증에 대한 걱정 정도",
+  "수면문제가 일상생활(피로, 업무/가사, 집중, 기억, 기분 등)에 미치는 영향"
 ];
 
+// 1~3,5~7: 0..4 = 전혀 없음 → 매우 심함
+const labelsA = ["전혀 없음","약간 있음","중간","심함","매우 심함"];
+// 4번(만족도): 0..4 = 매우 만족함 → 매우 불만족
+const labelsSatis = ["매우 만족함","만족함","보통임","불만족함","매우 불만족"];
+
 const form = document.getElementById('form');
-qs.forEach((it,i)=>{
+qs.forEach((t,i)=>{
   const box = document.createElement('div'); box.className='card';
-  box.innerHTML = `<div class="q">${i+1}. ${it.t}</div>
-  <div class="opts">${it.o.map((lb,idx)=>`<label><input type="radio" name="q${i}" value="${idx}" required/> ${lb}</label>`).join('')}</div>`;
+  const labels = (i===3)? labelsSatis : labelsA;
+  box.innerHTML = `
+    <div class="q">${i+1}. ${t}</div>
+    <div class="opts">
+      ${labels.map((lb,idx)=>`
+        <label><input type="radio" name="q${i}" value="${idx}" required/> ${lb}</label>
+      `).join('')}
+    </div>`;
   form.append(box);
 });
 
@@ -64,7 +69,9 @@ function score(){
   let s=0,c=0;
   qs.forEach((_,i)=>{
     const sel = form.querySelector(`input[name="q${i}"]:checked`);
-    if(!sel) return; s+=Number(sel.value); c++;
+    if(!sel) return;
+    s += Number(sel.value); // 모두 0..4로 설계됨
+    c++;
   });
   if(c!==qs.length) return null;
   return s; // 0~28
@@ -73,16 +80,16 @@ function score(){
 document.getElementById('submitBtn').addEventListener('click', ()=>{
   const sc = score();
   const out = document.getElementById('out');
-  if(sc===null){ alert('모든 문항을 선택해주세요.'); return; }
+  if(sc===null){ alert('모든 문항을 선택해 주세요.'); return; }
   let level="", guide="";
-  if(sc<=7){ level="정상/경미"; guide="불면 수준이 경미합니다."; }
-  else if(sc<=14){ level="경도"; guide="경도의 불면이 의심됩니다. 수면위생 점검 권장."; }
-  else if(sc<=21){ level="중등도"; guide="중등도 불면이 의심됩니다. 상담/치료 고려 권장."; }
-  else { level="중증"; guide="중증 불면 가능성이 높습니다. 빠른 진료 권고."; }
+  if(sc<=7){ level="불면 없음"; guide="전반적으로 수면 문제가 경미합니다."; }
+  else if(sc<=14){ level="경도 불면"; guide="경미한 수면 곤란이 있습니다. 수면 위생 점검 권장."; }
+  else if(sc<=21){ level="중등도 불면"; guide="중등도의 수면 곤란입니다. 상담/치료를 고려하세요."; }
+  else { level="중증 불면"; guide="중증 수준일 수 있습니다. 전문적 평가를 권합니다."; }
+
   out.style.display='block';
-  out.innerHTML = `<b>총점: ${sc} (0~28)</b><br/>구분: <b>${level}</b><br/><span class="muted">${guide}</span>`;
+  out.innerHTML = `<b>총점: ${sc}점 (0~28)</b><br/>구분: <b>${level}</b><br/><span class="muted">${guide}</span>`;
 });
 </script>
 </body>
 </html>
-
