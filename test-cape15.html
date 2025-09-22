@@ -2,17 +2,16 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
-<title>CAPE-15 (정신증 경향)</title>
+<title>CAPE-15 (정신증 경험)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
   body{font-family:-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:#f6f8fb;color:#111}
-  .wrap{max-width:900px;margin:0 auto;padding:32px}
+  .wrap{max-width:1000px;margin:0 auto;padding:32px}
   h1{font-size:28px;margin:8px 0 16px}
   .card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:22px 20px;margin:14px 0;box-shadow:0 6px 16px rgba(17,24,39,.06)}
-  .q{margin:0 0 10px;font-weight:600}
-  .row{display:flex;gap:16px;flex-wrap:wrap}
-  .col{flex:1 1 260px}
-  .opts label{display:inline-flex;align-items:center;gap:8px;margin:6px 8px 6px 0;padding:6px 10px;border-radius:10px;border:1px solid #e5e7eb;cursor:pointer}
+  .q{margin:0 0 12px;font-weight:600}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .opts label{display:inline-flex;align-items:center;gap:8px;margin:6px 10px 6px 0;padding:8px 10px;border-radius:10px;border:1px solid #e5e7eb;cursor:pointer}
   .btn{display:inline-block;background:#1668e3;color:#fff;border:0;border-radius:10px;padding:14px 18px;font-weight:700;cursor:pointer}
   .result{background:#eef5ff;border:1px solid #cfe2ff;border-radius:12px;padding:16px 18px;margin-top:16px}
   .muted{color:#667085}
@@ -26,8 +25,8 @@
     <div class="muted">마음건강 자가검진</div>
     <a class="home" href="index.html">← 메인으로</a>
   </div>
-  <h1>CAPE-15 (정신증 경향)</h1>
-  <p class="muted">각 항목마다 <b>빈도</b>와 <b>고통 정도</b>를 선택해주세요. (0~3점)</p>
+  <h1>CAPE-15 (정신증 관련 경험)</h1>
+  <p class="muted">각 항목의 <b>빈도</b>와 <b>고통 정도</b>를 선택하세요.</p>
 
   <form id="form"></form>
 
@@ -38,44 +37,44 @@
 </div>
 
 <script>
+const freqLabels = ["없음","가끔","자주","거의 항상"];
+const distLabels = ["없음","조금","상당히","매우"];
 const qs = [
-  "사람들이 나에 대해 숨겨진 의미로 말하는 것 같았다",
-  "내 생각이 메아리처럼 들린 적이 있었다",
-  "어떤 힘이 나를 통제하는 것처럼 느꼈다",
-  "가족/지인과 꼭 닮은 분신이 나타난 것 같았다",
-  "혼자 있을 때 어떤 ‘음성’을 들었다",
-  "혼자 있을 때 사람들이 서로 말하는 소리를 들었다",
-  "다른 사람에게 보이지 않는 사물이나 사람/동물을 보았다",
-  "겉으로 보이는 것과 다르다고 사람들을 느꼈다",
-  "어떤 방식으로든 괴롭힘을 당한다는 느낌이 있었다",
-  "나를 둘러싼 음모가 있는 것 같았다",
-  "외모 때문에 사람들이 이상하게 본다고 느꼈다",
-  "전자기기가 내 생각방식에 영향을 준다고 느꼈다",
-  "머릿속 생각을 누군가 빼앗아간다고 느꼈다",
-  "내 생각들이 내 것이 아닌 것처럼 느꼈다",
-  "생생한 생각이 다른 사람에게 들릴까 걱정됐다"
+  "사람들이 당신에 대해 넌지시 말하거나 숨은 의미로 말하는 느낌",
+  "자신의 생각이 메아리처럼 들리는 경험",
+  "어떤 힘이 자신을 통제하는 듯한 느낌",
+  "가족/지인과 똑같이 생긴 분신이 나타난 듯한 느낌",
+  "혼자 있을 때 음성을 들은 경험",
+  "혼자 있을 때 사람들이 말하는 소리를 들은 경험",
+  "다른 사람에게 보이지 않는 사물/사람/동물을 본 경험",
+  "겉모습과 다른 무언가가 느껴지는 느낌",
+  "괴롭힘을 당하고 있는 듯한 느낌",
+  "자신을 둘러싼 음모가 있는 듯한 느낌",
+  "외모 때문에 사람들이 이상하게 쳐다보는 느낌",
+  "전자 기기가 자신의 생각에 영향을 주는 듯한 느낌",
+  "누군가 생각을 빼앗아 가는 듯한 느낌",
+  "자신의 생각이 자신의 것이 아닌 듯한 느낌",
+  "생생한 생각 때문에 다른 사람이 내 생각을 들을까 걱정"
 ];
-const freq = ["없음(0)","가끔(1)","자주(2)","거의 항상(3)"];
-const dist = ["없음(0)","조금(1)","상당히(2)","매우(3)"];
 
 const form = document.getElementById('form');
 qs.forEach((t,i)=>{
   const box = document.createElement('div'); box.className='card';
   box.innerHTML = `
     <div class="q">${i+1}. ${t}</div>
-    <div class="row">
-      <div class="col">
+    <div class="cols">
+      <div>
         <div class="muted">빈도</div>
         <div class="opts">
-          ${freq.map((lb,idx)=>`
+          ${freqLabels.map((lb,idx)=>`
             <label><input type="radio" name="f${i}" value="${idx}" required/> ${lb}</label>
           `).join('')}
         </div>
       </div>
-      <div class="col">
+      <div>
         <div class="muted">고통</div>
         <div class="opts">
-          ${dist.map((lb,idx)=>`
+          ${distLabels.map((lb,idx)=>`
             <label><input type="radio" name="d${i}" value="${idx}" required/> ${lb}</label>
           `).join('')}
         </div>
@@ -84,29 +83,32 @@ qs.forEach((t,i)=>{
   form.append(box);
 });
 
-function score(){
-  let f=0,d=0,c=0;
-  qs.forEach((_,i)=>{
-    const sf = form.querySelector(`input[name="f${i}"]:checked`);
-    const sd = form.querySelector(`input[name="d${i}"]:checked`);
-    if(!sf || !sd) return;
-    f += Number(sf.value);
-    d += Number(sd.value);
-    c++;
-  });
-  if(c!==qs.length) return null;
-  return {f,d}; // 빈도/고통 총점 (각 0~45)
+function calc(){
+  let fSum=0,dSum=0, cnt=qs.length;
+  for(let i=0;i<cnt;i++){
+    const f = form.querySelector(`input[name="f${i}"]:checked`);
+    const d = form.querySelector(`input[name="d${i}"]:checked`);
+    if(!f||!d) return null;
+    fSum += Number(f.value);
+    dSum += Number(d.value);
+  }
+  const fAvg = fSum/cnt, dAvg = dSum/cnt;
+  return { fSum, dSum, fAvg, dAvg, cnt };
 }
 
 document.getElementById('submitBtn').addEventListener('click', ()=>{
-  const sc = score();
+  const res = calc();
   const out = document.getElementById('out');
-  if(!sc){ alert('모든 항목의 빈도/고통을 선택해주세요.'); return; }
-  let guide="일부 항목에 반복적으로 해당되고 고통이 크다면 전문가와 상담을 권합니다.";
+  if(!res){ alert('모든 문항의 빈도와 고통을 선택해 주세요.'); return; }
+
+  const fTxt = res.fAvg.toFixed(2), dTxt = res.dAvg.toFixed(2);
+  let note = "경험의 빈도와 고통 평균을 참고해 주십시오.";
+  if(res.fAvg>=2 || res.dAvg>=2) note = "빈도/고통 평균이 상대적으로 높습니다. 전문가 상담을 고려해 주세요.";
+
   out.style.display='block';
-  out.innerHTML = `<b>빈도 총점: ${sc.f} (0~45)</b><br/><b>고통 총점: ${sc.d} (0~45)</b><br/><span class="muted">${guide}</span>`;
+  out.innerHTML = `<b>빈도 평균:</b> ${fTxt} (0~3) / <b>고통 평균:</b> ${dTxt} (0~3)
+  <br/><span class="muted">${note}</span>`;
 });
 </script>
 </body>
 </html>
-
