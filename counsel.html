@@ -1,49 +1,61 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>온라인 상담</title>
-<style>
-  body{font-family:-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:#f6f8fb;color:#111}
-  .wrap{max-width:980px;margin:0 auto;padding:32px}
-  .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-  a.back{color:#1668e3;text-decoration:none;font-weight:600}
-  h1{font-size:28px;margin:8px 0 16px}
-  .note{color:#667085;margin:8px 0 20px}
-  .btns{display:flex;gap:8px;margin:10px 0 16px}
-  .btn{background:#1668e3;color:#fff;border:0;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block}
-  .btn.gray{background:#eef2f7;color:#111;border:1px solid #e5e7eb}
-  .frame{width:100%;height:1200px;border:0;border-radius:14px;box-shadow:0 6px 16px rgba(17,24,39,.06);background:#fff}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>온라인 상담</title>
+  <style>
+    :root{
+      --bg:#f6f8fb; --card:#fff; --text:#111; --muted:#667085;
+      --primary:#1668e3; --border:#e5e7eb; --radius:14px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:"Noto Sans KR",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text)}
+    .wrap{max-width:1000px;margin:0 auto;padding:28px 16px}
+    h1{font-size:28px;margin:0 0 12px}
+    p.muted{color:var(--muted);margin:0 0 14px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+    .actions{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}
+    .btn{display:inline-block;padding:10px 14px;border-radius:10px;font-weight:700;text-decoration:none;border:1px solid var(--border);background:#eef2f7;color:var(--text)}
+    .btn.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+    iframe#gform{width:100%;height:1700px;border:0;border-radius:12px;background:#fff}
+    @media (max-width:640px){iframe#gform{height:1900px}}
+  </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="top">
-      <div class="note">마음건강 자가검진</div>
-      <a class="back" href="index.html">← 메인으로</a>
-    </div>
-
     <h1>온라인 상담</h1>
-    <p class="note">아래 구글폼에서 접수하시면 담당자가 확인 후 연락드립니다. 폼이 보이지 않으면 “새 창에서 열기” 버튼을 이용해 주세요.</p>
+    <p class="muted">아래 구글폼에 접수하시면 담당자가 확인 후 연락드립니다. 폼이 보이지 않으면 <b>“새 창에서 열기”</b>를 이용해 주세요.</p>
 
-    <div class="btns">
-      <!-- 새 창 열기(일반 보기 링크) -->
-      <a class="btn"
-         href="https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/viewform?usp=sf_link"
-         target="_blank" rel="noopener">새 창에서 열기</a>
+    <div class="card">
+      <div class="actions">
+        <!-- 새 창에서 열기 -->
+        <a class="btn primary" target="_blank"
+           href="https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/viewform">
+          새 창에서 열기
+        </a>
+        <!-- 임베드 리로드(광고차단/확장프로그램으로 비었을 때) -->
+        <button class="btn" type="button"
+                onclick="document.getElementById('gform').src=document.getElementById('gform').src">
+          폼이 안 보이면 클릭
+        </button>
+      </div>
 
-      <!-- 폼이 안 보일 때 직접 링크 -->
-      <a class="btn gray"
-         href="https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/viewform?usp=sf_link"
-         target="_blank" rel="noopener">폼이 안 보이면 클릭</a>
+      <!-- Google Forms 임베드 (★ Drive 링크가 아니라 Forms 전용 embedded=true) -->
+      <iframe id="gform"
+              src="https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/viewform?embedded=true&cachebust=<?php echo Date.now || new Date().getTime ?> ">
+        로드 중…
+      </iframe>
     </div>
-
-    <!-- 임베드: docs.google.com/forms ... /viewform?embedded=true -->
-    <iframe
-      class="frame"
-      src="https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/viewform?embedded=true&v=2"
-      loading="lazy" allow="clipboard-write *"></iframe>
   </div>
+
+  <script>
+    // GitHub Pages는 PHP가 없으므로 위 cachebust를 JS로 교체
+    (function(){
+      var f = document.getElementById('gform');
+      var url = "https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/viewform?embedded=true&cachebust=" + Date.now();
+      f.src = url;
+    })();
+  </script>
 </body>
 </html>
