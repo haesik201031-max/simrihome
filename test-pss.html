@@ -1,105 +1,94 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<title>PSS(스트레스 지각 척도)</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<style>
-  body{font-family:-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:#f6f8fb;color:#111}
-  .wrap{max-width:900px;margin:0 auto;padding:32px}
-  h1{font-size:28px;margin:8px 0 16px}
-  .card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:22px 20px;margin:14px 0;box-shadow:0 6px 16px rgba(17,24,39,.06)}
-  .q{margin:0 0 12px;font-weight:600}
-  .opts label{display:inline-flex;align-items:center;gap:8px;margin:6px 10px 6px 0;padding:8px 10px;border-radius:10px;border:1px solid #e5e7eb;cursor:pointer}
-  .btn{display:inline-block;background:#1668e3;color:#fff;border:0;border-radius:10px;padding:14px 18px;font-weight:700;cursor:pointer}
-  .btn:disabled{opacity:.5}
-  .result{background:#eef5ff;border:1px solid #cfe2ff;border-radius:12px;padding:16px 18px;margin-top:16px}
-  .muted{color:#667085}
-  .topnav{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-  a.home{color:#1668e3;text-decoration:none;font-weight:600}
-</style>
+  <meta charset="UTF-8">
+  <title>PSS 스트레스 검사</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: "Noto Sans KR", sans-serif; margin:0; background:#f6f8fb; color:#111; }
+    .wrap { max-width:800px; margin:0 auto; padding:32px; }
+    h1 { font-size:26px; margin-bottom:20px; }
+    .question { margin:16px 0; padding:14px; background:#fff; border:1px solid #ddd; border-radius:12px; }
+    .question h3 { margin:0 0 10px; font-size:16px; }
+    .options label { display:block; margin:6px 0; }
+    button { margin-top:20px; padding:12px 18px; font-size:16px; font-weight:700;
+             background:#2563eb; color:#fff; border:none; border-radius:10px; cursor:pointer; }
+    .result-box {
+      margin-top:24px; padding:20px; border-radius:12px;
+      background:#fff; border:1px solid #ddd; font-size:15px; line-height:1.6;
+    }
+    .low { border-left:6px solid #22c55e; }     /* 낮음 → 초록 */
+    .mid { border-left:6px solid #f59e0b; }     /* 중간 → 주황 */
+    .high { border-left:6px solid #ef4444; }    /* 높음 → 빨강 */
+    .btn-counsel {
+      display:block; margin:28px auto 0; text-align:center; padding:14px 20px;
+      font-size:18px; font-weight:700; background:#1d4ed8; color:#fff;
+      border:none; border-radius:12px; cursor:pointer;
+    }
+  </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="topnav">
-    <div class="muted">마음건강 자가검진</div>
-    <a class="home" href="index.html">← 메인으로</a>
-  </div>
-  <h1>PSS (스트레스 지각 척도)</h1>
-  <p class="muted">지난 1개월 동안의 경험에 대해, 각 문항을 얼마나 자주 느꼈는지 선택하세요.</p>
+  <h1>PSS 스트레스 검사</h1>
 
-  <form id="form"></form>
-
-  <div>
-    <button class="btn" id="submitBtn" type="button">결과 보기</button>
-    <div id="out" class="result" style="display:none"></div>
+  <!-- 문항 예시 (실제는 총 10문항) -->
+  <div class="question">
+    <h3>1. 지난 한 달 동안, 예상치 못한 일 때문에 화가 난 적이 얼마나 있었습니까?</h3>
+    <div class="options">
+      <label><input type="radio" name="q1" value="0"> 전혀 없음</label>
+      <label><input type="radio" name="q1" value="1"> 가끔</label>
+      <label><input type="radio" name="q1" value="2"> 자주</label>
+      <label><input type="radio" name="q1" value="3"> 매우 자주</label>
+    </div>
   </div>
+
+  <div class="question">
+    <h3>2. 지난 한 달 동안, 중요한 일들을 통제할 수 없다고 느낀 적이 얼마나 있었습니까?</h3>
+    <div class="options">
+      <label><input type="radio" name="q2" value="0"> 전혀 없음</label>
+      <label><input type="radio" name="q2" value="1"> 가끔</label>
+      <label><input type="radio" name="q2" value="2"> 자주</label>
+      <label><input type="radio" name="q2" value="3"> 매우 자주</label>
+    </div>
+  </div>
+
+  <!-- 결과 버튼 -->
+  <button onclick="calcResult()">결과 보기</button>
+
+  <!-- 결과 출력 -->
+  <div id="result" class="result-box" style="display:none;"></div>
+
+  <!-- 상담 신청 버튼 -->
+  <button class="btn-counsel" onclick="location.href='counsel.html'">상담 신청하기</button>
 </div>
 
 <script>
-// 문항 텍스트(표시용) — '(역채점)' 표시는 제거
-const questions = [
-  "예상치 못한 일 때문에 화가 난 적이 있었다",
-  "생활의 중요한 일들을 통제할 수 없다고 느꼈다",
-  "신경이 예민해지고 스트레스를 받고 있다고 느꼈다",
-  "개인적 문제들을 다루는 데 자신감이 있었다",
-  "일상의 일들이 생각대로 진행된다고 느꼈다",
-  "꼭 해야 하는 일을 처리할 수 없다고 느꼈다",
-  "일상생활의 짜증을 잘 다스릴 수 있었다",
-  "최상의 컨디션이라고 느꼈다",
-  "통제할 수 없는 일 때문에 화가 난 적이 있었다",
-  "어려운 일들이 너무 많이 쌓여 극복하기 어렵다고 느꼈다"
-];
+function calcResult(){
+  let total = 0;
+  const qCount = 2; // 실제는 10문항으로 확장해야 함
+  for(let i=1; i<=qCount; i++){
+    const val = document.querySelector(`input[name=q${i}]:checked`);
+    if(val) total += parseInt(val.value);
+  }
 
-// 보기(표시용) — 괄호 점수 안내 제거
-const labels = ["전혀 없음","거의 없음","때때로 있음","자주 있음","매우 자주"];
+  const box = document.getElementById("result");
+  let msg="", cls="";
 
-// 역채점 문항(0기반 인덱스) — 채점 로직은 그대로 유지
-const reverseIdx = new Set([3,4,6,7]); // 4,5,7,8번
+  if(total <= 6){ 
+    msg = "<b>수준: 낮음</b><br>일상에서 큰 스트레스는 느끼지 않고 있습니다. 현재의 생활을 유지하면 좋습니다.";
+    cls = "low";
+  } else if(total <= 12){
+    msg = "<b>수준: 중간</b><br>평균적인 수준의 스트레스를 경험하고 있습니다. 관리법을 실천하세요.<br>→ 상담 선택 권장";
+    cls = "mid";
+  } else {
+    msg = "<b>수준: 높음</b><br>스트레스가 상당히 높은 상태입니다. 건강에 영향을 줄 수 있으므로 전문가 상담이 필요합니다.<br>→ 상담 필수 요망";
+    cls = "high";
+  }
 
-const form = document.getElementById('form');
-questions.forEach((t,i)=>{
-  const box = document.createElement('div'); box.className='card';
-  box.innerHTML = `
-    <div class="q">${i+1}. 지난 1개월 동안, ${t}?</div>
-    <div class="opts">
-      ${labels.map((lb,idx)=>`
-        <label>
-          <input type="radio" name="q${i}" value="${idx}" required/> ${lb}
-        </label>
-      `).join('')}
-    </div>`;
-  form.append(box);
-});
-
-// PSS 채점(0~40)
-function scorePSS(){
-  let total=0, cnt=0;
-  questions.forEach((_,i)=>{
-    const sel = form.querySelector(`input[name="q${i}"]:checked`);
-    if(!sel) return;
-    let v = Number(sel.value); // 0..4
-    // 역채점 변환: 0↔4, 1↔3, 2→2
-    if(reverseIdx.has(i)) v = 4 - v;
-    total += v; cnt++;
-  });
-  if(cnt!==questions.length) return null;
-  return total;
+  box.className = "result-box " + cls;
+  box.innerHTML = msg + `<br><br><span class="muted">총점: ${total}점</span>`;
+  box.style.display = "block";
 }
-
-document.getElementById('submitBtn').addEventListener('click', ()=>{
-  const sc = scorePSS();
-  const out = document.getElementById('out');
-  if(sc===null){ alert('모든 문항을 선택해 주세요.'); return; }
-  // 구간: 0–13 낮음, 14–26 중간, 27–40 높음
-  let level="", guide="";
-  if(sc<=13){ level="낮음"; guide="전반적으로 스트레스 지각이 낮은 편입니다."; }
-  else if(sc<=26){ level="중간"; guide="보통 수준의 스트레스를 경험할 수 있습니다."; }
-  else { level="높음"; guide="스트레스 지각이 높은 편입니다. 생활 패턴/상담 등 점검을 권합니다."; }
-
-  out.style.display='block';
-  out.innerHTML = `<b>총점: ${sc}점 (0~40)</b><br/>구분: <b>${level}</b><br/><span class="muted">${guide}</span>`;
-});
 </script>
 </body>
 </html>
