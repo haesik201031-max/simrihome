@@ -5,18 +5,17 @@
 <title>PHQ-9 (우울)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
-  body{font-family:"Noto Sans KR",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:#f6f8fb;color:#111}
+  body{font-family:-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:#f6f8fb;color:#111}
   .wrap{max-width:900px;margin:0 auto;padding:32px}
   h1{font-size:28px;margin:8px 0 16px}
   .card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:22px 20px;margin:14px 0;box-shadow:0 6px 16px rgba(17,24,39,.06)}
   .q{margin:0 0 12px;font-weight:600}
   .opts label{display:inline-flex;align-items:center;gap:8px;margin:6px 10px 6px 0;padding:8px 10px;border-radius:10px;border:1px solid #e5e7eb;cursor:pointer}
-  .btn{display:inline-block;background:#1668e3;color:#fff;border:0;border-radius:10px;padding:14px 18px;font-weight:700;cursor:pointer}
-  .result{background:#eef5ff;border:1px solid #cfe2ff;border-radius:12px;padding:16px 18px;margin-top:16px;line-height:1.6}
+  .btn{display:inline-block;background:#1668e3;color:#fff;border:0;border-radius:10px;padding:14px 18px;font-weight:700;cursor:pointer;margin-top:10px}
+  .result{background:#eef5ff;border:1px solid #cfe2ff;border-radius:12px;padding:16px 18px;margin-top:16px}
   .muted{color:#667085}
   .topnav{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
   a.home{color:#1668e3;text-decoration:none;font-weight:600}
-  .btn-consult{display:block;width:240px;margin:20px auto 0;padding:14px 18px;border-radius:12px;background:#1d4ed8;color:#fff;font-weight:800;text-align:center;text-decoration:none}
 </style>
 </head>
 <body>
@@ -33,7 +32,7 @@
   <div>
     <button class="btn" id="submitBtn" type="button">결과 보기</button>
     <div id="out" class="result" style="display:none"></div>
-    <a href="counsel.html" id="consultBtn" class="btn-consult" style="display:none">상담 신청하기</a>
+    <button class="btn" onclick="window.location.href='counsel.html'" type="button">상담 신청하기</button>
   </div>
 </div>
 
@@ -79,7 +78,7 @@ form.append(impact);
 function score(){
   let s=0,c=0;
   q.forEach((_,i)=>{
-    const sel = form.querySelector(\`input[name="q\${i}"]:checked\`);
+    const sel = form.querySelector(`input[name="q${i}"]:checked`);
     if(!sel) return; s+=Number(sel.value); c++;
   });
   if(c!==q.length) return null;
@@ -89,17 +88,15 @@ function score(){
 document.getElementById('submitBtn').addEventListener('click', ()=>{
   const sc = score();
   const out = document.getElementById('out');
-  const btn = document.getElementById('consultBtn');
   if(sc===null){ alert('모든 문항을 선택해 주세요.'); return; }
   let level="", guide="";
-  if(sc<=4){ level="최소"; guide="우울 증상이 경미한 수준입니다."; btn.style.display='none'; }
-  else if(sc<=9){ level="경도"; guide="가벼운 우울감이 있습니다. 지속되면 점검 권장."; btn.style.display='block'; }
-  else if(sc<=14){ level="중등도"; guide="중등도의 우울감. 전문가 상담을 권합니다."; btn.style.display='block'; }
-  else if(sc<=19){ level="중등도-중증"; guide="증상이 뚜렷합니다. 상담/진료를 권합니다."; btn.style.display='block'; }
-  else { level="중증"; guide="중증 범위일 수 있습니다. 빠른 상담/진료 권고."; btn.style.display='block'; }
-
+  if(sc<=4){ level="최소"; guide="우울 증상이 경미한 수준입니다."; }
+  else if(sc<=9){ level="경도"; guide="우울 증상이 가벼운 편입니다. 지속 시 점검 권장."; }
+  else if(sc<=14){ level="중등도"; guide="중등도의 우울감. 전문가 상담을 권합니다."; }
+  else if(sc<=19){ level="중등도-중증"; guide="증상이 뚜렷합니다. 상담/진료를 권합니다."; }
+  else { level="중증"; guide="중증 범위일 수 있습니다. 빠른 상담/진료 권고."; }
   out.style.display='block';
-  out.innerHTML = \`<b>총점: \${sc}점 (0~27)</b><br/>구분: <b>\${level}</b><br/><span class="muted">\${guide}</span>\`;
+  out.innerHTML = `<b>총점: ${sc}점 (0~27)</b><br/>구분: <b>${level}</b><br/><span class="muted">${guide}</span>`;
 });
 </script>
 </body>
