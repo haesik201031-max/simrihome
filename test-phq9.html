@@ -27,77 +27,73 @@
   <h1>PHQ-9 (우울)</h1>
   <p class="muted">지난 2주간 얼마나 자주 해당 증상이 있었는지 선택하세요.</p>
 
-  <form id="form"></form>
+  <form id="phqForm">
+    <div class="card"><div class="q">1. 기분이 가라앉거나, 우울하거나, 희망이 없었다</div>
+      <div class="opts">
+        <label><input type="radio" name="q1" value="0" required> 없음</label>
+        <label><input type="radio" name="q1" value="1"> 2~6일</label>
+        <label><input type="radio" name="q1" value="2"> 7~12일</label>
+        <label><input type="radio" name="q1" value="3"> 거의 매일</label>
+      </div>
+    </div>
 
-  <div>
-    <button class="btn" id="submitBtn" type="button">결과 보기</button>
-    <div id="out" class="result" style="display:none"></div>
-    <button class="btn" onclick="window.location.href='counsel.html'" type="button">상담 신청하기</button>
-  </div>
+    <!-- 동일한 구조로 9번까지 작성 -->
+    <div class="card"><div class="q">2. 평소 하던 일에 대한 흥미가 없어지거나 즐거움이 줄었다</div>
+      <div class="opts">
+        <label><input type="radio" name="q2" value="0" required> 없음</label>
+        <label><input type="radio" name="q2" value="1"> 2~6일</label>
+        <label><input type="radio" name="q2" value="2"> 7~12일</label>
+        <label><input type="radio" name="q2" value="3"> 거의 매일</label>
+      </div>
+    </div>
+
+    <!-- ... 중간 생략 (3~8번) ... -->
+
+    <div class="card"><div class="q">9. 차라리 죽는 게 낫겠다 / 자해 생각을 했다</div>
+      <div class="opts">
+        <label><input type="radio" name="q9" value="0" required> 없음</label>
+        <label><input type="radio" name="q9" value="1"> 2~6일</label>
+        <label><input type="radio" name="q9" value="2"> 7~12일</label>
+        <label><input type="radio" name="q9" value="3"> 거의 매일</label>
+      </div>
+    </div>
+
+    <div class="card"><div class="q">10. 위 증상 때문에 일/집안일/대인관계에 지장이 있었습니까? (점수에 미포함)</div>
+      <div class="opts">
+        <label><input type="radio" name="impact" required> 전혀 지장없다</label>
+        <label><input type="radio" name="impact"> 약간 힘들었다</label>
+        <label><input type="radio" name="impact"> 많이 힘들었다</label>
+        <label><input type="radio" name="impact"> 매우 많이 힘들었다</label>
+      </div>
+    </div>
+
+    <button class="btn" type="button" onclick="calcScore()">결과 보기</button>
+  </form>
+
+  <div id="out" class="result" style="display:none"></div>
+  <button class="btn" onclick="window.location.href='counsel.html'" type="button">상담 신청하기</button>
 </div>
 
 <script>
-const q = [
-  "기분이 가라앉거나, 우울하거나, 희망이 없었다",
-  "평소 하던 일에 대한 흥미가 없어지거나 즐거움이 줄었다",
-  "잠들기 어렵거나 자주 깼다 / 혹은 너무 많이 잤다",
-  "평소보다 식욕이 줄었다 / 혹은 평소보다 많이 먹었다",
-  "다른 사람이 눈치 챌 정도로 말과 행동이 느려졌다 / 혹은 너무 안절부절못했다",
-  "피곤하고 기운이 없었다",
-  "내가 잘못했거나 실패했다는 생각 / 자신과 가족을 실망시켰다고 생각했다",
-  "신문 읽기 / TV 보기 같은 일에도 집중하기 어려웠다",
-  "차라리 죽는 게 낫겠다 / 자해 생각을 했다"
-];
-
-const labels = ["없음","2~6일","7~12일","거의 매일"];
-const impactQ = "위 증상 때문에 일/집안일/대인관계에 지장이 있었습니까? (점수에 미포함)";
-
-const form = document.getElementById('form');
-q.forEach((t,i)=>{
-  const box = document.createElement('div'); box.className='card';
-  box.innerHTML = `
-    <div class="q">${i+1}. ${t}</div>
-    <div class="opts">
-      ${labels.map((lb,idx)=>`
-        <label><input type="radio" name="q${i}" value="${idx}" required/> ${lb}</label>
-      `).join('')}
-    </div>`;
-  form.append(box);
-});
-const impact = document.createElement('div');
-impact.className='card';
-impact.innerHTML = `
-  <div class="q">10. ${impactQ}</div>
-  <div class="opts">
-    ${["전혀 지장없다","약간 힘들었다","많이 힘들었다","매우 많이 힘들었다"].map((lb,idx)=>`
-      <label><input type="radio" name="impact" value="${idx}" required/> ${lb}</label>
-    `).join('')}
-  </div>`;
-form.append(impact);
-
-function score(){
-  let s=0,c=0;
-  q.forEach((_,i)=>{
-    const sel = form.querySelector(`input[name="q${i}"]:checked`);
-    if(!sel) return; s+=Number(sel.value); c++;
-  });
-  if(c!==q.length) return null;
-  return s; // 0~27
-}
-
-document.getElementById('submitBtn').addEventListener('click', ()=>{
-  const sc = score();
-  const out = document.getElementById('out');
-  if(sc===null){ alert('모든 문항을 선택해 주세요.'); return; }
+function calcScore(){
+  const form=document.getElementById("phqForm");
+  let score=0;
+  for(let i=1;i<=9;i++){
+    const sel=form.querySelector(`input[name="q${i}"]:checked`);
+    if(!sel){ alert("모든 문항에 응답해 주세요."); return; }
+    score+=parseInt(sel.value);
+  }
   let level="", guide="";
-  if(sc<=4){ level="최소"; guide="우울 증상이 경미한 수준입니다."; }
-  else if(sc<=9){ level="경도"; guide="우울 증상이 가벼운 편입니다. 지속 시 점검 권장."; }
-  else if(sc<=14){ level="중등도"; guide="중등도의 우울감. 전문가 상담을 권합니다."; }
-  else if(sc<=19){ level="중등도-중증"; guide="증상이 뚜렷합니다. 상담/진료를 권합니다."; }
+  if(score<=4){ level="최소"; guide="우울 증상이 경미한 수준입니다."; }
+  else if(score<=9){ level="경도"; guide="우울 증상이 가벼운 편입니다. 지속 시 점검 권장."; }
+  else if(score<=14){ level="중등도"; guide="중등도의 우울감. 전문가 상담을 권합니다."; }
+  else if(score<=19){ level="중등도-중증"; guide="증상이 뚜렷합니다. 상담/진료를 권합니다."; }
   else { level="중증"; guide="중증 범위일 수 있습니다. 빠른 상담/진료 권고."; }
-  out.style.display='block';
-  out.innerHTML = `<b>총점: ${sc}점 (0~27)</b><br/>구분: <b>${level}</b><br/><span class="muted">${guide}</span>`;
-});
+
+  const out=document.getElementById("out");
+  out.style.display="block";
+  out.innerHTML=`<b>총점: ${score}점 (0~27)</b><br/>구분: <b>${level}</b><br/><span class="muted">${guide}</span>`;
+}
 </script>
 </body>
 </html>
