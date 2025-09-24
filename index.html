@@ -5,116 +5,48 @@
   <title>심리검사 메인 선택</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root{
-      --primary:#2563eb; --primary-600:#1d4ed8;
-      --bg:#f6f7fb; --text:#1f2937; --muted:#6b7280; --card:#ffffff; --border:#e5e7eb;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0; padding:40px 16px; font-family:"Noto Sans KR",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple SD Gothic Neo","맑은 고딕",sans-serif;
-      background:var(--bg); color:var(--text);
-    }
-    .wrap{max-width:980px; margin:0 auto}
-    header{margin-bottom:28px; text-align:center}
-    header h1{font-size:28px; margin:0 0 8px}
-    header p{margin:0; color:var(--muted)}
-    .grid{
-      display:grid; gap:16px; grid-template-columns:repeat(1,minmax(0,1fr));
-    }
-    @media (min-width:640px){ .grid{grid-template-columns:repeat(2,minmax(0,1fr));} }
-    @media (min-width:1024px){ .grid{grid-template-columns:repeat(3,minmax(0,1fr));} }
-
-    .card{
-      background:var(--card); border:1px solid var(--border); border-radius:14px; padding:18px 16px;
-      transition:.2s; display:flex; flex-direction:column; justify-content:space-between; min-height:140px;
-      box-shadow:0 6px 16px rgba(17,24,39,.06);
-    }
-    .card h3{margin:0 0 8px; font-size:18px}
-    .card p{margin:0 0 14px; color:var(--muted); font-size:14px; line-height:1.45}
-    .card a{
-      display:inline-block; padding:10px 14px; border-radius:10px;
-      text-decoration:none; color:#fff; background:var(--primary); transition:.2s;
-      border:1px solid var(--primary-600); font-weight:600; font-size:14px;
-    }
-    .card:hover{transform:translateY(-2px); box-shadow:0 10px 22px rgba(17,24,39,.09)}
-    .card a:hover{background:var(--primary-600)}
-    footer{margin-top:28px; text-align:center; color:var(--muted); font-size:13px}
+    body{font-family:"Noto Sans KR",sans-serif;margin:0;background:#f6f7fb;color:#111}
+    .wrap{max-width:960px;margin:0 auto;padding:32px}
+    h1{text-align:center;font-size:28px;margin-bottom:20px}
+    .card{background:#fff;border:1px solid #ddd;border-radius:14px;padding:18px;margin:12px 0;box-shadow:0 6px 16px rgba(0,0,0,.06)}
+    .card h3{margin:0 0 6px}
+    .card p{margin:0 0 10px;color:#555}
+    .card button{background:#2563eb;color:#fff;border:0;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:600}
+    .info{margin:20px 0;padding:16px;background:#eef5ff;border:1px solid #cfe2ff;border-radius:12px}
+    .info label{display:block;margin:8px 0 4px}
+    .info input, .info select{width:100%;padding:8px;border:1px solid #ccc;border-radius:8px}
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <h1>마음건강 자가검진</h1>
-      <p>검사 종류를 선택하세요 (중복 선택 가능 · 결과는 화면에 표시)</p>
-    </header>
+<div class="wrap">
+  <h1>마음건강 자가검진</h1>
 
-    <div class="grid">
-      <div class="card">
-        <div>
-          <h3>스트레스평가 (PSS)</h3>
-          <p>최근 한 달의 인지된 스트레스 수준</p>
-        </div>
-        <a href="test-pss.html">검사 시작</a>
-      </div>
-
-      <div class="card">
-        <div>
-          <h3>우울 (PHQ-9)</h3>
-          <p>지난 2주간 우울 증상 빈도와 심각도</p>
-        </div>
-        <a href="test-phq9.html">검사 시작</a>
-      </div>
-
-      <div class="card">
-        <div>
-          <h3>알코올중독 (AUDIT-K)</h3>
-          <p>음주 패턴 / 위험 음주 선별</p>
-        </div>
-        <a href="test-auditk.html">검사 시작</a>
-      </div>
-
-      <div class="card">
-        <div>
-          <h3>정신증 (CAPE-15)</h3>
-          <p>양성/음성/우울 관련 경험 빈도 및 고통</p>
-        </div>
-        <a href="test-cape15.html">검사 시작</a>
-      </div>
-
-      <div class="card">
-        <div>
-          <h3>사건충격척도 (IES-R)</h3>
-          <p>외상 후 스트레스 반응 정도</p>
-        </div>
-        <a href="test-iesr.html">검사 시작</a>
-      </div>
-
-      <div class="card">
-        <div>
-          <h3>불면 (ISI-K)</h3>
-          <p>수면 곤란 심각도 및 기능 손상</p>
-        </div>
-        <a href="test-isik.html">검사 시작</a>
-      </div>
-
-      <div class="card">
-        <div>
-          <h3>온라인 상담</h3>
-          <p>간단 정보 입력 후 상담 신청 페이지로 이동</p>
-        </div>
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/viewform" target="_blank">상담하기</a>
-      </div>
-
-      <div class="card">
-        <div>
-          <h3>결과 보기(테스트)</h3>
-          <p>검사 결과 화면 샘플(내부 점수 전달 시 표시)</p>
-        </div>
-        <a href="result.html">결과 페이지</a>
-      </div>
-    </div>
-
-    <footer>© 2025 마음건강 자가검진</footer>
+  <div class="info">
+    <h3>기본정보 입력</h3>
+    <label>이름</label><input type="text" id="name" />
+    <label>성별</label>
+    <select id="gender"><option>남</option><option>여</option></select>
+    <label>나이</label><input type="number" id="age" />
+    <label>거주지</label><input type="text" id="location" />
   </div>
+
+  <div class="card">
+    <h3>정신증 (CAPE-15)</h3>
+    <p>양성/음성/우울 관련 경험 빈도 및 고통</p>
+    <button onclick="startTest('test-cape15.html')">검사 시작</button>
+  </div>
+</div>
+
+<script>
+function startTest(page){
+  const name=document.getElementById("name").value.trim();
+  const gender=document.getElementById("gender").value;
+  const age=document.getElementById("age").value.trim();
+  const location=document.getElementById("location").value.trim();
+  if(!name||!age||!location){alert("모든 기본정보를 입력하세요.");return;}
+  const query=`?name=${encodeURIComponent(name)}&gender=${encodeURIComponent(gender)}&age=${encodeURIComponent(age)}&location=${encodeURIComponent(location)}`;
+  window.location.href=page+query;
+}
+</script>
 </body>
 </html>
