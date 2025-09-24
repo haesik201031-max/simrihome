@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
-<title>AUDIT-K (음주)</title>
+<title>ISI-K (불면)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
   body{font-family:-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:#f6f8fb;color:#111}
@@ -28,8 +28,8 @@
     <a class="home" href="index.html">← 메인으로</a>
   </div>
 
-  <h1>AUDIT-K (음주)</h1>
-  <p class="muted">최근 1년 동안의 음주 습관을 바탕으로 선택하세요.</p>
+  <h1>ISI-K (불면)</h1>
+  <p class="muted">지난 2주간 수면에 대해 해당하는 정도를 선택하세요.</p>
 
   <form id="form"></form>
 
@@ -44,130 +44,39 @@
 </div>
 
 <script>
-// PSS와 동일한 동적 생성 방식(0-based name: q0~q9)
-const questions = [
-  {
-    text: "1. 얼마나 자주 술을 마십니까?",
-    opts: [
-      {label:"전혀 안 마심", value:0},
-      {label:"한 달에 한 번 미만", value:1},
-      {label:"한 달에 2~4번", value:2},
-      {label:"주 2~3번", value:3},
-      {label:"주 4번 이상", value:4},
-    ]
-  },
-  {
-    text: "2. 술을 마시는 날, 보통 얼마나 마십니까? (잔 기준)",
-    opts: [
-      {label:"1~2잔", value:0},
-      {label:"3~4잔", value:1},
-      {label:"5~6잔", value:2},
-      {label:"7~9잔", value:3},
-      {label:"10잔 이상", value:4},
-    ]
-  },
-  {
-    text: "3. 한 번에 소주 1병(맥주 4캔) 이상 마시는 경우는 얼마나 자주 있습니까?",
-    opts: [
-      {label:"전혀 없음", value:0},
-      {label:"한 달에 1회 미만", value:1},
-      {label:"한 달에 1회 이상", value:2},
-      {label:"주 1회 이상", value:3},
-      {label:"거의 매일", value:4},
-    ]
-  },
-  {
-    text: "4. 지난 1년 동안, 술 때문에 일상에 지장이 있었습니까?",
-    opts: [
-      {label:"없음", value:0},
-      {label:"한 달에 1회 미만", value:1},
-      {label:"한 달에 1회 이상", value:2},
-      {label:"주 1회 이상", value:3},
-      {label:"거의 매일", value:4},
-    ]
-  },
-  {
-    text: "5. 지난 1년 동안, 음주 후 후회하거나 죄책감을 느낀 적이 있습니까?",
-    opts: [
-      {label:"없음", value:0},
-      {label:"한 달에 1회 미만", value:1},
-      {label:"한 달에 1회 이상", value:2},
-      {label:"주 1회 이상", value:3},
-      {label:"거의 매일", value:4},
-    ]
-  },
-  {
-    text: "6. 음주 후 기억이 끊긴 적이 있습니까?",
-    opts: [
-      {label:"없음", value:0},
-      {label:"한 달에 1회 미만", value:1},
-      {label:"한 달에 1회 이상", value:2},
-      {label:"주 1회 이상", value:3},
-      {label:"거의 매일", value:4},
-    ]
-  },
-  {
-    text: "7. 술로 인해 다치거나 사고를 당한 적이 있습니까?",
-    opts: [
-      {label:"없음", value:0},
-      {label:"있음", value:2},
-      {label:"최근 1년 내 반복됨", value:4},
-    ]
-  },
-  {
-    text: "8. 가족이나 친구가 당신의 음주를 걱정하거나 권고한 적이 있습니까?",
-    opts: [
-      {label:"없음", value:0},
-      {label:"있음", value:2},
-      {label:"최근 1년 내 반복됨", value:4},
-    ]
-  },
-  {
-    text: "9. 아침에 해장술을 마셔본 적이 있습니까?",
-    opts: [
-      {label:"없음", value:0},
-      {label:"드물게", value:1},
-      {label:"가끔", value:2},
-      {label:"자주", value:3},
-      {label:"거의 매일", value:4},
-    ]
-  },
-  {
-    text: "10. 음주를 줄이거나 끊어야겠다고 생각한 적이 있습니까?",
-    opts: [
-      {label:"전혀 없음", value:0},
-      {label:"있음", value:2},
-      {label:"최근 1년 내 반복됨", value:4},
-    ]
-  },
+const q = [
+  "잠들기 어려웠다",
+  "자주 깨거나 일찍 깼다",
+  "충분히 자지 못했다고 느꼈다",
+  "수면 문제가 낮 동안의 기능에 영향을 주었다",
+  "수면 문제로 삶의 질이 저하되었다",
+  "수면 문제로 기분/정서가 영향을 받았다",
+  "수면 문제로 다른 사람과의 관계에 영향을 주었다"
 ];
 
-const labelsToHTML = (name, opts) =>
-  opts.map((o,idx)=>(
-    `<label><input type="radio" name="${name}" value="${o.value}" required/> ${o.label}</label>`
-  )).join('');
+const labels = ["없음(0점)","경미(1점)","중간(2점)","심함(3점)","매우 심함(4점)"];
 
 const form = document.getElementById('form');
-questions.forEach((q,i)=>{
+q.forEach((t,i)=>{
   const box = document.createElement('div'); box.className='card';
   box.innerHTML = `
-    <div class="q">${q.text}</div>
+    <div class="q">${i+1}. ${t}</div>
     <div class="opts">
-      ${labelsToHTML(`q${i}`, q.opts)}
+      ${labels.map((lb,idx)=>`
+        <label><input type="radio" name="q${i}" value="${idx}" required/> ${lb}</label>
+      `).join('')}
     </div>`;
   form.append(box);
 });
 
 function score(){
-  let sum=0, count=0;
-  for(let i=0;i<questions.length;i++){
-    const sel = form.querySelector(`input[name="q${i}"]:checked`);
-    if(!sel) return null;
-    sum += Number(sel.value);
-    count++;
-  }
-  if(count!==questions.length) return null;
-  return sum; // 0~40
+  let s=0,c=0;
+  q.forEach((_,i)=>{
+    const sel = form.querySelector(\`input[name="q\${i}"]:checked\`);
+    if(!sel) return; s+=Number(sel.value); c++;
+  });
+  if(c!==q.length) return null;
+  return s; // 0~28
 }
 
 document.getElementById('submitBtn').addEventListener('click', ()=>{
@@ -175,20 +84,17 @@ document.getElementById('submitBtn').addEventListener('click', ()=>{
   const out = document.getElementById('out');
   if(sc===null){ alert('모든 문항을 선택해 주세요.'); return; }
 
-  let level='', guide='';
-  if(sc < 8){
-    level='정상';
-    guide='음주 습관이 비교적 건강하며 위험 요인은 낮습니다.';
-  }else if(sc < 16){
-    level='위험 음주';
-    guide='음주 습관이 건강에 영향을 줄 가능성이 있으며, 절주 노력과 자기 점검이 필요합니다. → 상담 선택 권장';
-  }else{
-    level='알코올 의존 가능성';
-    guide='알코올 사용 문제가 뚜렷해 일상·신체·정신건강에 심각한 영향을 줄 수 있습니다. → 상담 필수 요망';
+  let guide="";
+  if(sc<=14){
+    guide="경증: 일시적 불면으로 수면위생 개선만으로도 호전될 수 있습니다.";
+  } else if(sc<=21){
+    guide="중등도: 불면이 생활 기능에 영향을 주고 있으며, 지속적일 경우 전문 상담이 필요합니다. → 상담 선택 권장";
+  } else {
+    guide="중증: 수면 문제로 심각한 삶의 질 저하가 있으며, 반드시 치료적 개입이 필요합니다. → 상담 필수 요망";
   }
 
   out.style.display='block';
-  out.innerHTML = `<b>총점: ${sc}점</b><br/><b>구분: ${level}</b><br/><span class="muted">${guide}</span>`;
+  out.innerHTML = \`<b>총점: \${sc}점 (0~28)</b><br/><span>\${guide}</span>\`;
   document.getElementById('counselDiv').style.display='block';
 });
 </script>
