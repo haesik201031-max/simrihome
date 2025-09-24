@@ -37,7 +37,7 @@
   </div>
 
   <div class="counsel-btn" id="counselDiv">
-    <button type="button" onclick="sendToGoogleForm()">상담 신청하기</button>
+    <button onclick="window.location.href='counsel.html'" type="button">상담 신청하기</button>
   </div>
 </div>
 
@@ -70,12 +70,10 @@ q.forEach((t,i)=>{
   form.append(box);
 });
 
-let lastScore=0, lastGuide="";
-
 function score(){
   let s=0,c=0;
   q.forEach((_,i)=>{
-    const sel = form.querySelector(\`input[name="q\${i}"]:checked\`);
+    const sel=form.querySelector(`input[name="q${i}"]:checked`);
     if(!sel) return; s+=Number(sel.value); c++;
   });
   if(c!==q.length) return null;
@@ -83,35 +81,50 @@ function score(){
 }
 
 document.getElementById('submitBtn').addEventListener('click', ()=>{
-  const sc = score();
-  const out = document.getElementById('out');
+  const sc=score();
+  const out=document.getElementById('out');
   if(sc===null){ alert('모든 문항을 선택해 주세요.'); return; }
 
-  lastScore=sc;
-  if(sc<=13){ lastGuide="낮음: 일상에서 큰 스트레스 없이 안정된 상태입니다. 생활습관을 잘 유지하세요."; }
-  else if(sc<=19){ lastGuide="중간: 평균적인 수준의 스트레스를 경험하고 있습니다. 스트레스 관리 방법(운동, 명상, 취미 등)을 적극적으로 실천하는 것이 좋습니다. → 상담 선택 권장"; }
-  else { lastGuide="높음: 스트레스 반응이 심각하게 누적되고 있으며, 건강과 삶의 질에 영향을 줄 수 있습니다. → 상담 필수 요망"; }
+  let guide="";
+  if(sc<=13){ guide="낮음: 큰 스트레스 없이 안정된 상태입니다."; }
+  else if(sc<=19){ guide="중간: 평균 수준의 스트레스, 관리 필요. → 상담 권장"; }
+  else { guide="높음: 심각한 스트레스 누적. → 상담 필수 요망"; }
 
   out.style.display='block';
-  out.innerHTML = \`<b>총점: \${sc}점 (0~30)</b><br/><span>\${lastGuide}</span>\`;
+  out.innerHTML=`<b>총점: ${sc}점 (0~30)</b><br/><span>${guide}</span>`;
   document.getElementById('counselDiv').style.display='block';
+
+  // localStorage 불러오기
+  const name=localStorage.getItem('name')||'';
+  const gender=localStorage.getItem('gender')||'';
+  const age=localStorage.getItem('age')||'';
+  const location=localStorage.getItem('location')||'';
+
+  // 구글폼 전송
+  sendToGoogleForm({
+    name, gender, age, location,
+    testName:"PSS",
+    score:sc,
+    result:guide
+  });
 });
 
-function sendToGoogleForm(){
-  const url = "https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/formResponse";
+function sendToGoogleForm(data){
+  const url="https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/formResponse";
+  const fd=new FormData();
 
-  const data = new FormData();
-  data.append("entry.707709000", "닉네임자동값");   // 닉네임
-  data.append("entry.513328345", "20대");           // 나이
-  data.append("entry.1389984940", "여성");         // 성별
-  data.append("entry.436383647", "부산");          // 지역
-  data.append("entry.1649771076", "PSS");          // 검사명
-  data.append("entry.1905166231", lastScore);      // 총점
-  data.append("entry.43237668", lastGuide);        // 판정결과
+  // entry ID 매핑
+  fd.append("entry.707709000", data.name);      // 닉네임
+  fd.append("entry.1389984940", data.gender);   // 성별
+  fd.append("entry.513328345", data.age);       // 나이
+  fd.append("entry.436383647", data.location);  // 지역
+  fd.append("entry.1649771076", data.testName); // 검사명
+  fd.append("entry.1905166231", data.score);    // 총점
+  fd.append("entry.43237668", data.result);     // 판정결과
 
-  fetch(url, { method:"POST", mode:"no-cors", body:data })
-    .then(()=>{ alert("상담 요청이 전송되었습니다."); })
-    .catch(err=>{ console.error("전송 실패", err); });
+  fetch(url,{method:"POST",mode:"no-cors",body:fd})
+    .then(()=>console.log("구글폼 전송 성공"))
+    .catch(err=>console.error("전송 실패",err));
 }
 </script>
 </body>
