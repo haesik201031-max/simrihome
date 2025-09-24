@@ -1,162 +1,99 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <title>스트레스 평가 (PSS)</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    body {
-      font-family: "Noto Sans KR", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-      margin: 0; padding: 20px;
-      background: #f6f8fb; color: #111;
-    }
-    .wrap { max-width: 900px; margin: 0 auto; }
-    h1 { font-size: 26px; margin-bottom: 16px; }
-    form { background: #fff; padding: 20px; border-radius: 14px;
-           box-shadow: 0 6px 16px rgba(17,24,39,.06); }
-    .q { margin-bottom: 20px; }
-    .q p { margin: 0 0 8px; font-weight: 600; }
-    label { margin-right: 14px; }
-    .btn {
-      display: inline-block; padding: 10px 18px; border-radius: 10px;
-      border: 0; cursor: pointer; font-weight: 700; font-size: 15px;
-    }
-    .btn.primary { background: #1668e3; color: #fff; }
-    .result {
-      margin-top: 24px; padding: 18px; border-radius: 12px;
-      background: #eef3fc; border: 1px solid #c7d7f7;
-    }
-    .consult {
-      margin-top: 20px; text-align: center;
-    }
-    .consult a {
-      display: inline-block; background: #dc2626; color: #fff;
-      padding: 14px 22px; font-size: 18px; font-weight: 700;
-      border-radius: 12px; text-decoration: none;
-    }
-  </style>
+<meta charset="UTF-8" />
+<title>PSS (스트레스)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  body{font-family:-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:#f6f8fb;color:#111}
+  .wrap{max-width:900px;margin:0 auto;padding:32px}
+  h1{font-size:28px;margin:8px 0 16px}
+  .card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:22px 20px;margin:14px 0;box-shadow:0 6px 16px rgba(17,24,39,.06)}
+  .q{margin:0 0 12px;font-weight:600}
+  .opts label{display:inline-flex;align-items:center;gap:8px;margin:6px 10px 6px 0;padding:8px 10px;border-radius:10px;border:1px solid #e5e7eb;cursor:pointer}
+  .btn{display:inline-block;background:#1668e3;color:#fff;border:0;border-radius:10px;padding:14px 18px;font-weight:700;cursor:pointer;margin-top:10px}
+  .result{background:#eef5ff;border:1px solid #cfe2ff;border-radius:12px;padding:16px 18px;margin-top:16px;font-size:16px}
+  .muted{color:#667085}
+  .topnav{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  a.home{color:#1668e3;text-decoration:none;font-weight:600}
+  .counsel-btn{display:none;text-align:center;margin-top:20px}
+  .counsel-btn button{background:#e53935;color:#fff;font-size:18px;font-weight:700;border:0;border-radius:12px;padding:16px 28px;cursor:pointer}
+</style>
 </head>
 <body>
 <div class="wrap">
-  <h1>스트레스 평가 (PSS-10)</h1>
-  <p>지난 한 달 동안의 경험을 바탕으로 응답해 주세요.</p>
+  <div class="topnav">
+    <div class="muted">마음건강 자가검진</div>
+    <a class="home" href="index.html">← 메인으로</a>
+  </div>
+  <h1>PSS (스트레스)</h1>
+  <p class="muted">지난 한 달 동안 얼마나 자주 해당 상황을 경험했는지 선택하세요.</p>
 
-  <form id="pssForm">
-    <div class="q"><p>1. 예기치 못한 일 때문에 화가 난 적이 얼마나 있습니까?</p>
-      <label><input type="radio" name="q1" value="0" required> 전혀 아니다</label>
-      <label><input type="radio" name="q1" value="1"> 거의 없다</label>
-      <label><input type="radio" name="q1" value="2"> 가끔 있다</label>
-      <label><input type="radio" name="q1" value="3"> 자주 있다</label>
-      <label><input type="radio" name="q1" value="4"> 매우 자주</label>
-    </div>
+  <form id="form"></form>
 
-    <div class="q"><p>2. 중요한 일을 통제할 수 없다고 느낀 적이 얼마나 있습니까?</p>
-      <label><input type="radio" name="q2" value="0" required> 전혀 아니다</label>
-      <label><input type="radio" name="q2" value="1"> 거의 없다</label>
-      <label><input type="radio" name="q2" value="2"> 가끔 있다</label>
-      <label><input type="radio" name="q2" value="3"> 자주 있다</label>
-      <label><input type="radio" name="q2" value="4"> 매우 자주</label>
-    </div>
+  <div>
+    <button class="btn" id="submitBtn" type="button">결과 확인</button>
+    <div id="out" class="result" style="display:none"></div>
+  </div>
 
-    <div class="q"><p>3. 초조하거나 스트레스를 받는다고 느낀 적이 얼마나 있습니까?</p>
-      <label><input type="radio" name="q3" value="0" required> 전혀 아니다</label>
-      <label><input type="radio" name="q3" value="1"> 거의 없다</label>
-      <label><input type="radio" name="q3" value="2"> 가끔 있다</label>
-      <label><input type="radio" name="q3" value="3"> 자주 있다</label>
-      <label><input type="radio" name="q3" value="4"> 매우 자주</label>
-    </div>
-
-    <div class="q"><p>4. 개인적인 문제를 다룰 수 없다고 생각한 적이 얼마나 있습니까?</p>
-      <label><input type="radio" name="q4" value="0" required> 전혀 아니다</label>
-      <label><input type="radio" name="q4" value="1"> 거의 없다</label>
-      <label><input type="radio" name="q4" value="2"> 가끔 있다</label>
-      <label><input type="radio" name="q4" value="3"> 자주 있다</label>
-      <label><input type="radio" name="q4" value="4"> 매우 자주</label>
-    </div>
-
-    <div class="q"><p>5. 일상의 중요한 일을 효과적으로 처리하고 있다고 느낀 적이 얼마나 있습니까?</p>
-      <label><input type="radio" name="q5" value="0" required> 전혀 아니다</label>
-      <label><input type="radio" name="q5" value="1"> 거의 없다</label>
-      <label><input type="radio" name="q5" value="2"> 가끔 있다</label>
-      <label><input type="radio" name="q5" value="3"> 자주 있다</label>
-      <label><input type="radio" name="q5" value="4"> 매우 자주</label>
-    </div>
-
-    <div class="q"><p>6. 통제할 수 없는 일들 때문에 마음이 흔들린 적이 얼마나 있습니까?</p>
-      <label><input type="radio" name="q6" value="0" required> 전혀 아니다</label>
-      <label><input type="radio" name="q6" value="1"> 거의 없다</label>
-      <label><input type="radio" name="q6" value="2"> 가끔 있다</label>
-      <label><input type="radio" name="q6" value="3"> 자주 있다</label>
-      <label><input type="radio" name="q6" value="4"> 매우 자주</label>
-    </div>
-
-    <div class="q"><p>7. 일이 내 뜻대로 되고 있다고 느낀 적이 얼마나 있습니까?</p>
-      <label><input type="radio" name="q7" value="0" required> 전혀 아니다</label>
-      <label><input type="radio" name="q7" value="1"> 거의 없다</label>
-      <label><input type="radio" name="q7" value="2"> 가끔 있다</label>
-      <label><input type="radio" name="q7" value="3"> 자주 있다</label>
-      <label><input type="radio" name="q7" value="4"> 매우 자주</label>
-    </div>
-
-    <div class="q"><p>8. 어려움을 대처하지 못한다고 생각한 적이 얼마나 있습니까?</p>
-      <label><input type="radio" name="q8" value="0" required> 전혀 아니다</label>
-      <label><input type="radio" name="q8" value="1"> 거의 없다</label>
-      <label><input type="radio" name="q8" value="2"> 가끔 있다</label>
-      <label><input type="radio" name="q8" value="3"> 자주 있다</label>
-      <label><input type="radio" name="q8" value="4"> 매우 자주</label>
-    </div>
-
-    <div class="q"><p>9. 내 상황을 통제하고 있다고 느낀 적이 얼마나 있습니까?</p>
-      <label><input type="radio" name="q9" value="0" required> 전혀 아니다</label>
-      <label><input type="radio" name="q9" value="1"> 거의 없다</label>
-      <label><input type="radio" name="q9" value="2"> 가끔 있다</label>
-      <label><input type="radio" name="q9" value="3"> 자주 있다</label>
-      <label><input type="radio" name="q9" value="4"> 매우 자주</label>
-    </div>
-
-    <div class="q"><p>10. 너무 많은 어려움이 겹쳐서 극복할 수 없다고 느낀 적이 얼마나 있습니까?</p>
-      <label><input type="radio" name="q10" value="0" required> 전혀 아니다</label>
-      <label><input type="radio" name="q10" value="1"> 거의 없다</label>
-      <label><input type="radio" name="q10" value="2"> 가끔 있다</label>
-      <label><input type="radio" name="q10" value="3"> 자주 있다</label>
-      <label><input type="radio" name="q10" value="4"> 매우 자주</label>
-    </div>
-
-    <button class="btn primary" type="button" onclick="calcScore()">결과 확인</button>
-  </form>
-
-  <div id="result" class="result" style="display:none;"></div>
-  <div class="consult" id="consultBtn" style="display:none;">
-    <a href="counsel.html">상담 신청하기</a>
+  <div class="counsel-btn" id="counselDiv">
+    <button onclick="window.location.href='counsel.html'" type="button">상담 신청하기</button>
   </div>
 </div>
 
 <script>
-function calcScore(){
-  const form = document.getElementById("pssForm");
-  let score = 0;
-  for(let i=1;i<=10;i++){
-    const val = form["q"+i].value;
-    if(!val){ alert("모든 문항에 응답해주세요."); return; }
-    let v = parseInt(val);
-    // 역문항 처리 (5,7,9번)
-    if([5,7,9].includes(i)){ v = 4 - v; }
-    score += v;
-  }
+const q = [
+  "예상치 못한 일 때문에 화가 난 적이 얼마나 있었습니까?",
+  "중요한 일을 통제할 수 없다고 느낀 적이 얼마나 있었습니까?",
+  "긴장을 많이 했던 적이 얼마나 있었습니까?",
+  "자신이 해야 할 일을 통제할 수 없다고 느낀 적이 얼마나 있었습니까?",
+  "문제가 너무 많아 감당할 수 없다고 느낀 적이 얼마나 있었습니까?",
+  "어려운 일을 잘 처리할 수 있다고 느낀 적이 얼마나 있었습니까?",
+  "개인적인 문제를 잘 해결할 수 있었다고 느낀 적이 얼마나 있었습니까?",
+  "중요한 일을 통제할 수 있었다고 느낀 적이 얼마나 있었습니까?",
+  "어려운 상황을 잘 대처할 수 있었다고 느낀 적이 얼마나 있었습니까?",
+  "생활 속 짜증나는 일을 잘 조절할 수 있었다고 느낀 적이 얼마나 있었습니까?"
+];
 
-  let feedback="";
-  if(score <= 13){
-    feedback = "스트레스 수준이 낮습니다. 현재의 생활습관을 유지하면 좋습니다.";
-  } else if(score <= 26){
-    feedback = "스트레스가 다소 있으므로 자기관리(휴식, 운동, 수면)가 필요합니다. 필요 시 상담을 고려하세요.";
-  } else {
-    feedback = "스트레스 수준이 높습니다. 전문가 상담을 권장합니다.";
-  }
+const labels = ["전혀 없음","가끔","자주","매우 자주"];
 
-  document.getElementById("result").style.display="block";
-  document.getElementById("result").innerHTML = `<h3>총점: ${score}점</h3><p>${feedback}</p>`;
-  document.getElementById("consultBtn").style.display="block";
+const form = document.getElementById('form');
+q.forEach((t,i)=>{
+  const box = document.createElement('div'); box.className='card';
+  box.innerHTML = `
+    <div class="q">${i+1}. ${t}</div>
+    <div class="opts">
+      ${labels.map((lb,idx)=>`
+        <label><input type="radio" name="q${i}" value="${idx}" required/> ${lb}</label>
+      `).join('')}
+    </div>`;
+  form.append(box);
+});
+
+function score(){
+  let s=0,c=0;
+  q.forEach((_,i)=>{
+    const sel = form.querySelector(`input[name="q${i}"]:checked`);
+    if(!sel) return; s+=Number(sel.value); c++;
+  });
+  if(c!==q.length) return null;
+  return s; // 0~30
 }
+
+document.getElementById('submitBtn').addEventListener('click', ()=>{
+  const sc = score();
+  const out = document.getElementById('out');
+  if(sc===null){ alert('모든 문항을 선택해 주세요.'); return; }
+
+  let guide="";
+  if(sc<=13){ guide="낮음: 일상에서 큰 스트레스 없이 안정된 상태입니다. 생활습관을 잘 유지하세요."; }
+  else if(sc<=19){ guide="중간: 평균적인 수준의 스트레스를 경험하고 있습니다. 스트레스 관리 방법(운동, 명상, 취미 등)을 적극적으로 실천하는 것이 좋습니다. → 상담 선택 권장"; }
+  else { guide="높음: 스트레스 반응이 심각하게 누적되고 있으며, 건강과 삶의 질에 영향을 줄 수 있습니다. → 상담 필수 요망"; }
+
+  out.style.display='block';
+  out.innerHTML = `<b>총점: ${sc}점 (0~30)</b><br/><span>${guide}</span>`;
+  document.getElementById('counselDiv').style.display='block';
+});
 </script>
 </body>
 </html>
