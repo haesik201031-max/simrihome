@@ -12,10 +12,12 @@
   .q{margin:0 0 12px;font-weight:600}
   .opts label{display:inline-flex;align-items:center;gap:8px;margin:6px 10px 6px 0;padding:8px 10px;border-radius:10px;border:1px solid #e5e7eb;cursor:pointer}
   .btn{display:inline-block;background:#1668e3;color:#fff;border:0;border-radius:10px;padding:14px 18px;font-weight:700;cursor:pointer}
-  .result{background:#eef5ff;border:1px solid #cfe2ff;border-radius:12px;padding:16px 18px;margin-top:16px}
+  .result{background:#eef5ff;border:1px solid #cfe2ff;border-radius:12px;padding:16px 18px;margin-top:16px;font-size:16px}
   .muted{color:#667085}
   .topnav{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
   a.home{color:#1668e3;text-decoration:none;font-weight:600}
+  .counsel-btn{display:none;text-align:center;margin-top:20px}
+  .counsel-btn button{background:#e53935;color:#fff;font-size:18px;font-weight:700;border:0;border-radius:12px;padding:16px 28px;cursor:pointer}
 </style>
 </head>
 <body>
@@ -30,8 +32,12 @@
   <form id="form"></form>
 
   <div>
-    <button class="btn" id="submitBtn" type="button">결과 보기</button>
+    <button class="btn" id="submitBtn" type="button">결과 확인</button>
     <div id="out" class="result" style="display:none"></div>
+  </div>
+
+  <div class="counsel-btn" id="counselDiv">
+    <button onclick="window.location.href='counsel.html'" type="button">상담 신청하기</button>
   </div>
 </div>
 
@@ -46,9 +52,7 @@ const qs = [
   "수면문제가 일상생활(피로, 업무/가사, 집중, 기억, 기분 등)에 미치는 영향"
 ];
 
-// 1~3,5~7: 0..4 = 전혀 없음 → 매우 심함
 const labelsA = ["전혀 없음","약간 있음","중간","심함","매우 심함"];
-// 4번(만족도): 0..4 = 매우 만족함 → 매우 불만족
 const labelsSatis = ["매우 만족함","만족함","보통임","불만족함","매우 불만족"];
 
 const form = document.getElementById('form');
@@ -70,7 +74,7 @@ function score(){
   qs.forEach((_,i)=>{
     const sel = form.querySelector(`input[name="q${i}"]:checked`);
     if(!sel) return;
-    s += Number(sel.value); // 모두 0..4로 설계됨
+    s += Number(sel.value);
     c++;
   });
   if(c!==qs.length) return null;
@@ -81,14 +85,15 @@ document.getElementById('submitBtn').addEventListener('click', ()=>{
   const sc = score();
   const out = document.getElementById('out');
   if(sc===null){ alert('모든 문항을 선택해 주세요.'); return; }
-  let level="", guide="";
-  if(sc<=7){ level="불면 없음"; guide="전반적으로 수면 문제가 경미합니다."; }
-  else if(sc<=14){ level="경도 불면"; guide="경미한 수면 곤란이 있습니다. 수면 위생 점검 권장."; }
-  else if(sc<=21){ level="중등도 불면"; guide="중등도의 수면 곤란입니다. 상담/치료를 고려하세요."; }
-  else { level="중증 불면"; guide="중증 수준일 수 있습니다. 전문적 평가를 권합니다."; }
+
+  let guide="";
+  if(sc<=7){ guide="경증: 일시적 불면으로 수면위생 개선만으로도 호전될 수 있습니다."; }
+  else if(sc<=14){ guide="중등도: 불면이 생활 기능에 영향을 주고 있으며, 지속적일 경우 전문 상담이 필요합니다. → 상담 선택 권장"; }
+  else { guide="중증: 수면 문제로 심각한 삶의 질 저하가 있으며, 반드시 치료적 개입이 필요합니다. → 상담 필수 요망"; }
 
   out.style.display='block';
-  out.innerHTML = `<b>총점: ${sc}점 (0~28)</b><br/>구분: <b>${level}</b><br/><span class="muted">${guide}</span>`;
+  out.innerHTML = `<b>총점: ${sc}점 (0~28)</b><br/><span>${guide}</span>`;
+  document.getElementById('counselDiv').style.display='block';
 });
 </script>
 </body>
