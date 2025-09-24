@@ -5,117 +5,51 @@
 <title>CAPE-15 (정신증 경험)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
-  body{font-family:-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:#f6f8fb;color:#111}
-  .wrap{max-width:1000px;margin:0 auto;padding:32px}
-  h1{font-size:28px;margin:8px 0 16px}
-  .card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:22px 20px;margin:14px 0;box-shadow:0 6px 16px rgba(17,24,39,.06)}
-  .q{margin:0 0 12px;font-weight:600}
-  .cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  .opts label{display:inline-flex;align-items:center;gap:8px;margin:6px 10px 6px 0;padding:8px 10px;border-radius:10px;border:1px solid #e5e7eb;cursor:pointer}
-  .btn{display:inline-block;background:#1668e3;color:#fff;border:0;border-radius:10px;padding:14px 18px;font-weight:700;cursor:pointer}
-  .result{background:#eef5ff;border:1px solid #cfe2ff;border-radius:12px;padding:16px 18px;margin-top:16px;font-size:16px}
-  .muted{color:#667085}
-  .topnav{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-  a.home{color:#1668e3;text-decoration:none;font-weight:600}
-  .counsel-btn{display:none;text-align:center;margin-top:20px}
-  .counsel-btn button{background:#e53935;color:#fff;font-size:18px;font-weight:700;border:0;border-radius:12px;padding:16px 28px;cursor:pointer}
+  body{font-family:"Noto Sans KR",sans-serif;background:#f6f8fb;margin:0}
+  .wrap{max-width:960px;margin:0 auto;padding:32px}
+  .card{background:#fff;border:1px solid #ddd;border-radius:14px;padding:16px;margin:12px 0}
+  .q{font-weight:600;margin-bottom:8px}
+  .opts label{display:inline-flex;align-items:center;margin:4px 8px 4px 0;padding:6px 10px;border:1px solid #ddd;border-radius:8px;cursor:pointer}
+  .btn{background:#2563eb;color:#fff;border:0;padding:12px 20px;border-radius:10px;cursor:pointer;font-weight:700;margin-top:10px}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="topnav">
-    <div class="muted">마음건강 자가검진</div>
-    <a class="home" href="index.html">← 메인으로</a>
-  </div>
-  <h1>CAPE-15 (정신증 경험)</h1>
-  <p class="muted">각 항목의 <b>빈도</b>와 <b>고통 정도</b>를 선택하세요.</p>
-
+  <h2>CAPE-15 검사</h2>
   <form id="form"></form>
-
-  <div>
-    <button class="btn" id="submitBtn" type="button">결과 확인</button>
-    <div id="out" class="result" style="display:none"></div>
-  </div>
-
-  <div class="counsel-btn" id="counselDiv">
-    <button onclick="window.location.href='counsel.html'" type="button">상담 신청하기</button>
-  </div>
+  <button class="btn" id="submitBtn" type="button">결과 보기</button>
 </div>
 
 <script>
-const freqLabels = ["없음","가끔","자주","거의 항상"];
-const distLabels = ["없음","조금","상당히","매우"];
-const qs = [
-  "사람들이 당신에 대해 넌지시 말하거나 숨은 의미로 말하는 느낌",
-  "자신의 생각이 메아리처럼 들리는 경험",
-  "어떤 힘이 자신을 통제하는 듯한 느낌",
-  "가족/지인과 똑같이 생긴 분신이 나타난 듯한 느낌",
-  "혼자 있을 때 음성을 들은 경험",
-  "혼자 있을 때 사람들이 말하는 소리를 들은 경험",
-  "다른 사람에게 보이지 않는 사물/사람/동물을 본 경험",
-  "겉모습과 다른 무언가가 느껴지는 느낌",
-  "괴롭힘을 당하고 있는 듯한 느낌",
-  "자신을 둘러싼 음모가 있는 듯한 느낌",
-  "외모 때문에 사람들이 이상하게 쳐다보는 느낌",
-  "전자 기기가 자신의 생각에 영향을 주는 듯한 느낌",
-  "누군가 생각을 빼앗아 가는 듯한 느낌",
-  "자신의 생각이 자신의 것이 아닌 듯한 느낌",
-  "생생한 생각 때문에 다른 사람이 내 생각을 들을까 걱정"
-];
-
-const form = document.getElementById('form');
+const qs=["사람들이 나에 대해 숨은 의미로 말하는 느낌","생각이 메아리처럼 들림","어떤 힘이 자신을 통제하는 느낌"];
+const labels=["없음","가끔","자주","거의 항상"];
+const form=document.getElementById('form');
 qs.forEach((t,i)=>{
-  const box = document.createElement('div'); box.className='card';
-  box.innerHTML = `
+  const box=document.createElement('div'); box.className='card';
+  box.innerHTML=`
     <div class="q">${i+1}. ${t}</div>
-    <div class="cols">
-      <div>
-        <div class="muted">빈도</div>
-        <div class="opts">
-          ${freqLabels.map((lb,idx)=>`
-            <label><input type="radio" name="f${i}" value="${idx}" required/> ${lb}</label>
-          `).join('')}
-        </div>
-      </div>
-      <div>
-        <div class="muted">고통</div>
-        <div class="opts">
-          ${distLabels.map((lb,idx)=>`
-            <label><input type="radio" name="d${i}" value="${idx}" required/> ${lb}</label>
-          `).join('')}
-        </div>
-      </div>
+    <div class="opts">
+      ${labels.map((lb,idx)=>`
+        <label><input type="radio" name="q${i}" value="${idx}" required/> ${lb}</label>
+      `).join('')}
     </div>`;
   form.append(box);
 });
-
-function calc(){
-  let fSum=0,dSum=0, cnt=qs.length;
-  for(let i=0;i<cnt;i++){
-    const f = form.querySelector(`input[name="f${i}"]:checked`);
-    const d = form.querySelector(`input[name="d${i}"]:checked`);
-    if(!f||!d) return null;
-    fSum += Number(f.value);
-    dSum += Number(d.value);
-  }
-  const total = fSum + dSum;
-  return { total, fAvg:fSum/cnt, dAvg:dSum/cnt };
+function score(){
+  let s=0,c=0;
+  qs.forEach((_,i)=>{
+    const sel=form.querySelector(`input[name="q${i}"]:checked`);
+    if(!sel)return; s+=Number(sel.value); c++;
+  });
+  if(c!==qs.length)return null;
+  return s;
 }
-
-document.getElementById('submitBtn').addEventListener('click', ()=>{
-  const res = calc();
-  const out = document.getElementById('out');
-  const counsel = document.getElementById('counselDiv');
-  if(!res){ alert('모든 문항의 빈도와 고통을 선택해 주세요.'); return; }
-
-  let guide="";
-  if(res.total <=20){ guide="낮음: 정신증적 경험이 거의 없거나 경미하여 임상적 위험은 낮습니다."; }
-  else if(res.total <=40){ guide="중간: 일상에서 혼란을 일으킬 수 있는 경험이 반복될 수 있습니다. → 상담 선택 권장"; }
-  else { guide="높음: 환각·망상적 경험 또는 극심한 고통이 뚜렷해 조기 개입이 필요합니다. → 상담 필수 요망"; }
-
-  out.style.display='block';
-  out.innerHTML = `<b>총점:</b> ${res.total}점 (0~90)<br/><span>${guide}</span>`;
-  counsel.style.display='block';
+document.getElementById('submitBtn').addEventListener('click',()=>{
+  const sc=score();
+  if(sc===null){alert('모든 문항을 선택하세요.');return;}
+  const params=new URLSearchParams(window.location.search);
+  params.set("score",sc);
+  window.location.href="result.html?"+params.toString();
 });
 </script>
 </body>
