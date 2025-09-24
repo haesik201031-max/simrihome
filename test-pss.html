@@ -86,27 +86,28 @@ document.getElementById('submitBtn').addEventListener('click', ()=>{
   if(sc===null){ alert('모든 문항을 선택해 주세요.'); return; }
 
   let guide="";
-  if(sc<=13){ guide="낮음: 일상에서 큰 스트레스 없이 안정된 상태입니다. 생활습관을 잘 유지하세요."; }
-  else if(sc<=19){ guide="중간: 평균적인 수준의 스트레스를 경험하고 있습니다. 스트레스 관리 방법(운동, 명상, 취미 등)을 적극적으로 실천하는 것이 좋습니다. → 상담 선택 권장"; }
-  else { guide="높음: 스트레스 반응이 심각하게 누적되고 있으며, 건강과 삶의 질에 영향을 줄 수 있습니다. → 상담 필수 요망"; }
+  if(sc<=13){ guide="낮음: 안정된 상태입니다. 생활습관을 유지하세요."; }
+  else if(sc<=19){ guide="중간: 평균 수준의 스트레스를 경험 중입니다. 관리가 필요합니다."; }
+  else { guide="높음: 심각한 스트레스가 누적되었습니다. 상담이 권장됩니다."; }
 
   out.style.display='block';
   out.innerHTML = `<b>총점: ${sc}점 (0~30)</b><br/><span>${guide}</span>`;
   document.getElementById('counselDiv').style.display='block';
 
-  // ✅ 구글폼으로 자동 제출
-  sendToGoogleForm(sc, "PSS");
+  // 🔹 구글폼으로 자동 제출
+  sendToGoogleForm(sc, "PSS", guide, "여성", "부산");
 });
 
-function sendToGoogleForm(score, testName){
-  // 🔹 실제 구글폼 "양식 응답 제출" URL (응답 링크 아님)
-  const url = "https://docs.google.com/forms/d/e/1FAIpQLSf1234567890abcdef/formResponse";
+function sendToGoogleForm(score, testName, resultText, gender, region){
+  const url = "https://docs.google.com/forms/d/e/1FAIpQLSf1234567890abcdef/formResponse"; // ★ 실제 주소로 교체
 
-  // 🔹 구글폼 entry ID (개발자도구에서 name="entry.xxxxx" 확인 후 교체)
   const data = new FormData();
-  data.append("entry.1234567890", testName); // 검사 종류 (예: PSS)
-  data.append("entry.9876543210", score);    // 총점
-  data.append("entry.1111111111", new Date().toLocaleString()); // 검사 시간
+  data.append("entry.1111111111", testName);  // 검사명
+  data.append("entry.2222222222", score);     // 총점
+  data.append("entry.3333333333", resultText); // 판정 결과
+  data.append("entry.4444444444", gender);    // 성별
+  data.append("entry.5555555555", region);    // 지역
+  data.append("entry.6666666666", new Date().toLocaleString()); // 제출 시간
 
   fetch(url, {
     method: "POST",
