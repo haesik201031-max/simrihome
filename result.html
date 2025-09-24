@@ -2,104 +2,35 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
-<title>결과 보기 (테스트)</title>
+<title>검사 결과</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
-  body{
-    font-family:-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-    margin:0; background:#f6f8fb; color:#111;
-  }
-  .wrap{max-width:900px;margin:0 auto;padding:32px}
-  .topnav{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-  a.home{color:#1668e3;text-decoration:none;font-weight:600}
-  h1{font-size:30px;margin:8px 0 16px}
-  .muted{color:#667085}
-  .grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
-  .card{
-    background:#fff;border:1px solid #e5e7eb;border-radius:14px;
-    padding:20px;box-shadow:0 6px 16px rgba(17,24,39,.06);
-  }
-  .card b{font-size:18px}
-  .btn{
-    display:inline-block;background:#1668e3;color:#fff;border:0;
-    border-radius:10px;padding:10px 14px;font-weight:700;
-    cursor:pointer;margin-top:14px;text-decoration:none;
-  }
+  body{font-family:"Noto Sans KR",sans-serif;background:#f6f8fb;margin:0}
+  .wrap{max-width:720px;margin:0 auto;padding:32px}
+  .card{background:#fff;border:1px solid #ddd;border-radius:14px;padding:20px;margin:12px 0}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="topnav">
-    <div class="muted">마음건강 자가검진</div>
-    <a class="home" href="index.html">← 메인으로</a>
-  </div>
-
-  <h1>검사 결과 요약</h1>
-  <p class="muted">아래는 각 검사별 결과 수준에 따른 설명 예시입니다.<br/>실제 검사는 점수 계산 후 해당 수준의 설명이 표시됩니다.</p>
-
-  <div class="grid" id="grid"></div>
-
-  <!-- 상담 신청 버튼 -->
-  <div style="margin-top:32px; text-align:center">
-    <a href="counsel.html" class="btn">상담 신청하기</a>
-  </div>
+  <h2>검사 결과</h2>
+  <div id="out" class="card"></div>
 </div>
 
 <script>
-// 18개 결과 설명 정의
-const results = {
-  "PSS": {
-    낮음: "스트레스가 안정된 상태입니다. 생활습관을 유지하세요.",
-    중간: "평균적 수준의 스트레스를 경험 중입니다. 관리법을 실천하세요. → 상담 선택 권장",
-    높음: "스트레스가 심각하게 누적되어 건강에 영향을 줄 수 있습니다. → 상담 필수 요망"
-  },
-  "PHQ-9": {
-    경증: "가벼운 우울감이 있으나 기능은 유지됩니다. 자기 관리로 개선 가능.",
-    중등도: "우울 증상이 일상에 영향을 주고 있습니다. → 상담 선택 권장",
-    중증: "심각한 우울 증상으로 기능 저하가 뚜렷합니다. → 상담 필수 요망"
-  },
-  "AUDIT-K": {
-    정상: "음주 습관이 건강한 범위 내에 있습니다.",
-    위험: "절주 노력과 자기 점검이 필요합니다. → 상담 선택 권장",
-    의존: "알코올 사용 문제가 심각합니다. → 상담 필수 요망"
-  },
-  "CAPE-15": {
-    낮음: "정신증적 경험이 거의 없어 임상적 위험은 낮습니다.",
-    중간: "혼란스러운 경험이 반복될 수 있습니다. → 상담 선택 권장",
-    높음: "환각·망상적 경험과 고통이 뚜렷합니다. → 상담 필수 요망"
-  },
-  "IES-R": {
-    낮음: "외상 반응이 경미하며 자연 회복이 가능합니다.",
-    중간: "외상 경험이 지속되어 수면·집중력에 영향을 줍니다. → 상담 선택 권장",
-    높음: "외상 후 스트레스 반응이 심각합니다. → 상담 필수 요망"
-  },
-  "ISI-K": {
-    경증: "일시적 불면으로 수면위생 개선이 필요합니다.",
-    중등도: "불면이 생활 기능에 영향을 주고 있습니다. → 상담 선택 권장",
-    중증: "수면 문제로 삶의 질이 크게 저하되었습니다. → 상담 필수 요망"
-  }
-};
-
-// 샘플 데이터 (테스트용)
-const samples = [
-  {t:"PSS", level:"중간"},
-  {t:"PHQ-9", level:"중등도"},
-  {t:"AUDIT-K", level:"위험"},
-  {t:"CAPE-15", level:"낮음"},
-  {t:"IES-R", level:"높음"},
-  {t:"ISI-K", level:"중증"}
-];
-
-// 결과 카드 출력
-const grid = document.getElementById('grid');
-samples.forEach(x=>{
-  const el = document.createElement('div');
-  el.className='card';
-  el.innerHTML = `<b>${x.t}</b><br/><br/>
-    <b>수준:</b> ${x.level}<br/>
-    <span class="muted">${results[x.t][x.level]}</span>`;
-  grid.append(el);
-});
+const params=new URLSearchParams(window.location.search);
+const name=params.get("name"),gender=params.get("gender"),age=params.get("age"),location=params.get("location"),score=params.get("score");
+let guide=""; 
+if(score<=3) guide="낮음: 정신증적 경험이 거의 없거나 경미합니다.";
+else if(score<=6) guide="중간: 혼란을 일으킬 수 있는 경험이 반복될 수 있습니다. → 상담 권장";
+else guide="높음: 환각·망상적 경험이 뚜렷합니다. → 상담 필수 요망";
+document.getElementById("out").innerHTML=`
+  <b>이름:</b> ${name}<br>
+  <b>성별:</b> ${gender}<br>
+  <b>나이:</b> ${age}세<br>
+  <b>거주지:</b> ${location}<br>
+  <b>총점:</b> ${score}<br>
+  <b>판정:</b> ${guide}
+`;
 </script>
 </body>
 </html>
