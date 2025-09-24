@@ -13,10 +13,12 @@
   .cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
   .opts label{display:inline-flex;align-items:center;gap:8px;margin:6px 10px 6px 0;padding:8px 10px;border-radius:10px;border:1px solid #e5e7eb;cursor:pointer}
   .btn{display:inline-block;background:#1668e3;color:#fff;border:0;border-radius:10px;padding:14px 18px;font-weight:700;cursor:pointer}
-  .result{background:#eef5ff;border:1px solid #cfe2ff;border-radius:12px;padding:16px 18px;margin-top:16px}
+  .result{background:#eef5ff;border:1px solid #cfe2ff;border-radius:12px;padding:16px 18px;margin-top:16px;font-size:16px}
   .muted{color:#667085}
   .topnav{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
   a.home{color:#1668e3;text-decoration:none;font-weight:600}
+  .counsel-btn{display:none;text-align:center;margin-top:20px}
+  .counsel-btn button{background:#e53935;color:#fff;font-size:18px;font-weight:700;border:0;border-radius:12px;padding:16px 28px;cursor:pointer}
 </style>
 </head>
 <body>
@@ -25,14 +27,18 @@
     <div class="muted">마음건강 자가검진</div>
     <a class="home" href="index.html">← 메인으로</a>
   </div>
-  <h1>CAPE-15 (정신증 관련 경험)</h1>
+  <h1>CAPE-15 (정신증 경험)</h1>
   <p class="muted">각 항목의 <b>빈도</b>와 <b>고통 정도</b>를 선택하세요.</p>
 
   <form id="form"></form>
 
   <div>
-    <button class="btn" id="submitBtn" type="button">결과 보기</button>
+    <button class="btn" id="submitBtn" type="button">결과 확인</button>
     <div id="out" class="result" style="display:none"></div>
+  </div>
+
+  <div class="counsel-btn" id="counselDiv">
+    <button onclick="window.location.href='counsel.html'" type="button">상담 신청하기</button>
   </div>
 </div>
 
@@ -92,22 +98,24 @@ function calc(){
     fSum += Number(f.value);
     dSum += Number(d.value);
   }
-  const fAvg = fSum/cnt, dAvg = dSum/cnt;
-  return { fSum, dSum, fAvg, dAvg, cnt };
+  const total = fSum + dSum;
+  return { total, fAvg:fSum/cnt, dAvg:dSum/cnt };
 }
 
 document.getElementById('submitBtn').addEventListener('click', ()=>{
   const res = calc();
   const out = document.getElementById('out');
+  const counsel = document.getElementById('counselDiv');
   if(!res){ alert('모든 문항의 빈도와 고통을 선택해 주세요.'); return; }
 
-  const fTxt = res.fAvg.toFixed(2), dTxt = res.dAvg.toFixed(2);
-  let note = "경험의 빈도와 고통 평균을 참고해 주십시오.";
-  if(res.fAvg>=2 || res.dAvg>=2) note = "빈도/고통 평균이 상대적으로 높습니다. 전문가 상담을 고려해 주세요.";
+  let guide="";
+  if(res.total <=20){ guide="낮음: 정신증적 경험이 거의 없거나 경미하여 임상적 위험은 낮습니다."; }
+  else if(res.total <=40){ guide="중간: 일상에서 혼란을 일으킬 수 있는 경험이 반복될 수 있습니다. → 상담 선택 권장"; }
+  else { guide="높음: 환각·망상적 경험 또는 극심한 고통이 뚜렷해 조기 개입이 필요합니다. → 상담 필수 요망"; }
 
   out.style.display='block';
-  out.innerHTML = `<b>빈도 평균:</b> ${fTxt} (0~3) / <b>고통 평균:</b> ${dTxt} (0~3)
-  <br/><span class="muted">${note}</span>`;
+  out.innerHTML = `<b>총점:</b> ${res.total}점 (0~90)<br/><span>${guide}</span>`;
+  counsel.style.display='block';
 });
 </script>
 </body>
