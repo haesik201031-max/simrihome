@@ -2,50 +2,80 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>심리검사 메인 선택</title>
+  <title>마음건강 자가검진</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body{font-family:"Noto Sans KR",sans-serif;margin:0;background:#f6f7fb;color:#111}
     .wrap{max-width:960px;margin:0 auto;padding:32px}
-    h1{text-align:center;font-size:28px;margin-bottom:20px}
-    .card{background:#fff;border:1px solid #ddd;border-radius:14px;padding:18px;margin:12px 0;box-shadow:0 6px 16px rgba(0,0,0,.06)}
-    .card h3{margin:0 0 6px}
-    .card p{margin:0 0 10px;color:#555}
-    .card button{background:#2563eb;color:#fff;border:0;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:600}
-    .info{margin:20px 0;padding:16px;background:#eef5ff;border:1px solid #cfe2ff;border-radius:12px}
-    .info label{display:block;margin:8px 0 4px}
-    .info input, .info select{width:100%;padding:8px;border:1px solid #ccc;border-radius:8px}
+    h1{text-align:center;margin-bottom:20px}
+    .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+    .card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:20px;
+          box-shadow:0 6px 16px rgba(17,24,39,.06);cursor:pointer;transition:.2s}
+    .card:hover{transform:translateY(-3px);box-shadow:0 10px 20px rgba(17,24,39,.08)}
+    .card h3{margin:0 0 8px;font-size:18px}
+    .card p{margin:0;color:#6b7280;font-size:14px}
+    .hidden{display:none}
+    .form-box{background:#eef5ff;border:1px solid #cfe2ff;border-radius:12px;padding:20px;margin-top:20px}
+    .form-box label{display:block;margin:10px 0 6px}
+    .form-box input,.form-box select{width:100%;padding:10px;border:1px solid #ccc;border-radius:8px}
+    .btn{margin-top:20px;display:inline-block;background:#2563eb;color:#fff;
+         padding:12px 20px;border:none;border-radius:10px;font-weight:600;cursor:pointer}
+    .btn:hover{background:#1d4ed8}
   </style>
 </head>
 <body>
 <div class="wrap">
   <h1>마음건강 자가검진</h1>
 
-  <div class="info">
-    <h3>기본정보 입력</h3>
-    <label>이름</label><input type="text" id="name" />
-    <label>성별</label>
-    <select id="gender"><option>남</option><option>여</option></select>
-    <label>나이</label><input type="number" id="age" />
-    <label>거주지</label><input type="text" id="location" />
+  <!-- 1단계: 검사 선택 -->
+  <div id="step1">
+    <div class="grid">
+      <div class="card" onclick="selectTest('test-pss.html')">
+        <h3>스트레스 (PSS)</h3><p>최근 한 달의 인지된 스트레스 수준</p>
+      </div>
+      <div class="card" onclick="selectTest('test-phq9.html')">
+        <h3>우울 (PHQ-9)</h3><p>지난 2주간 우울 증상 빈도와 심각도</p>
+      </div>
+      <div class="card" onclick="selectTest('test-auditk.html')">
+        <h3>알코올 (AUDIT-K)</h3><p>음주 패턴 / 위험 음주 선별</p>
+      </div>
+      <div class="card" onclick="selectTest('test-cape15.html')">
+        <h3>정신증 (CAPE-15)</h3><p>양성/음성/우울 관련 경험</p>
+      </div>
+      <div class="card" onclick="selectTest('test-iesr.html')">
+        <h3>사건충격척도 (IES-R)</h3><p>외상 후 스트레스 반응 정도</p>
+      </div>
+      <div class="card" onclick="selectTest('test-isik.html')">
+        <h3>불면 (ISI-K)</h3><p>수면 곤란 심각도 및 기능 손상</p>
+      </div>
+    </div>
   </div>
 
-  <div class="card">
-    <h3>정신증 (CAPE-15)</h3>
-    <p>양성/음성/우울 관련 경험 빈도 및 고통</p>
-    <button onclick="startTest('test-cape15.html')">검사 시작</button>
+  <!-- 2단계: 기본정보 입력 -->
+  <div id="step2" class="hidden">
+    <div class="form-box">
+      <h2>기본정보 입력</h2>
+      <label>이름</label><input type="text" id="name" required>
+      <label>성별</label>
+      <select id="gender"><option>남</option><option>여</option></select>
+      <label>나이</label><input type="number" id="age" required>
+      <label>거주지</label><input type="text" id="location">
+      <button class="btn" onclick="startTest()">검사 시작</button>
+    </div>
   </div>
 </div>
 
 <script>
-function startTest(page){
-  const name=document.getElementById("name").value.trim();
-  const gender=document.getElementById("gender").value;
-  const age=document.getElementById("age").value.trim();
-  const location=document.getElementById("location").value.trim();
-  if(!name||!age||!location){alert("모든 기본정보를 입력하세요.");return;}
-  const query=`?name=${encodeURIComponent(name)}&gender=${encodeURIComponent(gender)}&age=${encodeURIComponent(age)}&location=${encodeURIComponent(location)}`;
-  window.location.href=page+query;
+let selectedTest = "";
+function selectTest(file){
+  selectedTest = file;
+  document.getElementById('step1').classList.add('hidden');
+  document.getElementById('step2').classList.remove('hidden');
+}
+function startTest(){
+  if(!selectedTest){alert("검사를 먼저 선택하세요.");return;}
+  // 기본정보 추후 구글시트 연동 가능
+  window.location.href = selectedTest;
 }
 </script>
 </body>
