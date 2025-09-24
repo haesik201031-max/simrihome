@@ -5,57 +5,34 @@
 <title>AUDIT-K (음주)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
-  body { font-family:-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-    margin:0; background:#f6f8fb; color:#111; }
+  body { font-family:-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif; margin:0; background:#f6f8fb; color:#111; }
   .wrap { max-width:900px; margin:0 auto; padding:32px; }
   h1 { font-size:28px; margin:8px 0 16px; }
-  .card {
-    background:#fff; border:1px solid #e5e7eb; border-radius:14px;
-    padding:22px 20px; margin:14px 0; box-shadow:0 6px 16px rgba(17,24,39,.06);
-  }
+  .card { background:#fff; border:1px solid #e5e7eb; border-radius:14px;
+    padding:22px 20px; margin:14px 0; box-shadow:0 6px 16px rgba(17,24,39,.06); }
   .q { margin:0 0 12px; font-weight:600; }
-  .opts label {
-    display:block; margin:6px 0; padding:8px 10px;
-    border-radius:10px; border:1px solid #e5e7eb; cursor:pointer;
-  }
-  .btn {
-    display:inline-block; background:#1668e3; color:#fff;
+  .opts label { display:block; margin:6px 0; padding:8px 10px;
+    border-radius:10px; border:1px solid #e5e7eb; cursor:pointer; }
+  .btn { display:inline-block; background:#1668e3; color:#fff;
     border:0; border-radius:10px; padding:14px 18px;
-    font-weight:700; cursor:pointer; margin-top:10px;
-  }
-  .result {
-    background:#eef5ff; border:1px solid #cfe2ff;
-    border-radius:12px; padding:16px 18px; margin-top:16px;
-  }
-  .consult {
-    margin-top:20px; text-align:center;
-  }
-  .consult a {
-    display:inline-block; background:#dc2626; color:#fff;
+    font-weight:700; cursor:pointer; margin-top:10px; }
+  .result { background:#eef5ff; border:1px solid #cfe2ff;
+    border-radius:12px; padding:16px 18px; margin-top:16px; }
+  .consult { margin-top:20px; text-align:center; }
+  .consult a { display:inline-block; background:#dc2626; color:#fff;
     padding:14px 22px; font-size:18px; font-weight:700;
-    border-radius:12px; text-decoration:none;
-  }
+    border-radius:12px; text-decoration:none; }
   .muted { color:#667085; }
-  .topnav {
-    display:flex; justify-content:space-between;
-    align-items:center; margin-bottom:12px;
-  }
-  a.home { color:#1668e3; text-decoration:none; font-weight:600; }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="topnav">
-    <div class="muted">마음건강 자가검진</div>
-    <a class="home" href="index.html">← 메인으로</a>
-  </div>
   <h1>AUDIT-K (음주)</h1>
   <p class="muted">최근 1년 동안의 음주 습관을 바탕으로 선택하세요.</p>
 
   <form id="auditForm">
-    <!-- 문항 반복 -->
-    <div class="card">
-      <div class="q">1. 얼마나 자주 술을 마십니까?</div>
+    <!-- 문항 1~10 -->
+    <div class="card"><div class="q">1. 얼마나 자주 술을 마십니까?</div>
       <div class="opts">
         <label><input type="radio" name="q1" value="0" required> 전혀 안 마심</label>
         <label><input type="radio" name="q1" value="1"> 한 달에 한 번 미만</label>
@@ -65,8 +42,7 @@
       </div>
     </div>
 
-    <div class="card">
-      <div class="q">2. 술을 마시는 날, 보통 얼마나 마십니까? (잔 기준)</div>
+    <div class="card"><div class="q">2. 술을 마시는 날, 보통 얼마나 마십니까? (잔 기준)</div>
       <div class="opts">
         <label><input type="radio" name="q2" value="0" required> 1~2잔</label>
         <label><input type="radio" name="q2" value="1"> 3~4잔</label>
@@ -76,8 +52,7 @@
       </div>
     </div>
 
-    <div class="card">
-      <div class="q">3. 한 번에 소주 1병(맥주 4캔) 이상 마시는 경우는 얼마나 자주 있습니까?</div>
+    <div class="card"><div class="q">3. 한 번에 소주 1병(맥주 4캔) 이상 마시는 경우는 얼마나 자주 있습니까?</div>
       <div class="opts">
         <label><input type="radio" name="q3" value="0" required> 전혀 없음</label>
         <label><input type="radio" name="q3" value="1"> 한 달에 1회 미만</label>
@@ -87,8 +62,7 @@
       </div>
     </div>
 
-    <div class="card">
-      <div class="q">4. 지난 1년 동안, 술 때문에 일상에 지장이 있었습니까?</div>
+    <div class="card"><div class="q">4. 지난 1년 동안, 술 때문에 일상에 지장이 있었습니까?</div>
       <div class="opts">
         <label><input type="radio" name="q4" value="0" required> 없음</label>
         <label><input type="radio" name="q4" value="1"> 한 달에 1회 미만</label>
@@ -98,8 +72,7 @@
       </div>
     </div>
 
-    <div class="card">
-      <div class="q">5. 지난 1년 동안, 음주 후 후회하거나 죄책감을 느낀 적이 있습니까?</div>
+    <div class="card"><div class="q">5. 지난 1년 동안, 음주 후 후회하거나 죄책감을 느낀 적이 있습니까?</div>
       <div class="opts">
         <label><input type="radio" name="q5" value="0" required> 없음</label>
         <label><input type="radio" name="q5" value="1"> 한 달에 1회 미만</label>
@@ -109,8 +82,7 @@
       </div>
     </div>
 
-    <div class="card">
-      <div class="q">6. 음주 후 기억이 끊긴 적이 있습니까?</div>
+    <div class="card"><div class="q">6. 음주 후 기억이 끊긴 적이 있습니까?</div>
       <div class="opts">
         <label><input type="radio" name="q6" value="0" required> 없음</label>
         <label><input type="radio" name="q6" value="1"> 한 달에 1회 미만</label>
@@ -120,8 +92,7 @@
       </div>
     </div>
 
-    <div class="card">
-      <div class="q">7. 술로 인해 다치거나 사고를 당한 적이 있습니까?</div>
+    <div class="card"><div class="q">7. 술로 인해 다치거나 사고를 당한 적이 있습니까?</div>
       <div class="opts">
         <label><input type="radio" name="q7" value="0" required> 없음</label>
         <label><input type="radio" name="q7" value="2"> 있음</label>
@@ -129,8 +100,7 @@
       </div>
     </div>
 
-    <div class="card">
-      <div class="q">8. 가족이나 친구가 당신의 음주를 걱정하거나 권고한 적이 있습니까?</div>
+    <div class="card"><div class="q">8. 가족이나 친구가 당신의 음주를 걱정하거나 권고한 적이 있습니까?</div>
       <div class="opts">
         <label><input type="radio" name="q8" value="0" required> 없음</label>
         <label><input type="radio" name="q8" value="2"> 있음</label>
@@ -138,8 +108,7 @@
       </div>
     </div>
 
-    <div class="card">
-      <div class="q">9. 아침에 해장술을 마셔본 적이 있습니까?</div>
+    <div class="card"><div class="q">9. 아침에 해장술을 마셔본 적이 있습니까?</div>
       <div class="opts">
         <label><input type="radio" name="q9" value="0" required> 없음</label>
         <label><input type="radio" name="q9" value="1"> 드물게</label>
@@ -149,8 +118,7 @@
       </div>
     </div>
 
-    <div class="card">
-      <div class="q">10. 음주를 줄이거나 끊어야겠다고 생각한 적이 있습니까?</div>
+    <div class="card"><div class="q">10. 음주를 줄이거나 끊어야겠다고 생각한 적이 있습니까?</div>
       <div class="opts">
         <label><input type="radio" name="q10" value="0" required> 전혀 없음</label>
         <label><input type="radio" name="q10" value="2"> 있음</label>
