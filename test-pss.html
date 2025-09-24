@@ -93,7 +93,31 @@ document.getElementById('submitBtn').addEventListener('click', ()=>{
   out.style.display='block';
   out.innerHTML = `<b>총점: ${sc}점 (0~30)</b><br/><span>${guide}</span>`;
   document.getElementById('counselDiv').style.display='block';
+
+  // ✅ 구글폼으로 자동 제출
+  sendToGoogleForm(sc, "PSS");
 });
+
+function sendToGoogleForm(score, testName){
+  // 🔹 실제 구글폼 "양식 응답 제출" URL (응답 링크 아님)
+  const url = "https://docs.google.com/forms/d/e/1FAIpQLSf1234567890abcdef/formResponse";
+
+  // 🔹 구글폼 entry ID (개발자도구에서 name="entry.xxxxx" 확인 후 교체)
+  const data = new FormData();
+  data.append("entry.1234567890", testName); // 검사 종류 (예: PSS)
+  data.append("entry.9876543210", score);    // 총점
+  data.append("entry.1111111111", new Date().toLocaleString()); // 검사 시간
+
+  fetch(url, {
+    method: "POST",
+    mode: "no-cors",
+    body: data
+  }).then(() => {
+    console.log("구글폼 전송 성공");
+  }).catch(err => {
+    console.error("전송 실패", err);
+  });
+}
 </script>
 </body>
 </html>
