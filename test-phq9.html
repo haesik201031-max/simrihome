@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
-<title>PHQ-9 (우울 검사)</title>
+<title>PHQ-9 (우울)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
   body{font-family:-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:#f6f8fb;color:#111}
@@ -26,8 +26,8 @@
     <div class="muted">마음건강 자가검진</div>
     <a class="home" href="index.html">← 메인으로</a>
   </div>
-  <h1>PHQ-9 (우울 검사)</h1>
-  <p class="muted">지난 2주 동안 얼마나 자주 해당 상황을 경험했는지 선택하세요.</p>
+  <h1>PHQ-9 (우울)</h1>
+  <p class="muted">지난 2주 동안 얼마나 자주 해당 경험을 했는지 선택하세요.</p>
 
   <form id="form"></form>
 
@@ -42,24 +42,25 @@
 </div>
 
 <script>
+// 문항
 const q = [
-  "일이나 집안일을 하는 데 흥미나 즐거움을 느끼지 못함",
-  "기분이 가라앉거나, 우울하거나, 희망이 없음",
-  "잠들기 어렵거나 자주 깸, 혹은 너무 많이 잠",
-  "피곤하다고 느끼거나 기운이 거의 없음",
-  "식욕이 줄거나 과식함",
-  "자신을 나쁜 사람이라고 느끼거나 자신을 실패자라고 느낌",
-  "신문을 읽거나 TV를 볼 정도의 집중을 할 수 없음",
-  "남들이 알아챌 정도로 말과 행동이 느려짐, 또는 반대로 너무 초조하여 가만히 있을 수 없음",
-  "죽는 것이 더 낫겠다고 생각하거나 자해할 생각을 함"
+  "일이나 집안일에 흥미가 없거나 즐겁지 않았다.",
+  "기분이 가라앉거나 우울하거나 희망이 없었다.",
+  "잠들기 어렵거나 자주 깼거나 너무 많이 잤다.",
+  "피곤하다고 느끼거나 기운이 거의 없었다.",
+  "식욕이 줄거나 과식했다.",
+  "자신을 부정적으로 보거나, 실패자라고 느끼거나 자신이나 가족을 실망시켰다고 느꼈다.",
+  "신문이나 TV를 볼 만큼 집중하기가 어려웠다.",
+  "남들이 눈치챌 정도로 너무 느리게 움직이거나 말하거나, 반대로 너무 많이 움직여서 가만히 있을 수 없었다.",
+  "차라리 죽는 것이 낫겠다고 생각하거나, 자신을 해칠 생각을 했다."
 ];
 
-const labels = ["전혀 아니다 (0점)","며칠 동안 (1점)","일주일 이상 (2점)","거의 매일 (3점)"];
+const labels = ["전혀 아니다 (0점)", "며칠 동안 (1점)", "7일 이상 (2점)", "거의 매일 (3점)"];
 
 const form = document.getElementById('form');
 q.forEach((t,i)=>{
-  const box = document.createElement('div'); box.className='card';
-  box.innerHTML = `
+  const box=document.createElement('div'); box.className='card';
+  box.innerHTML=`
     <div class="q">${i+1}. ${t}</div>
     <div class="opts">
       ${labels.map((lb,idx)=>`
@@ -69,6 +70,7 @@ q.forEach((t,i)=>{
   form.append(box);
 });
 
+// 점수 합산
 function score(){
   let s=0,c=0;
   q.forEach((_,i)=>{
@@ -82,50 +84,28 @@ function score(){
 document.getElementById('submitBtn').addEventListener('click', ()=>{
   const sc=score();
   const out=document.getElementById('out');
-  if(sc===null){ alert('모든 문항을 선택해 주세요.'); return; }
+  if(sc===null){ alert("모든 문항을 선택해 주세요."); return; }
 
   let guide="";
-  if(sc<=4){ guide="정상 범위: 특별한 우울 증상은 보이지 않습니다."; }
-  else if(sc<=9){ guide="가벼운 우울: 스트레스 관리와 자기돌봄이 필요합니다."; }
-  else if(sc<=14){ guide="중간 정도 우울: 주의 깊은 관찰과 상담 권장."; }
-  else if(sc<=19){ guide="중등도~중증 우울: 적극적인 상담 및 치료 필요."; }
-  else { guide="심한 우울: 즉각적인 전문 상담·치료가 필요합니다."; }
+  if(sc<=4){
+    guide="정상 범위: 특별한 우울 증상은 보이지 않습니다.<br>정상적인 일상생활 유지가 가능하며, 자기 관리 습관을 지속하는 것이 좋습니다.";
+  } else if(sc<=9){
+    guide="가벼운 우울: 경미한 증상이 있으나 일상생활은 유지 가능합니다.<br>스트레스 관리와 규칙적인 생활 습관, 자기 돌봄이 필요합니다.";
+  } else if(sc<=14){
+    guide="중등도 우울: 뚜렷한 우울 증상이 있으며 삶의 만족도가 저하될 수 있습니다.<br>상담을 통한 정서적 지원과 관리가 권장됩니다.";
+  } else if(sc<=19){
+    guide="중등도~중증 우울: 일상에 큰 영향을 주는 우울 증상이 지속되고 있습니다.<br>전문가 상담 및 치료介入이 필요합니다.";
+  } else {
+    guide="심한 우울: 심각한 우울 증상으로 기능 저하와 위험이 높습니다.<br>즉각적인 전문 상담과 치료가 필수적입니다.";
+  }
 
   out.style.display='block';
   out.innerHTML=`<b>총점: ${sc}점 (0~27)</b><br/><span>${guide}</span>`;
   document.getElementById('counselDiv').style.display='block';
 
-  // localStorage 불러오기
-  const name=localStorage.getItem('name')||'';
-  const gender=localStorage.getItem('gender')||'';
-  const age=localStorage.getItem('age')||'';
-  const location=localStorage.getItem('location')||'';
-
-  // 구글폼 전송
-  sendToGoogleForm({
-    name, gender, age, location,
-    testName:"PHQ-9",
-    score:sc,
-    result:guide
-  });
+  // 상담 버튼이 자동으로 보이도록 스크롤
+  document.getElementById('counselDiv').scrollIntoView({behavior:"smooth"});
 });
-
-function sendToGoogleForm(data){
-  const url="https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/formResponse";
-  const fd=new FormData();
-
-  fd.append("entry.707709000", data.name);      // 닉네임
-  fd.append("entry.1389984940", data.gender);   // 성별
-  fd.append("entry.513328345", data.age);       // 나이
-  fd.append("entry.436383647", data.location);  // 지역
-  fd.append("entry.1649771076", data.testName); // 검사명
-  fd.append("entry.1905166231", data.score);    // 총점
-  fd.append("entry.43237668", data.result);     // 판정결과
-
-  fetch(url,{method:"POST",mode:"no-cors",body:fd})
-    .then(()=>console.log("구글폼 전송 성공"))
-    .catch(err=>console.error("전송 실패",err));
-}
 </script>
 </body>
 </html>
