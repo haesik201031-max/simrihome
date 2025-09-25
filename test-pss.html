@@ -6,77 +6,39 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
   body {
-    font-family:-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-    margin:0;
-    background:#f6f8fb;
-    color:#111;
+    font-family: -apple-system, system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    margin: 0; background: #f6f8fb; color: #111;
   }
-  .wrap {
-    max-width:900px;
-    margin:0 auto;
-    padding:32px;
-  }
-  h1 { font-size:28px; margin:8px 0 16px; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 32px; }
+  h1 { font-size: 28px; margin: 8px 0 16px; }
   .card {
-    background:#fff;
-    border:1px solid #e5e7eb;
-    border-radius:14px;
-    padding:22px 20px;
-    margin:14px 0;
-    box-shadow:0 6px 16px rgba(17,24,39,.06);
+    background: #fff; border: 1px solid #e5e7eb; border-radius: 14px;
+    padding: 22px 20px; margin: 14px 0; box-shadow: 0 6px 16px rgba(17,24,39,.06);
   }
-  .q { margin:0 0 12px; font-weight:600; }
+  .q { margin: 0 0 12px; font-weight: 600; }
   .opts label {
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    margin:6px 10px 6px 0;
-    padding:8px 10px;
-    border-radius:10px;
-    border:1px solid #e5e7eb;
-    cursor:pointer;
+    display: inline-flex; align-items: center; gap: 8px;
+    margin: 6px 10px 6px 0; padding: 8px 10px;
+    border-radius: 10px; border: 1px solid #e5e7eb; cursor: pointer;
+    background: #fafafa;
   }
+  .opts input[type="radio"] { margin: 0; }
   .btn {
-    display:inline-block;
-    background:#1668e3;
-    color:#fff;
-    border:0;
-    border-radius:10px;
-    padding:14px 18px;
-    font-weight:700;
-    cursor:pointer;
-    margin-top:10px;
+    display: inline-block; background: #1668e3; color: #fff;
+    border: 0; border-radius: 10px; padding: 14px 18px;
+    font-weight: 700; cursor: pointer; margin-top: 10px;
   }
   .result {
-    background:#eef5ff;
-    border:1px solid #cfe2ff;
-    border-radius:12px;
-    padding:16px 18px;
-    margin-top:16px;
-    font-size:16px;
+    background: #eef5ff; border: 1px solid #cfe2ff; border-radius: 12px;
+    padding: 16px 18px; margin-top: 16px; font-size: 16px;
   }
-  .muted { color:#667085; }
-  .topnav {
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:12px;
-  }
-  a.home { color:#1668e3; text-decoration:none; font-weight:600; }
-  .counsel-btn {
-    display:none;
-    text-align:center;
-    margin-top:20px;
-  }
+  .muted { color: #667085; }
+  .topnav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  a.home { color: #1668e3; text-decoration: none; font-weight: 600; }
+  .counsel-btn { display: none; text-align: center; margin-top: 20px; }
   .counsel-btn button {
-    background:#e53935;
-    color:#fff;
-    font-size:18px;
-    font-weight:700;
-    border:0;
-    border-radius:12px;
-    padding:16px 28px;
-    cursor:pointer;
+    background: #e53935; color: #fff; font-size: 18px; font-weight: 700;
+    border: 0; border-radius: 12px; padding: 16px 28px; cursor: pointer;
   }
 </style>
 </head>
@@ -115,62 +77,61 @@ const q = [
   "생활 속 짜증나는 일을 잘 조절할 수 있었다고 느낀 적이 얼마나 있었습니까?"
 ];
 
-const labels = ["전혀 아니다","가끔 그렇다","자주 그렇다","거의 항상 그렇다"];
+const labels = ["전혀 없음","가끔","자주","매우 자주"];
 
-const form = document.getElementById('form');
+const form = document.getElementById("form");
 q.forEach((t,i)=>{
-  const box = document.createElement('div'); 
-  box.className='card';
-  box.innerHTML = `
-    <div class="q">${i+1}. ${t}</div>
-    <div class="opts">
-      ${labels.map((lb,idx)=>`
-        <label><input type="radio" name="q${i}" value="${idx}" required/> ${lb}</label>
-      `).join('')}
-    </div>`;
-  form.append(box);
+  const box = document.createElement("div");
+  box.className = "card";
+  let optsHTML = "";
+  labels.forEach((lb,idx)=>{
+    optsHTML += `<label><input type="radio" name="q${i}" value="${idx}" required> ${lb}</label>`;
+  });
+  box.innerHTML = `<div class="q">${i+1}. ${t}</div><div class="opts">${optsHTML}</div>`;
+  form.appendChild(box);
 });
 
 function score(){
   let s=0,c=0;
   q.forEach((_,i)=>{
-    const sel=form.querySelector(\`input[name="q\${i}"]:checked\`);
-    if(!sel) return; s+=Number(sel.value); c++;
+    const sel = form.querySelector(`input[name="q${i}"]:checked`);
+    if(!sel) return;
+    s += Number(sel.value); c++;
   });
   if(c!==q.length) return null;
   return s; // 0~30
 }
 
-document.getElementById('submitBtn').addEventListener('click', ()=>{
-  const sc=score();
-  const out=document.getElementById('out');
-  if(sc===null){ alert('모든 문항을 선택해 주세요.'); return; }
+document.getElementById("submitBtn").addEventListener("click", ()=>{
+  const sc = score();
+  const out = document.getElementById("out");
+  if(sc===null){ alert("모든 문항을 선택해 주세요."); return; }
 
-  let guide="";
+  let guide = "";
   if(sc<=13){
-    guide="<b>낮음 (0–13점)</b><br>스트레스 지각 수준이 낮으며 전반적으로 안정된 상태입니다.<br>대처 전략이 비교적 잘 작동하고 있으며 회복력이 좋습니다.<br>규칙적인 자기 관리 습관을 유지하는 것이 예방 차원에서 중요합니다.";
+    guide = "낮음 (0–13점)<br>스트레스에 대한 지각 수준이 낮으며, 전반적으로 안정된 상태입니다.<br>대처 전략이 비교적 유효하게 작동하고 있으며, 회복력이 좋습니다.<br>규칙적인 자기 관리 습관을 유지하는 것이 예방 차원에서 중요합니다.";
   } else if(sc<=19){
-    guide="<b>중간 (14–19점)</b><br>일상에서 반복적인 부담과 긴장이 체감되고 있습니다.<br>스트레스 상황을 인식하지만 대처 자원이 제한적일 수 있습니다.<br>상담을 통한 스트레스 관리 교육 및 자기 돌봄 기술 향상이 필요합니다.";
+    guide = "중간 (14–19점)<br>일상에서 반복적인 부담과 긴장이 체감되고 있습니다.<br>스트레스 상황을 인식하지만 대처 자원이 제한적일 수 있습니다.<br>상담을 통한 스트레스 관리 교육 및 자기 돌봄 기술 향상이 필요합니다.";
   } else {
-    guide="<b>높음 (20점 이상)</b><br>스트레스 경험이 일상 전반에 영향을 미치며 정서적 소진이나 신체 증상으로 이어질 수 있습니다.<br>불면, 과민 반응, 건강 악화가 동반될 가능성이 높습니다.<br>전문적인 상담 개입 및 환경 조정이 필수적으로 권장됩니다.";
+    guide = "높음 (20점 이상)<br>스트레스 경험이 일상 전반에 영향을 미치며, 정서적 소진이나 신체 증상으로 이어질 수 있습니다.<br>불면, 과민 반응, 건강 악화가 동반될 가능성이 높습니다.<br>전문적인 상담 개입 및 환경 조정이 필수적으로 권장됩니다.";
   }
 
-  out.style.display='block';
-  out.innerHTML=\`<b>총점: \${sc}점 (0~30)</b><br/>\${guide}\`;
-  document.getElementById('counselDiv').style.display='block';
+  out.style.display = "block";
+  out.innerHTML = `<b>총점: ${sc}점 (0~30)</b><br/><span>${guide}</span>`;
+  document.getElementById("counselDiv").style.display = "block";
 
-  // localStorage 값 불러오기
-  const name=localStorage.getItem('name')||'';
-  const gender=localStorage.getItem('gender')||'';
-  const age=localStorage.getItem('age')||'';
-  const location=localStorage.getItem('location')||'';
+  // localStorage 불러오기
+  const name = localStorage.getItem("name")||"";
+  const gender = localStorage.getItem("gender")||"";
+  const age = localStorage.getItem("age")||"";
+  const location = localStorage.getItem("location")||"";
 
   // 구글폼 전송
   sendToGoogleForm({
     name, gender, age, location,
     testName:"PSS",
     score:sc,
-    result:guide.replace(/<[^>]+>/g,'')
+    result:guide
   });
 });
 
@@ -178,7 +139,7 @@ function sendToGoogleForm(data){
   const url="https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/formResponse";
   const fd=new FormData();
 
-  // entry 매핑 (최신 번호 적용)
+  // entry ID 매핑
   fd.append("entry.926411538", data.name);      // 닉네임
   fd.append("entry.1280065148", data.gender);   // 성별
   fd.append("entry.1741860606", data.age);      // 나이
