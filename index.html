@@ -69,6 +69,14 @@
         <a href="#" onclick="goInfo('test-isik.html')">검사 시작</a></div>
     </div>
 
+    <!-- ✅ 심층검사 박스 복구 -->
+    <div style="text-align:center; margin-top:28px;">
+      <a href="https://smartstore.naver.com/issueara" target="_blank" 
+         style="display:inline-block; background:#fefefe; border:2px solid #2563eb; padding:16px 24px; border-radius:12px; font-weight:700; color:#2563eb; text-decoration:none;">
+        정은영심리상담센터 심층검사 바로가기
+      </a>
+    </div>
+
     <!-- 기본 정보 입력 -->
     <div id="info-form" class="info-form">
       <h2>닉네임 입력</h2>
@@ -102,7 +110,6 @@ function startTest(){
   const form=document.getElementById('userInfo');
   if(!form.reportValidity()) return;
 
-  // 닉네임 저장 (필요 시 활용 가능)
   const name=form.querySelector('input[name="name"]').value;
   localStorage.setItem('name', name);
 
