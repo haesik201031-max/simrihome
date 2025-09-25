@@ -11,7 +11,7 @@
   .card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:22px 20px;margin:14px 0;box-shadow:0 6px 16px rgba(17,24,39,.06)}
   .q{margin:0 0 12px;font-weight:600}
   .opts label{display:inline-flex;align-items:center;gap:8px;margin:6px 10px 6px 0;padding:8px 10px;border-radius:10px;border:1px solid #e5e7eb;cursor:pointer}
-  .btn{display:inline-block;background:#1668e3;color:#fff;border:0;border-radius:10px;padding:14px 18px;font-weight:700;cursor:pointer}
+  .btn{display:inline-block;background:#1668e3;color:#fff;border:0;border-radius:10px;padding:14px 18px;font-weight:700;cursor:pointer;margin-top:10px}
   .result{background:#eef5ff;border:1px solid #cfe2ff;border-radius:12px;padding:16px 18px;margin-top:16px;font-size:16px}
   .muted{color:#667085}
   .topnav{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
@@ -27,7 +27,7 @@
     <a class="home" href="index.html">← 메인으로</a>
   </div>
   <h1>IES-R (사건 충격 척도)</h1>
-  <p class="muted">해당 사건과 관련하여 지난 1주 동안의 경험을 선택하세요.</p>
+  <p class="muted">최근 한 달 동안 특정 사건과 관련해 경험한 정도를 선택하세요.</p>
 
   <form id="form"></form>
 
@@ -42,36 +42,38 @@
 </div>
 
 <script>
-const labels = ["전혀 없다","약간 있다","상당히 있다","많이 있다","극심하게 있다"];
-const qs = [
-  "그 사건을 떠올리게 하는 것이 당시 감정을 다시 불러일으켰다",
-  "수면을 지속하는 데 어려움이 있었다",
-  "다른 일들로 인해 그 사건을 생각하게 된다",
-  "그 사건 이후 예민하고 화가 났다",
-  "그 사건을 생각/떠올릴 때 혼란스러워 회피하려 했다",
-  "생각하지 않으려 해도 그 사건이 떠올랐다",
-  "그 사건이 일어나지 않았거나 현실이 아닌 것처럼 느꼈다",
-  "그 사건을 상기시키는 것들을 멀리했다",
-  "그 사건의 장면이 마음속에 갑자기 떠올랐다",
-  "신경이 예민해지고 쉽게 놀랐다",
-  "그 사건에 대해 생각하지 않으려 노력했다",
-  "그 사건에 많은 감정을 느끼지만 신경 쓰고 싶지 않았다",
-  "그 사건에 대한 감정이 무감각했다",
-  "마치 사건 당시로 돌아간 것처럼 느끼거나 행동했다",
-  "잠들기가 어려웠다",
-  "그 사건에 대한 강한 감정이 밀려왔다",
-  "그 사건을 기억에서 지우려고 노력했다",
-  "집중하는 데 어려움이 있었다",
-  "사건을 떠올리게 하는 것에 신체 반응(식은땀, 호흡곤란 등)이 있었다",
-  "그 사건에 관한 꿈을 꾸었다",
-  "주위를 경계하고 감시하고 있다고 느꼈다",
-  "그 사건에 대해 이야기하지 않으려 했다"
+// IES-R 문항 (22개)
+const q = [
+  "사건에 대한 생각이나 영상이 원치 않아도 떠올랐다.",
+  "사건을 떠올리게 하는 것들을 피하려고 했다.",
+  "사건에 대한 꿈을 자주 꾸었다.",
+  "사건과 관련된 일을 떠올리는 것이 힘들었다.",
+  "사건이 다시 일어나는 것처럼 느꼈다.",
+  "사건에 대해 이야기하거나 생각하는 것을 피했다.",
+  "사건과 관련된 활동이나 상황을 피했다.",
+  "사건 이후로 경계심이 높아졌다.",
+  "사건에 대해 생각하지 않으려 애썼다.",
+  "사건을 떠올리면 심장이 두근거리거나 신체 반응이 나타났다.",
+  "사건이 일어나기 전의 생활을 떠올리기 힘들었다.",
+  "사건 이후로 사람들과 가까워지기 어렵게 느꼈다.",
+  "사건 이후로 미래가 단절된 것처럼 느껴졌다.",
+  "사건에 대해 떠올리면 화가 나거나 불안했다.",
+  "사건 이후로 쉽게 놀라거나 화들짝 놀랐다.",
+  "사건을 떠올리면 집중하기가 어려웠다.",
+  "사건 이후로 수면이 방해되거나 악몽을 꿨다.",
+  "사건에 대한 기억이 부분적으로 떠오르지 않았다.",
+  "사건 이후로 기분이 가라앉거나 우울했다.",
+  "사건을 생각하지 않으려고 다른 일에 몰두했다.",
+  "사건에 대한 감정이 둔화되었다.",
+  "사건 이후로 긴장 상태가 오래 지속되었다."
 ];
 
+const labels = ["전혀 없음 (0)", "조금 (1)", "보통 (2)", "많이 (3)", "매우 심함 (4)"];
+
 const form = document.getElementById('form');
-qs.forEach((t,i)=>{
-  const box = document.createElement('div'); box.className='card';
-  box.innerHTML = `
+q.forEach((t,i)=>{
+  const box=document.createElement('div'); box.className='card';
+  box.innerHTML=`
     <div class="q">${i+1}. ${t}</div>
     <div class="opts">
       ${labels.map((lb,idx)=>`
@@ -81,31 +83,35 @@ qs.forEach((t,i)=>{
   form.append(box);
 });
 
+// 점수 계산
 function score(){
   let s=0,c=0;
-  qs.forEach((_,i)=>{
-    const sel = form.querySelector(`input[name="q${i}"]:checked`);
+  q.forEach((_,i)=>{
+    const sel=form.querySelector(`input[name="q${i}"]:checked`);
     if(!sel) return; s+=Number(sel.value); c++;
   });
-  if(c!==qs.length) return null;
+  if(c!==q.length) return null;
   return s; // 0~88
 }
 
 document.getElementById('submitBtn').addEventListener('click', ()=>{
-  const sc = score();
-  const out = document.getElementById('out');
-  const counsel = document.getElementById('counselDiv');
-  if(sc===null){ alert('모든 문항을 선택해 주세요.'); return; }
+  const sc=score();
+  const out=document.getElementById('out');
+  if(sc===null){ alert("모든 문항을 선택해 주세요."); return; }
 
-  let level="", guide="";
-  if(sc<=24){ level="정상 범위"; guide="일반적인 스트레스 반응 범위입니다."; }
-  else if(sc<=39){ level="경도"; guide="경도의 외상 관련 반응이 있습니다."; }
-  else if(sc<=59){ level="중등도"; guide="PTSD 관련 증상 가능성이 있습니다. 상담을 권합니다."; }
-  else { level="고도"; guide="증상이 고도입니다. 전문적 평가가 권고됩니다."; }
+  let guide="";
+  if(sc<=24){
+    guide="정상 범위: 외상 사건이 큰 영향을 미치지 않고 있습니다.<br>일상 유지가 가능하나, 자기 관리와 예방이 필요합니다.";
+  } else if(sc<=39){
+    guide="주의 수준: 외상 사건으로 인한 정서적 어려움이 나타나고 있습니다.<br>상담을 통한 감정 조절 훈련이 권장됩니다.";
+  } else {
+    guide="높은 위험: PTSD(외상 후 스트레스 장애) 가능성이 높습니다.<br>즉각적인 전문 상담과 치료介入이 필요합니다.";
+  }
 
   out.style.display='block';
-  out.innerHTML = `<b>총점: ${sc}점 (0~88)</b><br/>구분: <b>${level}</b><br/><span class="muted">${guide}</span>`;
-  counsel.style.display='block';
+  out.innerHTML=`<b>총점: ${sc}점 (0~88)</b><br/><span>${guide}</span>`;
+  document.getElementById('counselDiv').style.display='block';
+  document.getElementById('counselDiv').scrollIntoView({behavior:"smooth"});
 });
 </script>
 </body>
