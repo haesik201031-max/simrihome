@@ -42,27 +42,24 @@
 </div>
 
 <script>
-// PHQ-9 문항
 const q = [
-  "일에 대한 흥미나 즐거움이 거의 없었다.",
-  "기분이 가라앉거나 우울하거나 희망이 없었다.",
-  "잠들기가 어렵거나 자주 깼다, 혹은 너무 많이 잤다.",
-  "피곤하거나 기운이 거의 없었다.",
-  "입맛이 없거나 과식을 했다.",
-  "내가 잘못했거나 실패했다는 생각이 들었다, 또는 자신이나 가족을 실망시켰다고 느꼈다.",
-  "신문을 읽거나 TV를 보는 것과 같은 일에 집중하기 어려웠다.",
-  "다른 사람들이 눈치 챌 정도로 너무 느리게 움직이거나 말을 했다. 혹은 반대로 너무 안절부절 못해서 평소보다 많이 움직였다.",
-  "차라리 죽는 것이 더 낫겠다는 생각이나 자해할 생각을 했다."
+  "일이나 집안일을 하는 데 흥미나 즐거움을 느끼지 못함",
+  "기분이 가라앉거나, 우울하거나, 희망이 없음",
+  "잠들기 어렵거나 자주 깸, 혹은 너무 많이 잠",
+  "피곤하다고 느끼거나 기운이 거의 없음",
+  "식욕이 줄거나 과식함",
+  "자신을 나쁜 사람이라고 느끼거나 자신을 실패자라고 느낌",
+  "신문을 읽거나 TV를 볼 정도의 집중을 할 수 없음",
+  "남들이 알아챌 정도로 말과 행동이 느려짐, 또는 반대로 너무 초조하여 가만히 있을 수 없음",
+  "죽는 것이 더 낫겠다고 생각하거나 자해할 생각을 함"
 ];
 
-// 답변 라벨
-const labels = ["전혀 없음 (0점)", "며칠 동안 (1점)", "1주일 이상 (2점)", "거의 매일 (3점)"];
+const labels = ["전혀 아니다 (0점)","며칠 동안 (1점)","일주일 이상 (2점)","거의 매일 (3점)"];
 
-// 문항 출력
 const form = document.getElementById('form');
 q.forEach((t,i)=>{
-  const box=document.createElement('div'); box.className='card';
-  box.innerHTML=`
+  const box = document.createElement('div'); box.className='card';
+  box.innerHTML = `
     <div class="q">${i+1}. ${t}</div>
     <div class="opts">
       ${labels.map((lb,idx)=>`
@@ -72,23 +69,20 @@ q.forEach((t,i)=>{
   form.append(box);
 });
 
-// 점수 계산
 function score(){
   let s=0,c=0;
   q.forEach((_,i)=>{
-    const sel=form.querySelector(\`input[name="q\${i}"]:checked\`);
-    if(!sel) return;
-    s+=Number(sel.value); c++;
+    const sel=form.querySelector(`input[name="q${i}"]:checked`);
+    if(!sel) return; s+=Number(sel.value); c++;
   });
   if(c!==q.length) return null;
   return s; // 0~27
 }
 
-// 결과 확인
 document.getElementById('submitBtn').addEventListener('click', ()=>{
   const sc=score();
   const out=document.getElementById('out');
-  if(sc===null){ alert('모든 문항에 답해주세요.'); return; }
+  if(sc===null){ alert('모든 문항을 선택해 주세요.'); return; }
 
   let guide="";
   if(sc<=4){ guide="정상 범위: 특별한 우울 증상은 보이지 않습니다."; }
@@ -98,7 +92,7 @@ document.getElementById('submitBtn').addEventListener('click', ()=>{
   else { guide="심한 우울: 즉각적인 전문 상담·치료가 필요합니다."; }
 
   out.style.display='block';
-  out.innerHTML=\`<b>총점: \${sc}점 (0~27)</b><br/><span>\${guide}</span>\`;
+  out.innerHTML=`<b>총점: ${sc}점 (0~27)</b><br/><span>${guide}</span>`;
   document.getElementById('counselDiv').style.display='block';
 
   // localStorage 불러오기
@@ -116,7 +110,6 @@ document.getElementById('submitBtn').addEventListener('click', ()=>{
   });
 });
 
-// 구글폼 전송 함수
 function sendToGoogleForm(data){
   const url="https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/formResponse";
   const fd=new FormData();
