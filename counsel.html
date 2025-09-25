@@ -1,83 +1,80 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <title>상담 신청하기</title>
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>온라인 상담</title>
+  <meta name="description" content="정은영 심리상담센터 온라인 상담 접수 폼" />
   <style>
-    body {
-      font-family: -apple-system, system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-      margin: 0;
-      background: #f6f8fb;
-      color: #111;
+    :root{
+      --bg:#f7f8fb; --card:#ffffff; --text:#111827; --muted:#6b7280;
+      --primary:#2563eb; --border:#e5e7eb; --radius:14px;
     }
-    .wrap {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 40px 20px;
-      text-align: center;
+    *{box-sizing:border-box}
+    body{
+      margin:0; background:var(--bg); color:var(--text);
+      font-family:"Noto Sans KR",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      line-height:1.6;
     }
-    h1 {
-      font-size: 28px;
-      margin-bottom: 16px;
+    .wrap{max-width:1000px; margin:0 auto; padding:28px 16px}
+    header{display:flex; align-items:center; gap:10px; margin-bottom:4px}
+    h1{font-size:28px; margin:0}
+    p.muted{color:var(--muted); margin:6px 0 16px}
+    .card{
+      background:var(--card); border:1px solid var(--border);
+      border-radius:var(--radius); padding:16px;
     }
-    p {
-      font-size: 16px;
-      color: #555;
-      margin-bottom: 24px;
-      line-height: 1.6;
+    .actions{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px}
+    .btn{
+      display:inline-block; padding:10px 14px; border-radius:10px; font-weight:700;
+      text-decoration:none; border:1px solid var(--border); background:#eef2f7; color:var(--text);
+      cursor:pointer;
     }
-    .btn {
-      display: inline-block;
-      background: #1668e3;
-      color: #fff;
-      border: 0;
-      border-radius: 12px;
-      padding: 16px 28px;
-      font-size: 18px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.2s;
-      text-decoration: none;
+    .btn.primary{background:var(--primary); color:#fff; border-color:var(--primary)}
+    iframe#gform{
+      width:100%; height:2000px; border:0; border-radius:12px; background:#fff;
     }
-    .btn:hover {
-      background: #0d47a1;
-    }
-    .topnav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    .muted {
-      color: #667085;
-    }
-    a.home {
-      color: #1668e3;
-      text-decoration: none;
-      font-weight: 600;
-    }
+    @media (max-width:640px){ iframe#gform{height:2200px} }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="topnav">
-      <div class="muted">마음건강 자가검진</div>
-      <a class="home" href="index.html">← 메인으로</a>
+    <header><h1>온라인 상담</h1></header>
+    <p class="muted">아래 구글폼에 접수하시면 담당자가 확인 후 연락드립니다. 폼이 보이지 않으면 <b>“새 창에서 열기”</b>를 이용해 주세요.</p>
+
+    <div class="card">
+      <div class="actions">
+        <!-- 새 창에서 열기 -->
+        <a class="btn primary" target="_blank" rel="noopener"
+           href="https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/viewform">
+          새 창에서 열기
+        </a>
+        <!-- 임베드 리로드 -->
+        <button class="btn" type="button" onclick="reloadForm()">폼이 안 보이면 클릭</button>
+      </div>
+
+      <!-- Google Forms 임베드 -->
+      <iframe
+        id="gform"
+        title="정은영 심리상담센터 온라인 상담 폼"
+        src="https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/viewform?embedded=true"
+      >로드 중…</iframe>
+
+      <noscript>
+        자바스크립트가 꺼져 있어 폼을 불러올 수 없습니다.
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/viewform" target="_blank" rel="noopener">여기를 클릭해 새 창에서 열기</a>
+      </noscript>
     </div>
-
-    <h1>상담 신청하기</h1>
-    <p>
-      자가검진 결과를 확인하셨다면, 보다 깊이 있는 상담을 통해<br/>
-      현재 상황을 점검하고 맞춤형 도움을 받으실 수 있습니다.<br/><br/>
-      아래 버튼을 클릭하면 상담 신청을 위한 <b>구글폼</b>으로 이동합니다.<br/>
-      (전화번호, 이메일, 상담 요청 사항 등은 구글폼에서 직접 작성하게 됩니다.)
-    </p>
-
-    <!-- 상담 신청 버튼 -->
-    <a class="btn" href="https://docs.google.com/forms/d/e/폼-ID/formResponse" target="_blank">
-      구글폼에서 상담 신청하기
-    </a>
   </div>
+
+  <script>
+    const EMBED_URL = "https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/viewform?embedded=true";
+    function setFormSrc(){
+      const f = document.getElementById("gform");
+      f.src = EMBED_URL + "&v=" + Date.now(); // 캐시 방지용 파라미터
+    }
+    function reloadForm(){ setFormSrc(); }
+    document.addEventListener("DOMContentLoaded", setFormSrc);
+  </script>
 </body>
 </html>
