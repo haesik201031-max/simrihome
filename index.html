@@ -39,7 +39,7 @@
 
     .info-form{display:none; margin-top:24px; background:#fff; border:1px solid var(--border); border-radius:14px; padding:24px;}
     .info-form label{display:block; margin:12px 0 6px; font-weight:600;}
-    .info-form input, .info-form select{
+    .info-form input{
       width:100%; padding:10px; border:1px solid var(--border); border-radius:8px; font-size:14px;
     }
     .info-form button{margin-top:16px;}
@@ -69,42 +69,12 @@
         <a href="#" onclick="goInfo('test-isik.html')">검사 시작</a></div>
     </div>
 
-    <!-- 심층검사 박스 -->
-    <div style="text-align:center; margin-top:28px;">
-      <a href="https://smartstore.naver.com/issueara" target="_blank" 
-         style="display:inline-block; background:#fefefe; border:2px solid #2563eb; padding:16px 24px; border-radius:12px; font-weight:700; color:#2563eb; text-decoration:none;">
-        정은영심리상담센터 심층검사 바로가기
-      </a>
-    </div>
-
     <!-- 기본 정보 입력 -->
     <div id="info-form" class="info-form">
-      <h2>기본정보 입력</h2>
+      <h2>닉네임 입력</h2>
       <form id="userInfo">
-        <label>닉네임(이름)</label>
-        <input type="text" id="nickname" placeholder="닉네임 입력" required />
-
-        <label>성별</label>
-        <select id="gender" required>
-          <option value="">선택</option>
-          <option>남성</option>
-          <option>여성</option>
-        </select>
-
-        <label>나이</label>
-        <select id="age" required>
-          <option value="">선택</option>
-          <option>10대</option>
-          <option>20대</option>
-          <option>30대</option>
-          <option>40대</option>
-          <option>50대</option>
-          <option>60대 이상</option>
-        </select>
-
-        <label>거주지역</label>
-        <input type="text" id="region" placeholder="예: 서울, 부산" required />
-
+        <label>닉네임</label>
+        <input type="text" name="name" placeholder="닉네임 입력" required />
         <button type="button" onclick="startTest()">검사 시작</button>
         <button type="button" onclick="goBack()">메인으로</button>
       </form>
@@ -129,23 +99,13 @@ function goBack(){
 
 function startTest(){
   if(!selectedTest) return alert("검사 종류를 선택하세요.");
-  const nick = document.getElementById("nickname").value;
-  const age  = document.getElementById("age").value;
-  const gender = document.getElementById("gender").value;
-  const region = document.getElementById("region").value;
+  const form=document.getElementById('userInfo');
+  if(!form.reportValidity()) return;
 
-  if(!nick || !age || !gender || !region){
-    alert("모든 항목을 입력해주세요.");
-    return;
-  }
+  // 닉네임 저장 (필요 시 활용 가능)
+  const name=form.querySelector('input[name="name"]').value;
+  localStorage.setItem('name', name);
 
-  // localStorage 저장
-  localStorage.setItem("nickname", nick);
-  localStorage.setItem("age", age);
-  localStorage.setItem("gender", gender);
-  localStorage.setItem("region", region);
-
-  // 검사 페이지로 이동
   window.location.href=selectedTest;
 }
 </script>
