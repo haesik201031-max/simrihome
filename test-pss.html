@@ -56,11 +56,11 @@ const q = [
 ];
 
 const labels = ["전혀 없음","가끔","자주","매우 자주"];
-
 const form = document.getElementById('form');
+
 q.forEach((t,i)=>{
-  const box = document.createElement('div'); box.className='card';
-  box.innerHTML = `
+  const box=document.createElement('div'); box.className='card';
+  box.innerHTML=`
     <div class="q">${i+1}. ${t}</div>
     <div class="opts">
       ${labels.map((lb,idx)=>`
@@ -73,7 +73,7 @@ q.forEach((t,i)=>{
 function score(){
   let s=0,c=0;
   q.forEach((_,i)=>{
-    const sel=form.querySelector(`input[name="q${i}"]:checked`);
+    const sel=form.querySelector(\`input[name="q\${i}"]:checked\`);
     if(!sel) return; s+=Number(sel.value); c++;
   });
   if(c!==q.length) return null;
@@ -91,10 +91,10 @@ document.getElementById('submitBtn').addEventListener('click', ()=>{
   else { guide="높음: 심각한 스트레스 누적. → 상담 필수 요망"; }
 
   out.style.display='block';
-  out.innerHTML=`<b>총점: ${sc}점 (0~30)</b><br/><span>${guide}</span>`;
+  out.innerHTML=\`<b>총점: \${sc}점 (0~30)</b><br/><span>\${guide}</span>\`;
   document.getElementById('counselDiv').style.display='block';
 
-  // localStorage 불러오기
+  // localStorage 값 불러오기
   const name=localStorage.getItem('name')||'';
   const gender=localStorage.getItem('gender')||'';
   const age=localStorage.getItem('age')||'';
@@ -113,14 +113,14 @@ function sendToGoogleForm(data){
   const url="https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/formResponse";
   const fd=new FormData();
 
-  // entry ID 매핑
-  fd.append("entry.707709000", data.name);      // 닉네임
-  fd.append("entry.1389984940", data.gender);   // 성별
-  fd.append("entry.513328345", data.age);       // 나이
-  fd.append("entry.436383647", data.location);  // 지역
-  fd.append("entry.1649771076", data.testName); // 검사명
-  fd.append("entry.1905166231", data.score);    // 총점
-  fd.append("entry.43237668", data.result);     // 판정결과
+  // ✅ 새로운 entry 번호 반영
+  fd.append("entry.926411538", data.name);       // 닉네임
+  fd.append("entry.1280065148", data.gender);    // 성별
+  fd.append("entry.1741860606", data.age);       // 나이
+  fd.append("entry.2096812076", data.location);  // 지역
+  fd.append("entry.1849931493", data.testName);  // 검사명
+  fd.append("entry.2131156286", data.score);     // 총점
+  fd.append("entry.2114023650", data.result);    // 판정결과
 
   fetch(url,{method:"POST",mode:"no-cors",body:fd})
     .then(()=>console.log("구글폼 전송 성공"))
