@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>상담 신청</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <title>상담 신청하기</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
       font-family: -apple-system, system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
@@ -12,61 +12,45 @@
       color: #111;
     }
     .wrap {
-      max-width: 720px;
+      max-width: 800px;
       margin: 0 auto;
-      padding: 32px;
+      padding: 40px 20px;
+      text-align: center;
     }
     h1 {
-      font-size: 26px;
-      margin: 8px 0 16px;
+      font-size: 28px;
+      margin-bottom: 16px;
     }
-    .card {
-      background: #fff;
-      border: 1px solid #e5e7eb;
-      border-radius: 14px;
-      padding: 22px 20px;
-      margin: 14px 0;
-      box-shadow: 0 6px 16px rgba(17, 24, 39, .06);
-    }
-    label {
-      display: block;
-      margin: 8px 0 4px;
-      font-weight: 600;
-    }
-    input, textarea, select {
-      width: 100%;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #e5e7eb;
-      margin-bottom: 12px;
-      font-size: 15px;
+    p {
+      font-size: 16px;
+      color: #555;
+      margin-bottom: 24px;
+      line-height: 1.6;
     }
     .btn {
       display: inline-block;
       background: #1668e3;
       color: #fff;
       border: 0;
-      border-radius: 10px;
-      padding: 14px 18px;
+      border-radius: 12px;
+      padding: 16px 28px;
+      font-size: 18px;
       font-weight: 700;
       cursor: pointer;
+      transition: background 0.2s;
+      text-decoration: none;
     }
-    .result {
-      background: #eef5ff;
-      border: 1px solid #cfe2ff;
-      border-radius: 12px;
-      padding: 16px 18px;
-      margin-top: 16px;
-      display: none;
-    }
-    .muted {
-      color: #667085;
+    .btn:hover {
+      background: #0d47a1;
     }
     .topnav {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 20px;
+    }
+    .muted {
+      color: #667085;
     }
     a.home {
       color: #1668e3;
@@ -78,77 +62,22 @@
 <body>
   <div class="wrap">
     <div class="topnav">
-      <div class="muted">상담 신청</div>
+      <div class="muted">마음건강 자가검진</div>
       <a class="home" href="index.html">← 메인으로</a>
     </div>
+
     <h1>상담 신청하기</h1>
-    <form id="counselForm">
-      <div class="card">
-        <label for="name">닉네임 (이름)</label>
-        <input type="text" id="name" name="entry.926411538" required>
+    <p>
+      자가검진 결과를 확인하셨다면, 보다 깊이 있는 상담을 통해<br/>
+      현재 상황을 점검하고 맞춤형 도움을 받으실 수 있습니다.<br/><br/>
+      아래 버튼을 클릭하면 상담 신청을 위한 <b>구글폼</b>으로 이동합니다.<br/>
+      (전화번호, 이메일, 상담 요청 사항 등은 구글폼에서 직접 작성하게 됩니다.)
+    </p>
 
-        <label for="gender">성별</label>
-        <select id="gender" name="entry.1280065148" required>
-          <option value="">선택</option>
-          <option value="남성">남성</option>
-          <option value="여성">여성</option>
-        </select>
-
-        <label for="age">나이</label>
-        <input type="number" id="age" name="entry.1741860606" required>
-
-        <label for="region">지역</label>
-        <input type="text" id="region" name="entry.2096812076" required>
-
-        <label for="phone">전화번호</label>
-        <input type="tel" id="phone" name="entry.730308549" required>
-
-        <label for="email">이메일 (선택)</label>
-        <input type="email" id="email" name="entry.182988118">
-
-        <label for="req">상담 요청 내용 (선택)</label>
-        <textarea id="req" name="entry.1094804331" rows="4"></textarea>
-
-        <input type="hidden" name="entry.1849931493" id="testName" value="상담신청">
-        <input type="hidden" name="entry.2131156286" id="totalScore" value="">
-        <input type="hidden" name="entry.2114023650" id="resultText" value="">
-      </div>
-      <button class="btn" type="submit">제출하기</button>
-    </form>
-
-    <div id="submitResult" class="result"></div>
+    <!-- 상담 신청 버튼 -->
+    <a class="btn" href="https://docs.google.com/forms/d/e/폼-ID/formResponse" target="_blank">
+      구글폼에서 상담 신청하기
+    </a>
   </div>
-
-  <script>
-    const form = document.getElementById("counselForm");
-    const submitResult = document.getElementById("submitResult");
-
-    form.addEventListener("submit", function(e){
-      e.preventDefault();
-
-      // 실제 Google Form URL (예: action="https://docs.google.com/forms/d/e/xxx/formResponse")
-      const url = "https://docs.google.com/forms/d/e/폼ID/formResponse";
-
-      const data = new FormData(form);
-
-      fetch(url, {
-        method: "POST",
-        body: data,
-        mode: "no-cors"
-      }).then(() => {
-        submitResult.style.display = "block";
-        submitResult.innerHTML = "<b>제출이 완료되었습니다.</b><br/>빠른 시일 내 연락드리겠습니다.";
-
-        // 📌 자동으로 제출 결과 영역으로 스크롤 이동
-        submitResult.scrollIntoView({ behavior: "smooth", block: "start" });
-
-        form.reset();
-      }).catch(() => {
-        submitResult.style.display = "block";
-        submitResult.innerHTML = "<b>제출 중 오류가 발생했습니다.</b>";
-        submitResult.scrollIntoView({ behavior: "smooth", block: "start" });
-      });
-    });
-  </script>
 </body>
 </html>
