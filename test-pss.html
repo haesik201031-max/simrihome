@@ -5,12 +5,13 @@
 <title>PSS (스트레스)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
-  body{font-family:"Noto Sans KR",sans-serif;margin:0;background:#f6f8fb;color:#111}
+  body{font-family:-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:#f6f8fb;color:#111}
   .wrap{max-width:900px;margin:0 auto;padding:32px}
   h1{font-size:28px;margin:8px 0 16px}
   .card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:22px 20px;margin:14px 0;box-shadow:0 6px 16px rgba(17,24,39,.06)}
   .q{margin:0 0 12px;font-weight:600}
   .opts label{display:inline-flex;align-items:center;gap:8px;margin:6px 10px 6px 0;padding:8px 10px;border-radius:10px;border:1px solid #e5e7eb;cursor:pointer}
+  .opts input{margin:0}
   .btn{display:inline-block;background:#1668e3;color:#fff;border:0;border-radius:10px;padding:14px 18px;font-weight:700;cursor:pointer;margin-top:10px}
   .result{background:#eef5ff;border:1px solid #cfe2ff;border-radius:12px;padding:16px 18px;margin-top:16px;font-size:16px}
   .muted{color:#667085}
@@ -29,7 +30,6 @@
   <h1>PSS (스트레스)</h1>
   <p class="muted">지난 한 달 동안 얼마나 자주 해당 상황을 경험했는지 선택하세요.</p>
 
-  <!-- 문항 영역 -->
   <form id="form"></form>
 
   <div>
@@ -40,9 +40,6 @@
   <div class="counsel-btn" id="counselDiv">
     <button onclick="window.location.href='counsel.html'" type="button">상담 신청하기</button>
   </div>
-
-  <!-- 숨겨진 필드 (구글폼 entry) -->
-  <div id="hiddenFields" style="display:none"></div>
 </div>
 
 <script>
@@ -60,12 +57,11 @@ const q = [
 ];
 
 const labels = ["전혀 없음","가끔","자주","매우 자주"];
-const form = document.getElementById('form');
 
-// 🔹 문항은 무조건 먼저 보이도록 append
+const form = document.getElementById('form');
 q.forEach((t,i)=>{
-  const box=document.createElement('div'); box.className='card';
-  box.innerHTML=`
+  const box = document.createElement('div'); box.className='card';
+  box.innerHTML = `
     <div class="q">${i+1}. ${t}</div>
     <div class="opts">
       ${labels.map((lb,idx)=>`
@@ -82,7 +78,7 @@ function score(){
     if(!sel) return; s+=Number(sel.value); c++;
   });
   if(c!==q.length) return null;
-  return s;
+  return s; // 0~30
 }
 
 document.getElementById('submitBtn').addEventListener('click', ()=>{
@@ -92,41 +88,28 @@ document.getElementById('submitBtn').addEventListener('click', ()=>{
 
   let guide="";
   if(sc<=13){
-    guide="낮음 (0–13점)<br/>스트레스 수준이 낮으며 전반적으로 안정된 상태입니다.<br/>대처 전략이 유효하고 회복력이 좋습니다.<br/>규칙적인 자기 관리 습관을 유지하세요.";
-  } else if(sc<=19){
-    guide="중간 (14–19점)<br/>반복적인 부담과 긴장이 체감됩니다.<br/>대처 자원이 제한적일 수 있습니다.<br/>상담을 통한 스트레스 관리 교육 및 자기 돌봄 기술이 필요합니다.";
-  } else {
-    guide="높음 (20점 이상)<br/>스트레스가 일상 전반에 영향을 미칩니다.<br/>불면, 과민 반응, 건강 악화가 동반될 수 있습니다.<br/>전문적인 상담 및 환경 조정이 필수적으로 권장됩니다.";
+    guide=`낮음 (0–13점)<br/>
+    • 스트레스에 대한 지각 수준이 낮으며 전반적으로 안정된 상태입니다.<br/>
+    • 대처 전략이 비교적 유효하게 작동하고 있으며 회복력이 좋습니다.<br/>
+    • 규칙적인 자기 관리 습관을 유지하는 것이 예방 차원에서 중요합니다.`;
+  }
+  else if(sc<=19){
+    guide=`중간 (14–19점)<br/>
+    • 일상에서 반복적인 부담과 긴장이 체감되고 있습니다.<br/>
+    • 스트레스 상황을 인식하지만 대처 자원이 제한적일 수 있습니다.<br/>
+    • 상담을 통한 스트레스 관리 교육 및 자기 돌봄 기술 향상이 필요합니다.`;
+  }
+  else {
+    guide=`높음 (20점 이상)<br/>
+    • 스트레스 경험이 일상 전반에 영향을 미치며 정서적 소진이나 신체 증상으로 이어질 수 있습니다.<br/>
+    • 불면, 과민 반응, 건강 악화가 동반될 가능성이 높습니다.<br/>
+    • 전문적인 상담介入 및 환경 조정이 필수적으로 권장됩니다.`;
   }
 
   out.style.display='block';
   out.innerHTML=`<b>총점: ${sc}점 (0~30)</b><br/><span>${guide}</span>`;
   document.getElementById('counselDiv').style.display='block';
-
-  // 🔹 localStorage 불러오기
-  const name=localStorage.getItem('name')||'';
-  const gender=localStorage.getItem('gender')||'';
-  const age=localStorage.getItem('age')||'';
-  const location=localStorage.getItem('location')||'';
-
-  sendToGoogleForm({name,gender,age,location,testName:"PSS",score:sc,result:guide});
 });
-
-function sendToGoogleForm(data){
-  const url="https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/formResponse";
-  const fd=new FormData();
-  fd.append("entry.926411538", data.name);
-  fd.append("entry.1280065148", data.gender);
-  fd.append("entry.1741860606", data.age);
-  fd.append("entry.2096812076", data.location);
-  fd.append("entry.1849931493", data.testName);
-  fd.append("entry.2131156286", data.score);
-  fd.append("entry.2114023650", data.result);
-
-  fetch(url,{method:"POST",mode:"no-cors",body:fd})
-    .then(()=>console.log("구글폼 전송 성공"))
-    .catch(err=>console.error("전송 실패",err));
-}
 </script>
 </body>
 </html>
