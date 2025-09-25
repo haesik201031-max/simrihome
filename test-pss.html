@@ -42,90 +42,99 @@
 </div>
 
 <script>
-const q = [
-  "예상치 못한 일 때문에 화가 난 적이 얼마나 있었습니까?",
-  "중요한 일을 통제할 수 없다고 느낀 적이 얼마나 있었습니까?",
-  "긴장을 많이 했던 적이 얼마나 있었습니까?",
-  "자신이 해야 할 일을 통제할 수 없다고 느낀 적이 얼마나 있었습니까?",
-  "문제가 너무 많아 감당할 수 없다고 느낀 적이 얼마나 있었습니까?",
-  "어려운 일을 잘 처리할 수 있다고 느낀 적이 얼마나 있었습니까?",
-  "개인적인 문제를 잘 해결할 수 있었다고 느낀 적이 얼마나 있었습니까?",
-  "중요한 일을 통제할 수 있었다고 느낀 적이 얼마나 있었습니까?",
-  "어려운 상황을 잘 대처할 수 있었다고 느낀 적이 얼마나 있었습니까?",
-  "생활 속 짜증나는 일을 잘 조절할 수 있었다고 느낀 적이 얼마나 있었습니까?"
-];
+document.addEventListener("DOMContentLoaded", () => {
+  const q = [
+    "예상치 못한 일 때문에 화가 난 적이 얼마나 있었습니까?",
+    "중요한 일을 통제할 수 없다고 느낀 적이 얼마나 있었습니까?",
+    "긴장을 많이 했던 적이 얼마나 있었습니까?",
+    "자신이 해야 할 일을 통제할 수 없다고 느낀 적이 얼마나 있었습니까?",
+    "문제가 너무 많아 감당할 수 없다고 느낀 적이 얼마나 있었습니까?",
+    "어려운 일을 잘 처리할 수 있다고 느낀 적이 얼마나 있었습니까?",
+    "개인적인 문제를 잘 해결할 수 있었다고 느낀 적이 얼마나 있었습니까?",
+    "중요한 일을 통제할 수 있었다고 느낀 적이 얼마나 있었습니까?",
+    "어려운 상황을 잘 대처할 수 있었다고 느낀 적이 얼마나 있었습니까?",
+    "생활 속 짜증나는 일을 잘 조절할 수 있었다고 느낀 적이 얼마나 있었습니까?"
+  ];
 
-const labels = ["전혀 없음","가끔","자주","매우 자주"];
-const form = document.getElementById('form');
+  const labels = ["전혀 없음","가끔","자주","매우 자주"];
+  const form = document.getElementById('form');
 
-q.forEach((t,i)=>{
-  const box=document.createElement('div'); box.className='card';
-  box.innerHTML=`
-    <div class="q">${i+1}. ${t}</div>
-    <div class="opts">
-      ${labels.map((lb,idx)=>`
-        <label><input type="radio" name="q${i}" value="${idx}" required/> ${lb}</label>
-      `).join('')}
-    </div>`;
-  form.append(box);
-});
-
-function score(){
-  let s=0,c=0;
-  q.forEach((_,i)=>{
-    const sel=form.querySelector(\`input[name="q\${i}"]:checked\`);
-    if(!sel) return; s+=Number(sel.value); c++;
+  q.forEach((t,i)=>{
+    const box=document.createElement('div');
+    box.className='card';
+    box.innerHTML=`
+      <div class="q">${i+1}. ${t}</div>
+      <div class="opts">
+        ${labels.map((lb,idx)=>`
+          <label><input type="radio" name="q${i}" value="${idx}" required/> ${lb}</label>
+        `).join('')}
+      </div>`;
+    form.append(box);
   });
-  if(c!==q.length) return null;
-  return s; // 0~30
-}
 
-document.getElementById('submitBtn').addEventListener('click', ()=>{
-  const sc=score();
-  const out=document.getElementById('out');
-  if(sc===null){ alert('모든 문항을 선택해 주세요.'); return; }
+  function score(){
+    let s=0,c=0;
+    q.forEach((_,i)=>{
+      const sel=form.querySelector(\`input[name="q\${i}"]:checked\`);
+      if(!sel) return; 
+      s+=Number(sel.value); 
+      c++;
+    });
+    if(c!==q.length) return null;
+    return s; // 0~30
+  }
 
-  let guide="";
-  if(sc<=13){ guide="낮음: 큰 스트레스 없이 안정된 상태입니다."; }
-  else if(sc<=19){ guide="중간: 평균 수준의 스트레스, 관리 필요. → 상담 권장"; }
-  else { guide="높음: 심각한 스트레스 누적. → 상담 필수 요망"; }
+  document.getElementById('submitBtn').addEventListener('click', ()=>{
+    const sc=score();
+    const out=document.getElementById('out');
+    if(sc===null){ alert('모든 문항을 선택해 주세요.'); return; }
 
-  out.style.display='block';
-  out.innerHTML=\`<b>총점: \${sc}점 (0~30)</b><br/><span>\${guide}</span>\`;
-  document.getElementById('counselDiv').style.display='block';
+    let guide="";
+    if(sc<=13){
+      guide="낮음: 스트레스 지각 수준이 낮으며 전반적으로 안정된 상태입니다. 회복력이 좋고, 예방 차원에서 규칙적 생활이 권장됩니다.";
+    } else if(sc<=19){
+      guide="중간: 반복적 부담과 긴장이 체감됩니다. 대처 자원이 제한적일 수 있으므로, 상담과 스트레스 관리 훈련이 유익합니다.";
+    } else {
+      guide="높음: 스트레스가 전반적 기능을 제한하고 신체·정신적 증상을 유발할 수 있습니다. 전문적 상담介入이 필수적입니다.";
+    }
 
-  // localStorage 값 불러오기
-  const name=localStorage.getItem('name')||'';
-  const gender=localStorage.getItem('gender')||'';
-  const age=localStorage.getItem('age')||'';
-  const location=localStorage.getItem('location')||'';
+    out.style.display='block';
+    out.innerHTML=\`<b>총점: \${sc}점 (0~30)</b><br/><span>\${guide}</span>\`;
+    document.getElementById('counselDiv').style.display='block';
 
-  // 구글폼 전송
-  sendToGoogleForm({
-    name, gender, age, location,
-    testName:"PSS",
-    score:sc,
-    result:guide
+    // localStorage 불러오기
+    const name=localStorage.getItem('name')||'';
+    const gender=localStorage.getItem('gender')||'';
+    const age=localStorage.getItem('age')||'';
+    const location=localStorage.getItem('location')||'';
+
+    // 구글폼 전송
+    sendToGoogleForm({
+      name, gender, age, location,
+      testName:"PSS",
+      score:sc,
+      result:guide
+    });
   });
+
+  function sendToGoogleForm(data){
+    const url="https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/formResponse";
+    const fd=new FormData();
+
+    // 사용자 제공 entry 번호 반영
+    fd.append("entry.926411538", data.name);       // 닉네임
+    fd.append("entry.1280065148", data.gender);    // 성별
+    fd.append("entry.1741860606", data.age);       // 나이
+    fd.append("entry.2096812076", data.location);  // 지역
+    fd.append("entry.1849931493", data.testName);  // 검사명
+    fd.append("entry.2131156286", data.score);     // 총점
+    fd.append("entry.2114023650", data.result);    // 판정결과
+
+    fetch(url,{method:"POST",mode:"no-cors",body:fd})
+      .then(()=>console.log("구글폼 전송 성공"))
+      .catch(err=>console.error("전송 실패",err));
+  }
 });
-
-function sendToGoogleForm(data){
-  const url="https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/formResponse";
-  const fd=new FormData();
-
-  // ✅ 새로운 entry 번호 반영
-  fd.append("entry.926411538", data.name);       // 닉네임
-  fd.append("entry.1280065148", data.gender);    // 성별
-  fd.append("entry.1741860606", data.age);       // 나이
-  fd.append("entry.2096812076", data.location);  // 지역
-  fd.append("entry.1849931493", data.testName);  // 검사명
-  fd.append("entry.2131156286", data.score);     // 총점
-  fd.append("entry.2114023650", data.result);    // 판정결과
-
-  fetch(url,{method:"POST",mode:"no-cors",body:fd})
-    .then(()=>console.log("구글폼 전송 성공"))
-    .catch(err=>console.error("전송 실패",err));
-}
 </script>
 </body>
 </html>
