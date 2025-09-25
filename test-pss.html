@@ -59,8 +59,7 @@ const labels = ["전혀 없음","가끔","자주","매우 자주"];
 
 const form = document.getElementById('form');
 q.forEach((t,i)=>{
-  const box = document.createElement('div'); 
-  box.className='card';
+  const box = document.createElement('div'); box.className='card';
   box.innerHTML = `
     <div class="q">${i+1}. ${t}</div>
     <div class="opts">
@@ -68,16 +67,14 @@ q.forEach((t,i)=>{
         <label><input type="radio" name="q${i}" value="${idx}" required/> ${lb}</label>
       `).join('')}
     </div>`;
-  form.appendChild(box);
+  form.append(box);
 });
 
 function score(){
   let s=0,c=0;
   q.forEach((_,i)=>{
-    const sel=form.querySelector(`input[name="q${i}"]:checked`);
-    if(!sel) return; 
-    s+=Number(sel.value); 
-    c++;
+    const sel=form.querySelector(\`input[name="q\${i}"]:checked\`);
+    if(!sel) return; s+=Number(sel.value); c++;
   });
   if(c!==q.length) return null;
   return s; // 0~30
@@ -89,18 +86,12 @@ document.getElementById('submitBtn').addEventListener('click', ()=>{
   if(sc===null){ alert('모든 문항을 선택해 주세요.'); return; }
 
   let guide="";
-  if(sc<=13){ 
-    guide="<b>낮음 (0–13점)</b><br/>스트레스에 대한 지각 수준이 낮으며, 전반적으로 안정된 상태입니다.<br/>대처 전략이 비교적 유효하게 작동하고 있으며 회복력이 좋습니다.<br/>예방 차원에서 규칙적인 생활 관리와 자기 돌봄을 지속하는 것이 중요합니다.";
-  }
-  else if(sc<=19){ 
-    guide="<b>중간 (14–19점)</b><br/>일상에서 반복적인 부담과 긴장이 체감되고 있습니다.<br/>스트레스 상황을 인식하지만 대처 자원이 제한적일 수 있습니다.<br/>전문 상담을 통한 관리 교육 및 자기 돌봄 기술 향상이 필요합니다.";
-  }
-  else { 
-    guide="<b>높음 (20점 이상)</b><br/>스트레스가 정서적·신체적 건강 전반에 영향을 미칠 수 있습니다.<br/>불면, 과민 반응, 피로 누적이 동반될 가능성이 높습니다.<br/>전문적인 상담介입 및 환경 조정이 필수적으로 권장됩니다.";
-  }
+  if(sc<=13){ guide="낮음: 스트레스 수준이 낮고 회복력이 양호합니다. 자기 관리 습관을 유지하세요."; }
+  else if(sc<=19){ guide="중간: 스트레스가 일상에 영향을 주고 있습니다. 관리 교육 및 상담이 권장됩니다."; }
+  else { guide="높음: 스트레스가 심각하며 정서적·신체적 문제로 이어질 수 있습니다. 전문 상담介入이 필요합니다."; }
 
   out.style.display='block';
-  out.innerHTML=`<b>총점: ${sc}점 (0~30)</b><br/><span>${guide}</span>`;
+  out.innerHTML=\`<b>총점: \${sc}점 (0~30)</b><br/><span>\${guide}</span>\`;
   document.getElementById('counselDiv').style.display='block';
 
   // localStorage 불러오기
@@ -122,7 +113,7 @@ function sendToGoogleForm(data){
   const url="https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/formResponse";
   const fd=new FormData();
 
-  // entry ID 매핑 (최신 번호 반영)
+  // ✅ 최신 entry 번호 반영
   fd.append("entry.926411538", data.name);       // 닉네임
   fd.append("entry.1280065148", data.gender);    // 성별
   fd.append("entry.1741860606", data.age);       // 나이
