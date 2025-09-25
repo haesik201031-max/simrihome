@@ -2,48 +2,22 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
-<title>PHQ-9 (우울)</title>
+<title>PHQ-9 (우울 검사)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
-  body {
-    font-family:-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-    margin:0; background:#f6f8fb; color:#111;
-  }
-  .wrap { max-width:900px; margin:0 auto; padding:32px; }
-  h1 { font-size:28px; margin:8px 0 16px; }
-  .card {
-    background:#fff; border:1px solid #e5e7eb; border-radius:14px;
-    padding:22px 20px; margin:14px 0; box-shadow:0 6px 16px rgba(17,24,39,.06);
-  }
-  .q { margin:0 0 12px; font-weight:600; }
-  .opts label {
-    display:inline-flex; align-items:center; gap:8px;
-    margin:6px 10px 6px 0; padding:8px 10px;
-    border-radius:10px; border:1px solid #e5e7eb; cursor:pointer;
-  }
-  .btn {
-    display:inline-block; background:#1668e3; color:#fff;
-    border:0; border-radius:10px; padding:14px 18px;
-    font-weight:700; cursor:pointer; margin-top:10px;
-  }
-  .result {
-    background:#eef5ff; border:1px solid #cfe2ff;
-    border-radius:12px; padding:16px 18px; margin-top:16px;
-  }
-  .consult {
-    margin-top:20px; text-align:center;
-  }
-  .consult a {
-    display:inline-block; background:#dc2626; color:#fff;
-    padding:14px 22px; font-size:18px; font-weight:700;
-    border-radius:12px; text-decoration:none;
-  }
-  .muted { color:#667085; }
-  .topnav {
-    display:flex; justify-content:space-between;
-    align-items:center; margin-bottom:12px;
-  }
-  a.home { color:#1668e3; text-decoration:none; font-weight:600; }
+  body{font-family:-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:#f6f8fb;color:#111}
+  .wrap{max-width:900px;margin:0 auto;padding:32px}
+  h1{font-size:28px;margin:8px 0 16px}
+  .card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:22px 20px;margin:14px 0;box-shadow:0 6px 16px rgba(17,24,39,.06)}
+  .q{margin:0 0 12px;font-weight:600}
+  .opts label{display:block;margin:6px 0;padding:8px 10px;border-radius:10px;border:1px solid #e5e7eb;cursor:pointer}
+  .btn{display:inline-block;background:#1668e3;color:#fff;border:0;border-radius:10px;padding:14px 18px;font-weight:700;cursor:pointer;margin-top:10px}
+  .result{background:#eef5ff;border:1px solid #cfe2ff;border-radius:12px;padding:16px 18px;margin-top:16px;font-size:16px}
+  .muted{color:#667085}
+  .topnav{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  a.home{color:#1668e3;text-decoration:none;font-weight:600}
+  .counsel-btn{display:none;text-align:center;margin-top:20px}
+  .counsel-btn button{background:#e53935;color:#fff;font-size:18px;font-weight:700;border:0;border-radius:12px;padding:16px 28px;cursor:pointer}
 </style>
 </head>
 <body>
@@ -52,143 +26,105 @@
     <div class="muted">마음건강 자가검진</div>
     <a class="home" href="index.html">← 메인으로</a>
   </div>
-  <h1>PHQ-9 (우울)</h1>
-  <p class="muted">지난 2주간 얼마나 자주 해당 증상이 있었는지 선택하세요.</p>
+  <h1>PHQ-9 (우울 검사)</h1>
+  <p class="muted">지난 2주 동안 얼마나 자주 해당 상황을 경험했는지 선택하세요.</p>
 
-  <form id="phqForm">
-    <!-- 1번 -->
-    <div class="card">
-      <div class="q">1. 기분이 가라앉거나, 우울하거나, 희망이 없었다</div>
-      <div class="opts">
-        <label><input type="radio" name="q1" value="0" required> 없음</label>
-        <label><input type="radio" name="q1" value="1"> 2~6일</label>
-        <label><input type="radio" name="q1" value="2"> 7~12일</label>
-        <label><input type="radio" name="q1" value="3"> 거의 매일</label>
-      </div>
-    </div>
-    <!-- 2번 -->
-    <div class="card">
-      <div class="q">2. 평소 하던 일에 대한 흥미가 없어지거나 즐거움이 줄었다</div>
-      <div class="opts">
-        <label><input type="radio" name="q2" value="0" required> 없음</label>
-        <label><input type="radio" name="q2" value="1"> 2~6일</label>
-        <label><input type="radio" name="q2" value="2"> 7~12일</label>
-        <label><input type="radio" name="q2" value="3"> 거의 매일</label>
-      </div>
-    </div>
-    <!-- 3번 -->
-    <div class="card">
-      <div class="q">3. 잠들기 어렵거나 자주 깼다 / 혹은 너무 많이 잤다</div>
-      <div class="opts">
-        <label><input type="radio" name="q3" value="0" required> 없음</label>
-        <label><input type="radio" name="q3" value="1"> 2~6일</label>
-        <label><input type="radio" name="q3" value="2"> 7~12일</label>
-        <label><input type="radio" name="q3" value="3"> 거의 매일</label>
-      </div>
-    </div>
-    <!-- 4번 -->
-    <div class="card">
-      <div class="q">4. 평소보다 식욕이 줄었다 / 혹은 평소보다 많이 먹었다</div>
-      <div class="opts">
-        <label><input type="radio" name="q4" value="0" required> 없음</label>
-        <label><input type="radio" name="q4" value="1"> 2~6일</label>
-        <label><input type="radio" name="q4" value="2"> 7~12일</label>
-        <label><input type="radio" name="q4" value="3"> 거의 매일</label>
-      </div>
-    </div>
-    <!-- 5번 -->
-    <div class="card">
-      <div class="q">5. 다른 사람이 눈치 챌 정도로 말과 행동이 느려졌다 / 혹은 너무 안절부절못했다</div>
-      <div class="opts">
-        <label><input type="radio" name="q5" value="0" required> 없음</label>
-        <label><input type="radio" name="q5" value="1"> 2~6일</label>
-        <label><input type="radio" name="q5" value="2"> 7~12일</label>
-        <label><input type="radio" name="q5" value="3"> 거의 매일</label>
-      </div>
-    </div>
-    <!-- 6번 -->
-    <div class="card">
-      <div class="q">6. 피곤하고 기운이 없었다</div>
-      <div class="opts">
-        <label><input type="radio" name="q6" value="0" required> 없음</label>
-        <label><input type="radio" name="q6" value="1"> 2~6일</label>
-        <label><input type="radio" name="q6" value="2"> 7~12일</label>
-        <label><input type="radio" name="q6" value="3"> 거의 매일</label>
-      </div>
-    </div>
-    <!-- 7번 -->
-    <div class="card">
-      <div class="q">7. 내가 잘못했거나 실패했다는 생각 / 자신과 가족을 실망시켰다고 생각했다</div>
-      <div class="opts">
-        <label><input type="radio" name="q7" value="0" required> 없음</label>
-        <label><input type="radio" name="q7" value="1"> 2~6일</label>
-        <label><input type="radio" name="q7" value="2"> 7~12일</label>
-        <label><input type="radio" name="q7" value="3"> 거의 매일</label>
-      </div>
-    </div>
-    <!-- 8번 -->
-    <div class="card">
-      <div class="q">8. 신문 읽기 / TV 보기 같은 일에도 집중하기 어려웠다</div>
-      <div class="opts">
-        <label><input type="radio" name="q8" value="0" required> 없음</label>
-        <label><input type="radio" name="q8" value="1"> 2~6일</label>
-        <label><input type="radio" name="q8" value="2"> 7~12일</label>
-        <label><input type="radio" name="q8" value="3"> 거의 매일</label>
-      </div>
-    </div>
-    <!-- 9번 -->
-    <div class="card">
-      <div class="q">9. 차라리 죽는 게 낫겠다 / 자해 생각을 했다</div>
-      <div class="opts">
-        <label><input type="radio" name="q9" value="0" required> 없음</label>
-        <label><input type="radio" name="q9" value="1"> 2~6일</label>
-        <label><input type="radio" name="q9" value="2"> 7~12일</label>
-        <label><input type="radio" name="q9" value="3"> 거의 매일</label>
-      </div>
-    </div>
-    <!-- 기능 장애 -->
-    <div class="card">
-      <div class="q">10. 위 증상 때문에 일/집안일/대인관계에 지장이 있었습니까? (점수에 미포함)</div>
-      <div class="opts">
-        <label><input type="radio" name="impact" value="0" required> 전혀 지장없다</label>
-        <label><input type="radio" name="impact" value="1"> 약간 힘들었다</label>
-        <label><input type="radio" name="impact" value="2"> 많이 힘들었다</label>
-        <label><input type="radio" name="impact" value="3"> 매우 많이 힘들었다</label>
-      </div>
-    </div>
+  <form id="form"></form>
 
-    <button class="btn" type="button" onclick="calcScore()">결과 확인</button>
-  </form>
+  <div>
+    <button class="btn" id="submitBtn" type="button">결과 확인</button>
+    <div id="out" class="result" style="display:none"></div>
+  </div>
 
-  <div id="result" class="result" style="display:none;"></div>
-  <div class="consult" id="consultBtn" style="display:none;">
-    <a href="counsel.html">상담 신청하기</a>
+  <div class="counsel-btn" id="counselDiv">
+    <button onclick="window.location.href='counsel.html'" type="button">상담 신청하기</button>
   </div>
 </div>
 
 <script>
-function calcScore(){
-  const form = document.getElementById("phqForm");
-  let score = 0;
-  for(let i=1;i<=9;i++){
-    const sel = form.querySelector(`input[name="q${i}"]:checked`);
-    if(!sel){ alert("모든 문항에 응답해주세요."); return; }
-    score += parseInt(sel.value);
-  }
+const q = [
+  "일에 흥미나 즐거움을 느끼지 못했다",
+  "우울하거나, 침울하거나, 희망이 없다고 느꼈다",
+  "잠들기 어렵거나 자주 깼다, 혹은 너무 많이 잤다",
+  "피곤하거나 기운이 거의 없었다",
+  "식욕이 없거나 과식을 했다",
+  "자신이 나쁜 사람이라거나 실패자라고 느꼈다",
+  "신문 읽기나 TV 시청 같은 일상적인 일에도 집중할 수 없었다",
+  "남들이 눈치 챌 정도로 느리게 움직이거나 말이 느려졌다 / 반대로 안절부절 못하며 많이 움직였다",
+  "차라리 죽는 게 낫겠다고 생각했거나 자해할 생각을 했다"
+];
 
-  let level="", feedback="";
-  if(score <= 9){
-    level="경증"; feedback="가벼운 우울감이 있지만 기능은 유지 가능한 상태입니다. 자기 관리로 개선될 수 있습니다.";
-  } else if(score <= 14){
-    level="중등도"; feedback="우울 증상이 일상에 영향을 미치고 있으며, 악화 가능성이 있습니다. → 상담 선택 권장";
-  } else {
-    level="중증"; feedback="심각한 우울 증상으로 기능 저하가 뚜렷합니다. → 상담 필수 요망";
-  }
+const labels = ["전혀 아님(0)", "며칠 동안(1)", "일주일 이상(2)", "거의 매일(3)"];
 
-  document.getElementById("result").style.display="block";
-  document.getElementById("result").innerHTML =
-    `<h3>총점: ${score}점</h3><p><b>구분: ${level}</b><br/><span class="muted">${feedback}</span></p>`;
-  document.getElementById("consultBtn").style.display="block";
+const form = document.getElementById('form');
+q.forEach((t,i)=>{
+  const box = document.createElement('div'); box.className='card';
+  box.innerHTML = `
+    <div class="q">${i+1}. ${t}</div>
+    <div class="opts">
+      ${labels.map((lb,idx)=>`
+        <label><input type="radio" name="q${i}" value="${idx}" required/> ${lb}</label>
+      `).join('')}
+    </div>`;
+  form.append(box);
+});
+
+function score(){
+  let s=0,c=0;
+  q.forEach((_,i)=>{
+    const sel=form.querySelector(\`input[name="q\${i}"]:checked\`);
+    if(!sel) return; s+=Number(sel.value); c++;
+  });
+  if(c!==q.length) return null;
+  return s; // 0~27
+}
+
+document.getElementById('submitBtn').addEventListener('click', ()=>{
+  const sc=score();
+  const out=document.getElementById('out');
+  if(sc===null){ alert('모든 문항을 선택해 주세요.'); return; }
+
+  let guide="";
+  if(sc<=4){ guide="정상 범위: 특별한 우울 증상은 보이지 않습니다."; }
+  else if(sc<=9){ guide="가벼운 우울: 스트레스 관리와 자기돌봄이 필요합니다."; }
+  else if(sc<=14){ guide="중간 정도 우울: 주의 깊은 관찰과 상담 권장."; }
+  else if(sc<=19){ guide="중등도~중증 우울: 적극적인 상담 및 치료 필요."; }
+  else { guide="심한 우울: 즉각적인 전문 상담·치료가 필요합니다."; }
+
+  out.style.display='block';
+  out.innerHTML=\`<b>총점: \${sc}점 (0~27)</b><br/><span>\${guide}</span>\`;
+  document.getElementById('counselDiv').style.display='block';
+
+  // localStorage 불러오기
+  const name=localStorage.getItem('name')||'';
+  const gender=localStorage.getItem('gender')||'';
+  const age=localStorage.getItem('age')||'';
+  const location=localStorage.getItem('location')||'';
+
+  // 구글폼 전송
+  sendToGoogleForm({
+    name, gender, age, location,
+    testName:"PHQ-9",
+    score:sc,
+    result:guide
+  });
+});
+
+function sendToGoogleForm(data){
+  const url="https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/formResponse";
+  const fd=new FormData();
+
+  fd.append("entry.707709000", data.name);      // 닉네임
+  fd.append("entry.1389984940", data.gender);   // 성별
+  fd.append("entry.513328345", data.age);       // 나이
+  fd.append("entry.436383647", data.location);  // 지역
+  fd.append("entry.1649771076", data.testName); // 검사명
+  fd.append("entry.1905166231", data.score);    // 총점
+  fd.append("entry.43237668", data.result);     // 판정결과
+
+  fetch(url,{method:"POST",mode:"no-cors",body:fd})
+    .then(()=>console.log("구글폼 전송 성공"))
+    .catch(err=>console.error("전송 실패",err));
 }
 </script>
 </body>
