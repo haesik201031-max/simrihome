@@ -10,7 +10,7 @@
   h1{font-size:28px;margin:8px 0 16px}
   .card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:22px 20px;margin:14px 0;box-shadow:0 6px 16px rgba(17,24,39,.06)}
   .q{margin:0 0 12px;font-weight:600}
-  .opts label{display:block;margin:6px 0;padding:8px 10px;border-radius:10px;border:1px solid #e5e7eb;cursor:pointer}
+  .opts label{display:inline-flex;align-items:center;gap:8px;margin:6px 10px 6px 0;padding:8px 10px;border-radius:10px;border:1px solid #e5e7eb;cursor:pointer}
   .btn{display:inline-block;background:#1668e3;color:#fff;border:0;border-radius:10px;padding:14px 18px;font-weight:700;cursor:pointer;margin-top:10px}
   .result{background:#eef5ff;border:1px solid #cfe2ff;border-radius:12px;padding:16px 18px;margin-top:16px;font-size:16px}
   .muted{color:#667085}
@@ -42,24 +42,27 @@
 </div>
 
 <script>
+// PHQ-9 문항
 const q = [
-  "일에 흥미나 즐거움을 느끼지 못했다",
-  "우울하거나, 침울하거나, 희망이 없다고 느꼈다",
-  "잠들기 어렵거나 자주 깼다, 혹은 너무 많이 잤다",
-  "피곤하거나 기운이 거의 없었다",
-  "식욕이 없거나 과식을 했다",
-  "자신이 나쁜 사람이라거나 실패자라고 느꼈다",
-  "신문 읽기나 TV 시청 같은 일상적인 일에도 집중할 수 없었다",
-  "남들이 눈치 챌 정도로 느리게 움직이거나 말이 느려졌다 / 반대로 안절부절 못하며 많이 움직였다",
-  "차라리 죽는 게 낫겠다고 생각했거나 자해할 생각을 했다"
+  "일에 대한 흥미나 즐거움이 거의 없었다.",
+  "기분이 가라앉거나 우울하거나 희망이 없었다.",
+  "잠들기가 어렵거나 자주 깼다, 혹은 너무 많이 잤다.",
+  "피곤하거나 기운이 거의 없었다.",
+  "입맛이 없거나 과식을 했다.",
+  "내가 잘못했거나 실패했다는 생각이 들었다, 또는 자신이나 가족을 실망시켰다고 느꼈다.",
+  "신문을 읽거나 TV를 보는 것과 같은 일에 집중하기 어려웠다.",
+  "다른 사람들이 눈치 챌 정도로 너무 느리게 움직이거나 말을 했다. 혹은 반대로 너무 안절부절 못해서 평소보다 많이 움직였다.",
+  "차라리 죽는 것이 더 낫겠다는 생각이나 자해할 생각을 했다."
 ];
 
-const labels = ["전혀 아님(0)", "며칠 동안(1)", "일주일 이상(2)", "거의 매일(3)"];
+// 답변 라벨
+const labels = ["전혀 없음 (0점)", "며칠 동안 (1점)", "1주일 이상 (2점)", "거의 매일 (3점)"];
 
+// 문항 출력
 const form = document.getElementById('form');
 q.forEach((t,i)=>{
-  const box = document.createElement('div'); box.className='card';
-  box.innerHTML = `
+  const box=document.createElement('div'); box.className='card';
+  box.innerHTML=`
     <div class="q">${i+1}. ${t}</div>
     <div class="opts">
       ${labels.map((lb,idx)=>`
@@ -69,20 +72,23 @@ q.forEach((t,i)=>{
   form.append(box);
 });
 
+// 점수 계산
 function score(){
   let s=0,c=0;
   q.forEach((_,i)=>{
     const sel=form.querySelector(\`input[name="q\${i}"]:checked\`);
-    if(!sel) return; s+=Number(sel.value); c++;
+    if(!sel) return;
+    s+=Number(sel.value); c++;
   });
   if(c!==q.length) return null;
   return s; // 0~27
 }
 
+// 결과 확인
 document.getElementById('submitBtn').addEventListener('click', ()=>{
   const sc=score();
   const out=document.getElementById('out');
-  if(sc===null){ alert('모든 문항을 선택해 주세요.'); return; }
+  if(sc===null){ alert('모든 문항에 답해주세요.'); return; }
 
   let guide="";
   if(sc<=4){ guide="정상 범위: 특별한 우울 증상은 보이지 않습니다."; }
@@ -110,6 +116,7 @@ document.getElementById('submitBtn').addEventListener('click', ()=>{
   });
 });
 
+// 구글폼 전송 함수
 function sendToGoogleForm(data){
   const url="https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/formResponse";
   const fd=new FormData();
