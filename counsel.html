@@ -17,31 +17,40 @@
       line-height:1.6;
     }
     .wrap{max-width:1000px; margin:0 auto; padding:28px 16px}
-    header{display:flex; align-items:center; gap:10px; margin-bottom:8px}
+    header{display:flex; align-items:center; gap:10px; margin-bottom:4px}
     h1{font-size:28px; margin:0}
-    p.muted{color:var(--muted); margin:6px 0 20px}
+    p.muted{color:var(--muted); margin:6px 0 16px}
     .card{
       background:var(--card); border:1px solid var(--border);
-      border-radius:var(--radius); padding:20px;
+      border-radius:var(--radius); padding:16px;
     }
-    .actions{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px}
+    .actions{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px}
     .btn{
-      display:inline-block; padding:12px 18px; border-radius:10px; font-weight:700;
+      display:inline-block; padding:10px 14px; border-radius:10px; font-weight:700;
       text-decoration:none; border:1px solid var(--border); background:#eef2f7; color:var(--text);
-      cursor:pointer; transition:all 0.2s ease-in-out;
+      cursor:pointer;
     }
-    .btn:hover{opacity:0.9; transform:translateY(-1px)}
     .btn.primary{background:var(--primary); color:#fff; border-color:var(--primary)}
-    .btn.store{
-      background:#16a34a; color:#fff; border-color:#16a34a;
-      font-size:18px; text-align:center; margin-top:20px;
-      width:100%; max-width:420px;
-    }
     iframe#gform{
       width:100%; height:2000px; border:0; border-radius:12px; background:#fff;
     }
-    @media (max-width:640px){
-      iframe#gform{height:2200px}
+    @media (max-width:640px){ iframe#gform{height:2200px} }
+
+    /* 정식검사 버튼 */
+    .final-btn{
+      display:none; /* 제출 완료 전까지 숨김 */
+      margin-top:20px;
+      text-align:center;
+    }
+    .final-btn a{
+      display:inline-block;
+      background:#10b981;
+      color:#fff;
+      font-weight:700;
+      text-decoration:none;
+      padding:14px 24px;
+      border-radius:12px;
+      font-size:18px;
     }
   </style>
 </head>
@@ -75,14 +84,11 @@
         자바스크립트가 꺼져 있어 폼을 불러올 수 없습니다.
         <a href="https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/viewform" target="_blank" rel="noopener">여기를 클릭해 새 창에서 열기</a>
       </noscript>
-    </div>
 
-    <!-- 정식검사 버튼 (스마트스토어) -->
-    <div style="text-align:center;">
-      <a class="btn store" target="_blank" rel="noopener"
-         href="https://smartstore.naver.com/issueara">
-        정식검사 신청하기 (스마트스토어 이동)
-      </a>
+      <!-- 정식검사 신청 버튼 (제출 완료 후 표시됨) -->
+      <div class="final-btn" id="finalBtn">
+        <a href="https://smartstore.naver.com/issueara" target="_blank" rel="noopener">정식검사 신청하기</a>
+      </div>
     </div>
   </div>
 
@@ -96,9 +102,19 @@
     function reloadForm(){ setFormSrc(); }
     document.addEventListener("DOMContentLoaded", setFormSrc);
 
-    // 제출 후 자동 스크롤
+    // ✅ 제출 완료 감지
     document.getElementById("gform").addEventListener("load", () => {
-      document.getElementById("gform").scrollIntoView({ behavior: "smooth" });
+      const f = document.getElementById("gform");
+      try {
+        const innerDoc = f.contentDocument || f.contentWindow.document;
+        if(innerDoc && innerDoc.body.innerText.includes("응답이 기록되었습니다") || 
+           innerDoc.body.innerText.includes("접수가 완료되었습니다")) {
+          document.getElementById("finalBtn").style.display = "block"; // 버튼 노출
+          document.getElementById("finalBtn").scrollIntoView({behavior:"smooth"});
+        }
+      } catch(e) {
+        console.log("Cross-origin 제한으로 감지 실패 가능");
+      }
     });
   </script>
 </body>
