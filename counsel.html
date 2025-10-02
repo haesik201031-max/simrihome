@@ -4,105 +4,50 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>온라인 상담</title>
-  <meta name="description" content="정은영 심리상담센터 온라인 상담 접수 폼" />
   <style>
     :root{
       --bg:#f7f8fb; --card:#ffffff; --text:#111827; --muted:#6b7280;
       --primary:#2563eb; --border:#e5e7eb; --radius:14px;
     }
-    *{box-sizing:border-box}
-    body{
-      margin:0; background:var(--bg); color:var(--text);
-      font-family:"Noto Sans KR",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      line-height:1.6;
-    }
-    .wrap{max-width:1000px; margin:0 auto; padding:28px 16px}
-    header{display:flex; align-items:center; gap:10px; margin-bottom:4px}
-    h1{font-size:28px; margin:0}
-    p.muted{color:var(--muted); margin:6px 0 16px}
-    .card{
-      background:var(--card); border:1px solid var(--border);
-      border-radius:var(--radius); padding:16px;
-    }
-    .actions{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px}
-    .btn{
-      display:inline-block; padding:12px 18px; border-radius:10px; font-weight:700;
-      text-decoration:none; border:1px solid var(--border); background:#eef2f7; color:var(--text);
-      cursor:pointer; font-size:16px;
-    }
-    .btn.primary{background:var(--primary); color:#fff; border-color:var(--primary)}
-    iframe#gform{
-      width:100%; height:2000px; border:0; border-radius:12px; background:#fff;
-    }
-    @media (max-width:640px){ iframe#gform{height:2200px} }
-    #final-link { display:none; text-align:center; margin-top:24px; }
+    body{margin:0;background:var(--bg);color:var(--text);
+      font-family:"Noto Sans KR",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;}
+    .wrap{max-width:1000px;margin:0 auto;padding:28px 16px}
+    .card{background:#fff;border:1px solid var(--border);
+      border-radius:14px;padding:16px;margin-top:16px}
+    .btn{display:inline-block;padding:14px 24px;border-radius:10px;
+      font-weight:700;text-decoration:none;border:1px solid var(--primary);
+      background:var(--primary);color:#fff;font-size:18px;text-align:center}
+    iframe#gform{width:100%;height:2000px;border:0;border-radius:12px;background:#fff}
+    @media(max-width:640px){iframe#gform{height:2200px}}
+    #final-link{text-align:center;margin-top:30px}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <header><h1>온라인 상담</h1></header>
-    <p class="muted">
-      아래 구글폼에 접수하시면 담당자가 확인 후 연락드립니다.<br/>
-      폼이 보이지 않으면 <b>“새 창에서 열기”</b>를 이용해 주세요.
-    </p>
+    <h1>온라인 상담</h1>
+    <p class="muted">아래 구글폼에 접수하시면 담당자가 확인 후 연락드립니다.</p>
 
     <div class="card">
-      <div class="actions">
-        <!-- 새 창에서 열기 -->
-        <a class="btn primary" target="_blank" rel="noopener"
-           href="https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/viewform">
-          새 창에서 열기
-        </a>
-        <!-- 임베드 리로드 -->
-        <button class="btn" type="button" onclick="reloadForm()">폼이 안 보이면 클릭</button>
-      </div>
-
       <!-- Google Forms 임베드 -->
       <iframe
         id="gform"
-        title="정은영 심리상담센터 온라인 상담 폼"
         src="https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/viewform?embedded=true"
+        title="정은영 심리상담센터 온라인 상담 폼"
       >로드 중…</iframe>
-
-      <noscript>
-        자바스크립트가 꺼져 있어 폼을 불러올 수 없습니다.
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/viewform" target="_blank" rel="noopener">여기를 클릭해 새 창에서 열기</a>
-      </noscript>
     </div>
 
-    <!-- 최종 제출 완료 후 정식검사 버튼 -->
+    <!-- ✅ 정식 검사 버튼 (항상 보이도록 수정) -->
     <div id="final-link">
-      <button class="btn primary" onclick="openStore()">정식 검사 바로가기</button>
+      <a class="btn" href="https://smartstore.naver.com/issueara" target="_blank" rel="noopener noreferrer">
+        정식 검사 바로가기
+      </a>
     </div>
   </div>
 
   <script>
-    const EMBED_URL = "https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/viewform?embedded=true";
-    
-    function setFormSrc(){
-      const f = document.getElementById("gform");
-      f.src = EMBED_URL + "&v=" + Date.now(); // 캐시 방지
-    }
-    function reloadForm(){ setFormSrc(); }
-    document.addEventListener("DOMContentLoaded", setFormSrc);
-
-    function openStore(){
-      window.open("https://smartstore.naver.com/issueara","_blank","noopener");
-    }
-
-    // 자동 스크롤 + 제출 완료 감지
-    document.getElementById("gform").addEventListener("load", () => {
-      // 자동으로 화면 상단으로 이동
+    // 구글폼 이동 시 자동 스크롤
+    document.getElementById("gform").addEventListener("load", ()=>{
       window.scrollTo({ top:0, behavior:"smooth" });
-
-      const f = document.getElementById("gform");
-      const url = f.src;
-
-      // ✅ 제출 완료 패턴 감지 (formResponse, usp=pp_url 등)
-      if (url.includes("formResponse") || url.includes("usp=pp_url") || url.includes("viewform?edit")) {
-        document.getElementById("final-link").style.display = "block";
-        document.getElementById("final-link").scrollIntoView({ behavior: "smooth" });
-      }
     });
   </script>
 </body>
