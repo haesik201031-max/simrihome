@@ -10,14 +10,13 @@
       --bg:#f7f8fb; --card:#ffffff; --text:#111827; --muted:#6b7280;
       --primary:#2563eb; --border:#e5e7eb; --radius:14px;
     }
-    *{box-sizing:border-box}
     body{
       margin:0; background:var(--bg); color:var(--text);
       font-family:"Noto Sans KR",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
       line-height:1.6;
     }
     .wrap{max-width:1000px; margin:0 auto; padding:28px 16px}
-    header{display:flex; align-items:center; gap:10px; margin-bottom:4px}
+    header{margin-bottom:4px}
     h1{font-size:28px; margin:0}
     p.muted{color:var(--muted); margin:6px 0 16px}
     .card{
@@ -26,9 +25,9 @@
     }
     .actions{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px}
     .btn{
-      display:inline-block; padding:14px 20px; border-radius:10px; font-weight:700;
+      display:inline-block; padding:16px 24px; border-radius:10px; font-weight:700;
       text-decoration:none; border:1px solid var(--border); background:#eef2f7; color:var(--text);
-      cursor:pointer; text-align:center;
+      cursor:pointer; text-align:center; font-size:18px;
     }
     .btn.primary{background:var(--primary); color:#fff; border-color:var(--primary)}
     iframe#gform{
@@ -36,7 +35,7 @@
     }
     @media (max-width:640px){ iframe#gform{height:2200px} }
     #final-link {
-      display:none; text-align:center; margin-top:20px;
+      display:none; text-align:center; margin-top:24px;
     }
   </style>
 </head>
@@ -50,16 +49,13 @@
 
     <div class="card">
       <div class="actions">
-        <!-- 새 창에서 열기 -->
         <a class="btn primary" target="_blank" rel="noopener"
            href="https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/viewform">
           새 창에서 열기
         </a>
-        <!-- 임베드 리로드 -->
         <button class="btn" type="button" onclick="reloadForm()">폼이 안 보이면 클릭</button>
       </div>
 
-      <!-- Google Forms 임베드 -->
       <iframe
         id="gform"
         title="정은영 심리상담센터 온라인 상담 폼"
@@ -72,7 +68,7 @@
       </noscript>
     </div>
 
-    <!-- ✅ 제출 후 보이는 정식 검사 버튼 -->
+    <!-- ✅ 제출 완료 후 표시되는 정식검사 버튼 -->
     <div id="final-link">
       <a class="btn primary" href="https://smartstore.naver.com/issueara" target="_blank" rel="noopener">
         정식 검사 바로가기
@@ -84,16 +80,16 @@
     const EMBED_URL = "https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/viewform?embedded=true";
     function setFormSrc(){
       const f = document.getElementById("gform");
-      f.src = EMBED_URL + "&v=" + Date.now(); // 캐시 방지
+      f.src = EMBED_URL + "&v=" + Date.now();
     }
     function reloadForm(){ setFormSrc(); }
     document.addEventListener("DOMContentLoaded", setFormSrc);
 
-    // ✅ 자동 스크롤: 페이지 이동할 때마다 맨 위로
+    // ✅ 자동 스크롤: 페이지 전환/제출 시 상단으로 이동
     document.getElementById("gform").addEventListener("load", () => {
-      document.getElementById("gform").scrollIntoView({ behavior: "smooth" });
+      window.scrollTo({ top:0, behavior:"smooth" });
 
-      // ✅ "제출 완료" 페이지 감지 → 정식 검사 버튼 표시
+      // ✅ 제출 완료 감지 → 정식검사 버튼 표시
       const f = document.getElementById("gform");
       if (f.src.includes("formResponse")) {
         document.getElementById("final-link").style.display = "block";
