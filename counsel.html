@@ -26,27 +26,19 @@
     }
     .actions{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px}
     .btn{
-      display:inline-block; padding:12px 20px; border-radius:10px; font-weight:700;
+      display:inline-block; padding:12px 20px; border-radius:12px; font-weight:700;
       text-decoration:none; border:1px solid var(--border); background:#eef2f7; color:var(--text);
       cursor:pointer; text-align:center;
     }
     .btn.primary{background:var(--primary); color:#fff; border-color:var(--primary)}
+    .btn.large{font-size:18px; padding:14px 28px; width:100%; max-width:320px}
     iframe#gform{
       width:100%; height:2000px; border:0; border-radius:12px; background:#fff;
     }
     @media (max-width:640px){ iframe#gform{height:2200px} }
-
-    /* 정식검사 버튼 영역 */
-    .exam-link{
-      text-align:center; margin-top:24px;
+    .after-submit{
+      margin-top:20px; text-align:center;
     }
-    .exam-btn{
-      display:inline-block; padding:14px 28px;
-      background:#10b981; color:#fff; font-size:18px; font-weight:700;
-      border-radius:12px; text-decoration:none;
-      transition:background 0.2s;
-    }
-    .exam-btn:hover{background:#059669}
   </style>
 </head>
 <body>
@@ -79,18 +71,20 @@
         자바스크립트가 꺼져 있어 폼을 불러올 수 없습니다.
         <a href="https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/viewform" target="_blank" rel="noopener">여기를 클릭해 새 창에서 열기</a>
       </noscript>
-    </div>
 
-    <!-- 정식검사 버튼 -->
-    <div class="exam-link">
-      <a href="https://smartstore.naver.com/issueara" target="_blank" rel="noopener" class="exam-btn">
-        정식 검사 바로가기
-      </a>
+      <!-- ✅ 제출 완료 후 보이는 정식 검사 버튼 -->
+      <div class="after-submit" id="after-submit" style="display:none;">
+        <a href="https://smartstore.naver.com/issueara" target="_blank" rel="noopener"
+           class="btn primary large">
+          정식 검사 바로가기
+        </a>
+      </div>
     </div>
   </div>
 
   <script>
     const EMBED_URL = "https://docs.google.com/forms/d/e/1FAIpQLSc3C7dxR-Aj_hoiCSTScEMVspsynE9q1wMvBjlrwceDccJrHg/viewform?embedded=true";
+    
     function setFormSrc(){
       const f = document.getElementById("gform");
       f.src = EMBED_URL + "&v=" + Date.now(); // 캐시 방지
@@ -98,9 +92,19 @@
     function reloadForm(){ setFormSrc(); }
     document.addEventListener("DOMContentLoaded", setFormSrc);
 
-    // 제출 후 자동 스크롤
+    // ✅ 제출 후 자동 스크롤 + 정식검사 버튼 표시
     document.getElementById("gform").addEventListener("load", () => {
-      document.getElementById("gform").scrollIntoView({ behavior: "smooth" });
+      const iframe = document.getElementById("gform");
+      // 제출 완료 여부 판별 (Google Forms 응답완료 문구 포함 여부)
+      try {
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        if(iframeDoc && iframeDoc.body.innerText.includes("응답이 기록되었습니다")){
+          document.getElementById("after-submit").style.display = "block";
+          document.getElementById("after-submit").scrollIntoView({ behavior:"smooth" });
+        }
+      } catch(e){
+        console.log("폼 상태 확인 불가 (cross-origin 제한).");
+      }
     });
   </script>
 </body>
